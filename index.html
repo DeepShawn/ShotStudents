@@ -205,7 +205,6 @@ input[type=text]{padding:11px 16px;border-radius:10px;font-size:15px;letter-spac
   transition:all .15s}
 input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,.3)}
 
-/* 初始武器选择器 */
 .weaponPicker{
   display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;
   padding:10px 12px;border-radius:12px;
@@ -223,7 +222,6 @@ input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,
   border-color:#38bdf8;box-shadow:0 3px 14px rgba(56,189,248,.3)}
 .wpItem.santi{color:#67e8f9;border-color:rgba(34,211,238,.3)}
 
-/* 控制台条目 */
 .consoleItem{
   padding:12px 16px;border-radius:10px;cursor:pointer;
   background:linear-gradient(150deg,rgba(20,32,58,.75),rgba(10,17,32,.85));
@@ -346,7 +344,6 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
       <h2>AI 难度</h2>
       <div class="row" id="aiRow" style="margin-bottom:18px"></div>
 
-      <!-- ========== 初始武器选择器（新增） ========== -->
       <h2>🎯 初始武器</h2>
       <p style="color:#6b87ab;font-size:12px;margin-bottom:8px;letter-spacing:1px">
         选择每局游戏开始时的第一把武器。<b style="color:#fbbf24">仅列出已拥有的武器</b>。
@@ -378,7 +375,6 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
     </div>
   </div>
 
-  <!-- ========== 控制台面板（新增） ========== -->
   <div class="panel hidden" id="consolePanel">
     <div class="box" style="width:min(680px,94vw)">
       <div class="row" style="margin-bottom:14px">
@@ -475,12 +471,16 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 <script>
 'use strict';
 /* =========================================================
-   星际射手 · Astro Shooter · 最终版
+   星际射手 · Astro Shooter · 最终版 v7.1
    =========================================================
-   最终版新增：
-   - 菜单内「初始武器选择器」（指定开局第一把枪）
-   - 菜单内「控制台」（启用/禁用技能按钮，简化画面）
-   - 所有原有代码完整保留
+   本次修复：
+   ✦ 修复黑暗行动 / 狂怒 / 噩梦 模式立即结束 bug
+   ✦ 修复玩家阵亡后无法退出游戏 bug
+   ✦ 返回主菜单时自动保存记录
+   本次新增：
+   ✦ 传说级模式分类（5 种超难模式 · 高倍积分）
+   ✦ 击杀积分基础值全面提升（约 3 倍）
+   ✦ 模式积分倍率系统（最高 ×10）
    ========================================================= */
 
 const W = 1600, H = 900, TAU = Math.PI * 2;
@@ -790,7 +790,7 @@ const PERKS = {
 };
 
 /* =========================================================
-   AI 难度
+   AI 难度（14 档）
    ========================================================= */
 const DIFFICULTY = {
   easy:      { name:'简单', aimErr:0.45, react:1.20, speed:0.42, dmgMul:0.30, hp:70,  dodge:0.00, aggro:0.40, fireGap:1.6,  color:'#4ade80' },
@@ -811,9 +811,10 @@ const DIFFICULTY = {
 let AI_LEVEL = 'normal';
 
 /* =========================================================
-   模式
+   模式（新增传说分类 · 5 种超难模式）
    ========================================================= */
 const MODES = {
+  // ===== 基础 =====
   time:        { name:'计时赛',   icon:'⏱', color:'#38bdf8', desc:'60 秒内击杀尽可能多的敌人',           group:'基础' },
   campaign:    { name:'闯关赛',   icon:'🚩', color:'#4ade80', desc:'10 个关卡，敌人逐级变强',             group:'基础' },
   vsai:        { name:'AI 对战',  icon:'🤖', color:'#a78bfa', desc:'与 AI 单挑，每人 5 条命',             group:'基础' },
@@ -822,16 +823,34 @@ const MODES = {
   zombie:      { name:'尸潮模式', icon:'🧟', color:'#84cc16', desc:'海量感染者缓慢逼近',                   group:'基础' },
   boss:        { name:'首领战',   icon:'👹', color:'#ef4444', desc:'挑战巨型 BOSS 及其弹幕',              group:'基础' },
   team:        { name:'团队战',   icon:'🛡', color:'#22d3ee', desc:'AI 队友协同对抗敌潮',                 group:'基础' },
-  eliteHunt:   { name:'精英猎杀', icon:'💀', color:'#f43f5e', desc:'只刷精英敌人 · 高额积分',             group:'进阶' },
+  // ===== 进阶 =====
+  eliteHunt:   { name:'精英猎杀', icon:'💀', color:'#f43f5e', desc:'只刷精英敌人 · 击杀得分 ×2',          group:'进阶' },
   bulletHell:  { name:'弹幕地狱', icon:'💥', color:'#ef4444', desc:'敌人子弹铺天盖地',                     group:'进阶' },
   deathmatch:  { name:'死亡竞赛', icon:'⚔', color:'#a78bfa', desc:'4 人自由混战',                        group:'进阶' },
   dualBoss:    { name:'双首领',   icon:'👹', color:'#ef4444', desc:'同时挑战 2 个 BOSS',                  group:'进阶' },
   darkOps:     { name:'黑暗行动', icon:'🌑', color:'#6b7280', desc:'视野受限 · 只能看到近距离',           group:'进阶' },
-  rage:        { name:'狂怒',     icon:'😡', color:'#dc2626', desc:'敌人速度 +40% · 积分 ×2',             group:'进阶' },
+  rage:        { name:'狂怒',     icon:'😡', color:'#dc2626', desc:'敌人速度 +40% · 积分 ×3',             group:'进阶' },
   superCampaign:{name:'超级闯关', icon:'🏆', color:'#fbbf24', desc:'20 关挑战 · 高额奖励',                group:'进阶' },
-  nightmare:   { name:'噩梦',     icon:'☠', color:'#7e22ce', desc:'所有敌人骨灰难度 · 积分 ×3',          group:'进阶' },
+  nightmare:   { name:'噩梦',     icon:'☠', color:'#7e22ce', desc:'所有敌人骨灰难度 · 积分 ×4',          group:'进阶' },
   speedrun:    { name:'速通',     icon:'🏃', color:'#22d3ee', desc:'限时清波 · 越快越好',                 group:'进阶' },
   survival:    { name:'生存',     icon:'⏳', color:'#f97316', desc:'敌人无尽 · 难度持续提升',             group:'进阶' },
+  // ===== 传说（新） =====
+  zenith:      { name:'巅峰对决', icon:'⛰', color:'#fbbf24', desc:'精英 + 弹幕 + 双 BOSS 混合 · 积分 ×5', group:'传说' },
+  godslayer:   { name:'屠神之路', icon:'⚡', color:'#c084fc', desc:'所有敌人三体难度 · 积分 ×6',          group:'传说' },
+  infinity:    { name:'无限战争', icon:'∞', color:'#38bdf8', desc:'波次无限 · 敌人快速增强 · 积分 ×4',    group:'传说' },
+  apocalypse:  { name:'末日审判', icon:'☄', color:'#dc2626', desc:'BOSS 潮 · 连续出现 · 积分 ×5',         group:'传说' },
+  singularity: { name:'奇点',     icon:'◎', color:'#8b5cf6', desc:'极限生存 · 积分 ×10',                  group:'传说' },
+  ascension:   { name:'飞升',     icon:'☯', color:'#ffffff', desc:'终极混合挑战 · 积分 ×15',              group:'传说' },
+};
+
+/* =========================================================
+   模式积分倍率（用于提升积分获取效率）
+   ========================================================= */
+const MODE_SCORE_MUL = {
+  time: 1, campaign: 1, vsai: 1, pvp: 1, endless: 1.5, zombie: 1.5, boss: 1.5, team: 1.5,
+  eliteHunt: 3, bulletHell: 2, deathmatch: 1.5, dualBoss: 3, darkOps: 2.5,
+  rage: 3, superCampaign: 3, nightmare: 4, speedrun: 2, survival: 2.5,
+  zenith: 5, godslayer: 6, infinity: 4, apocalypse: 5, singularity: 10, ascension: 15
 };
 
 /* =========================================================
@@ -1031,7 +1050,6 @@ buildUIButtons();
 
 function hitUI(x, y) {
   for (const b of TOUCH.uiBtns) {
-    // 控制台禁用的按钮不响应
     if (SAVE.skillButtons && SAVE.skillButtons[b.id] === false) continue;
     if (dist2(x, y, b.x, b.y) < b.r * b.r) return b;
   }
@@ -1185,6 +1203,7 @@ const G = {
   nightmareMul: 1,
   darkVision: false,
   scoreMul: 1,
+  modeScoreMul: 1,
   darkForestT: 0,
   sophonJamT: 0,
   wallfacerT: 0,
@@ -1299,7 +1318,6 @@ function startGame(mode) {
   pCount = 0;
   G.time = 0; G.acc = 0; G.shake = 0; G.uid = 1;
   G.score = 0; G.kills = 0; G.wave = 1; G.waveTimer = 2.0; G.spawnTimer = 0;
-  G.timeLeft = (mode === 'time') ? 60 : 0;
   G.over = false; G.paused = false; G.slowmo = 0; G.timeStop = 0;
   G.best = SAVE.high[mode] || 0;
   G.bossRef = null;
@@ -1317,14 +1335,25 @@ function startGame(mode) {
   G.wallfacerT = 0;
   killfeedEl.innerHTML = '';
 
-  if (mode === 'rage') G.rageMul = 2;
-  if (mode === 'nightmare') G.nightmareMul = 3;
+  // ★ 修复：所有限时模式的 timeLeft 初始化（此前黑暗/狂怒/噩梦未初始化导致立即结束）
+  if (mode === 'time') G.timeLeft = 60;
+  else if (mode === 'darkOps') G.timeLeft = 60;
+  else if (mode === 'rage') G.timeLeft = 60;
+  else if (mode === 'nightmare') G.timeLeft = 60;
+  else if (mode === 'speedrun') G.timeLeft = 45;
+  else if (mode === 'zenith') G.timeLeft = 75;
+  else if (mode === 'godslayer') G.timeLeft = 90;
+  else if (mode === 'apocalypse') G.timeLeft = 90;
+  else G.timeLeft = 0;
+
+  // 模式倍率
+  if (mode === 'rage') { G.rageMul = 2; G.modeScoreMul = MODE_SCORE_MUL.rage; }
+  else if (mode === 'nightmare') { G.nightmareMul = 3; G.modeScoreMul = MODE_SCORE_MUL.nightmare; }
+  else G.modeScoreMul = MODE_SCORE_MUL[mode] || 1;
+
   if (mode === 'darkOps') G.darkVision = true;
-  if (mode === 'speedrun') { G.timeLeft = 45; }
 
   const p1 = makePlayer(0, W * 0.28, H * 0.5, '#38bdf8', 0, false);
-
-  // ★ 初始武器：应用 SAVE.startWeapon
   const startW = SAVE.startWeapon;
   if (startW && SAVE.weapons.includes(startW) && WEAPONS[startW]) {
     p1.weapon = startW;
@@ -1376,10 +1405,19 @@ function startGame(mode) {
     spawnBoss(W * 0.35, H * 0.3);
     spawnBoss(W * 0.65, H * 0.3);
   }
+  else if (mode === 'apocalypse') {
+    spawnBoss(W * 0.5, 140);
+  }
   else if (mode === 'eliteHunt') {
     for (let i = 0; i < 3; i++) spawnEnemy(['hard','hell','ashen'][randInt(0, 2)], true);
   }
-  else if (mode === 'superCampaign') {
+  else if (mode === 'godslayer') {
+    for (let i = 0; i < 4; i++) spawnEnemy('trisolaris');
+  }
+  else if (mode === 'singularity') {
+    for (let i = 0; i < 2; i++) spawnEnemy('zeroHomer');
+  }
+  else if (mode === 'superCampaign' || mode === 'zenith' || mode === 'infinity' || mode === 'ascension') {
     for (let i = 0; i < 3; i++) spawnEnemy(pickLevel(1));
   }
   else {
@@ -1484,7 +1522,7 @@ function endGame(reason) {
   document.getElementById('overStats').innerHTML =
     `<div class="big">${fmt(base)}</div>
      <div style="color:#5a7ba3;font-size:12px;letter-spacing:3px;margin-bottom:14px">本 局 得 分</div>
-     <div>击杀 <b style="color:#4ade80">${G.kills}</b> &nbsp;·&nbsp; 存活 <b style="color:#7dd3fc">${G.time.toFixed(1)}s</b> &nbsp;·&nbsp; 波次 <b style="color:#fbbf24">${G.wave}</b></div>
+     <div>击杀 <b style="color:#4ade80">${G.kills}</b> &nbsp;·&nbsp; 存活 <b style="color:#7dd3fc">${G.time.toFixed(1)}s</b> &nbsp;·&nbsp; 波次 <b style="color:#fbbf24">${G.wave}</b>${G.modeScoreMul > 1 ? ` &nbsp;·&nbsp; 倍率 <b style="color:#f472b6">×${G.modeScoreMul}</b>` : ''}</div>
      <div style="margin-top:10px;font-size:13px">
        ${MODES[G.mode].name} 最高分：<b style="color:${isNew ? '#4ade80' : '#7dd3fc'}">${fmt(Math.max(best, base))}</b>
        ${isNew ? '<span class="tag" style="color:#4ade80">新纪录</span>' : ''}
@@ -1495,20 +1533,36 @@ function endGame(reason) {
 
 function restart() { startGame(G.mode); }
 function backToMenu() {
-  G.running = false; G.paused = false;
+  // ★ 修复：返回主菜单时自动保存当前记录
+  if (G.score > 0) {
+    const best = SAVE.high[G.mode] || 0;
+    if (G.score > best) SAVE.high[G.mode] = G.score;
+    SAVE.kills += 0;  // 击杀已在 killPlayer 中累计
+    saveGame();
+  }
+  flushSave();
+
+  G.running = false; G.paused = false; G.over = false;
   showGameUI(false);
   hideAllPanels();
   document.getElementById('menu').classList.remove('hidden');
   refreshMenu();
 }
 function quitGame() {
+  // ★ 修复：退出时自动保存当前记录
+  if (G.score > 0) {
+    const best = SAVE.high[G.mode] || 0;
+    if (G.score > best) SAVE.high[G.mode] = G.score;
+    saveGame();
+  }
   flushSave();
-  G.running = false; G.paused = false;
+
+  G.running = false; G.paused = false; G.over = false;
   showGameUI(false);
   document.getElementById('pause').classList.add('hidden');
   document.getElementById('menu').classList.remove('hidden');
   refreshMenu();
-  toast('已退出到主菜单');
+  toast('已退出到主菜单（记录已保存）');
 }
 function togglePause() {
   if (!G.running) return;
@@ -1780,7 +1834,7 @@ function damage(target, amount, sourceId) {
     }
   }
 
-  if (target.isBoss && (G.mode === 'boss' || G.mode === 'dualBoss')) {
+  if (target.isBoss && (G.mode === 'boss' || G.mode === 'dualBoss' || G.mode === 'apocalypse')) {
     document.getElementById('hBoss').textContent =
       Math.max(0, Math.ceil(target.hp / target.maxHp * 100)) + '%';
   }
@@ -1799,19 +1853,19 @@ function killPlayer(p, sourceId) {
 
   if (p.isBoss) {
     G.bossRef = null;
-    if (G.mode === 'dualBoss') {
+    if (G.mode === 'dualBoss' || G.mode === 'apocalypse') {
       const otherBoss = G.players.find(q => q.isBoss && q.alive);
       if (otherBoss) {
-        G.score += 5000;
-        SAVE.points += 5000;
+        G.score += 5000 * G.modeScoreMul;
+        SAVE.points += 5000 * G.modeScoreMul;
         saveGame();
         addFloat(p.x, p.y, '+5000', '#fbbf24', 22);
         return;
       }
     }
     document.getElementById('hBossBox').style.display = 'none';
-    G.score += 5000;
-    SAVE.points += 5000;
+    G.score += 5000 * G.modeScoreMul;
+    SAVE.points += 5000 * G.modeScoreMul;
     saveGame();
     endGame('win');
     return;
@@ -1824,8 +1878,15 @@ function killPlayer(p, sourceId) {
     p.respawn = 1.2;
     return;
   }
-  if (p.lives > 0 && p.isAI && p.team === 1) {
-    // AI 一次死亡即消失
+
+  // ★ 修复：玩家阵亡（lives=0）时，正确处理游戏结束
+  if (!p.isAI && p.lives <= 0) {
+    // 立即保存击杀记录
+    saveGame(); flushSave();
+    if (p === G.players[0]) {
+      endGame('lose');
+      return;
+    }
   }
 
   if (src && src !== p) {
@@ -1837,22 +1898,29 @@ function killPlayer(p, sourceId) {
       G.comboT = 3.0;
     }
 
-    let gain = 40;
+    // ★ 积分基础值全面提升（约 3 倍） + 模式倍率
+    let gain = 120;
     if (p.isAI) {
       const baseGain = {
-        easy: 35, normal: 55, hard: 100, hell: 160, ashen: 250,
-        nightmare: 400, inferno: 550, abyss: 750, chaos: 1000,
-        voidLv: 1500, godlike: 2500, transcend: 4000,
-        trisolaris: 7000, zeroHomer: 12000
+        easy: 120, normal: 200, hard: 350, hell: 550, ashen: 900,
+        nightmare: 1500, inferno: 2200, abyss: 3200, chaos: 4500,
+        voidLv: 6500, godlike: 10000, transcend: 16000,
+        trisolaris: 28000, zeroHomer: 50000
       };
-      gain = baseGain[p.aiLevel] || 55;
-      if (p.isZombie) gain = 45;
+      gain = baseGain[p.aiLevel] || 200;
+      if (p.isZombie) gain = 150;
       if (p.isElite) gain *= 2;
     } else {
-      gain = 700;
+      gain = 2000;
     }
-    gain = Math.round(gain * (1 + G.wave * 0.12) * G.rageMul * G.nightmareMul);
-    if (G.combo > 1) gain = Math.round(gain * (1 + Math.min(G.combo, 10) * 0.1));
+    // 波次 + 模式倍率 + 狂暴/噩梦倍率
+    gain = Math.round(
+      gain * (1 + G.wave * 0.15) *
+      G.modeScoreMul *
+      G.rageMul *
+      G.nightmareMul
+    );
+    if (G.combo > 1) gain = Math.round(gain * (1 + Math.min(G.combo, 10) * 0.12));
 
     if (p.team !== 0 || G.mode === 'deathmatch') {
       if (src.team === 0 || src === G.players[0]) {
@@ -2383,6 +2451,14 @@ function updateMode(dt) {
   if (G.darkForestT > 0) G.darkForestT -= dt;
   if (G.sophonJamT > 0) G.sophonJamT -= dt;
 
+  // ★ 修复：如果主玩家已阵亡（lives <= 0）且未重生中，立即结束游戏
+  const myP = G.players[0];
+  if (myP && !myP.alive && myP.lives <= 0 && G.running && !G.over && myP.respawn <= 0) {
+    endGame('lose');
+    return;
+  }
+
+  // ===== 基础模式 =====
   if (G.mode === 'time') {
     G.timeLeft -= dt;
     if (G.timeLeft <= 0) { endGame(); return; }
@@ -2392,38 +2468,52 @@ function updateMode(dt) {
       spawnEnemy(pickLevel(Math.floor(G.time / 14) + 1));
     }
   }
-  else if (G.mode === 'endless' || G.mode === 'campaign' || G.mode === 'superCampaign') {
+  else if (G.mode === 'endless' || G.mode === 'campaign' || G.mode === 'superCampaign' || G.mode === 'infinity' || G.mode === 'ascension') {
     if (aliveEnemies === 0 && G.spawnQueue <= 0) {
       G.waveTimer -= dt;
       if (G.waveTimer <= 0) {
         if (G.mode === 'campaign' && G.wave >= 10) {
-          G.score += 5000;
-          SAVE.points += 5000;
+          G.score += 5000 * G.modeScoreMul;
+          SAVE.points += 5000 * G.modeScoreMul;
           saveGame();
           endGame('win');
           return;
         }
         if (G.mode === 'superCampaign' && G.wave >= 20) {
-          G.score += 20000;
-          SAVE.points += 20000;
+          G.score += 20000 * G.modeScoreMul;
+          SAVE.points += 20000 * G.modeScoreMul;
+          saveGame();
+          endGame('win');
+          return;
+        }
+        if (G.mode === 'ascension' && G.wave >= 30) {
+          G.score += 100000 * G.modeScoreMul;
+          SAVE.points += 100000 * G.modeScoreMul;
           saveGame();
           endGame('win');
           return;
         }
         G.wave++;
-        const n = Math.min(10, 1 + Math.floor(G.wave * 0.8));
+        // 无限战争：增长更快
+        const n = G.mode === 'infinity'
+          ? Math.min(12, 2 + Math.floor(G.wave * 0.9))
+          : Math.min(10, 1 + Math.floor(G.wave * 0.8));
         G.spawnQueue = n;
+        // 无限战争用更高难度
+        const waveLevel = G.mode === 'infinity' ? G.wave + 2 :
+                          G.mode === 'ascension' ? G.wave + 3 :
+                          G.wave;
         for (let i = 0; i < n; i++) {
           setTimeout(() => {
             if (G.running) {
-              spawnEnemy(pickLevel(G.wave));
+              spawnEnemy(pickLevel(waveLevel));
               G.spawnQueue--;
             } else {
               G.spawnQueue = 0;
             }
-          }, i * 200);
+          }, i * 180);
         }
-        G.waveTimer = 3.0;
+        G.waveTimer = G.mode === 'infinity' ? 2.0 : 3.0;
         toast('第 ' + G.wave + ' 波');
       }
     } else {
@@ -2446,7 +2536,7 @@ function updateMode(dt) {
       }
     }
   }
-  else if (G.mode === 'boss' || G.mode === 'dualBoss') {
+  else if (G.mode === 'boss') {
     const anyBoss = G.players.some(q => q.isBoss && q.alive);
     if (!anyBoss) {
       if (G.over) return;
@@ -2455,6 +2545,77 @@ function updateMode(dt) {
         G.spawnTimer = 3.5;
         spawnEnemy('normal');
       }
+    }
+  }
+  else if (G.mode === 'dualBoss') {
+    const anyBoss = G.players.some(q => q.isBoss && q.alive);
+    if (!anyBoss) {
+      if (G.over) return;
+      G.spawnTimer -= dt;
+      if (G.spawnTimer <= 0 && aliveEnemies < 4) {
+        G.spawnTimer = 3.5;
+        spawnEnemy('normal');
+      }
+    }
+  }
+  else if (G.mode === 'apocalypse') {
+    // 末日审判：连续出现 BOSS
+    G.spawnTimer -= dt;
+    const bossCount = G.players.filter(q => q.isBoss && q.alive).length;
+    if (bossCount < 2 && G.spawnTimer <= 0) {
+      G.spawnTimer = Math.max(4, 10 - G.wave * 0.5);
+      spawnBoss(rand(200, W-200), rand(120, 300));
+      G.wave++;
+      toast('BOSS 来袭 · 第 ' + G.wave + ' 波');
+    }
+    // 小怪补充
+    if (aliveEnemies < 4 && Math.random() < 0.02) {
+      spawnEnemy(pickLevel(G.wave));
+    }
+  }
+  else if (G.mode === 'zenith') {
+    // 巅峰对决：精英 + 弹幕 + 双 BOSS
+    G.spawnTimer -= dt;
+    const bossCount = G.players.filter(q => q.isBoss && q.alive).length;
+    if (bossCount < 1 && G.spawnTimer <= 0 && G.wave >= 1) {
+      G.spawnTimer = 15;
+      spawnBoss(rand(200, W-200), rand(120, 280));
+    }
+    if (aliveEnemies < 8) {
+      if (G.spawnTimer <= 0) {
+        G.spawnTimer = 1.5;
+        // 一半精英，一半弹幕
+        if (Math.random() < 0.5) {
+          spawnEnemy(['hard','hell','ashen'][randInt(0,2)], true);
+        } else {
+          spawnEnemy('hard');
+        }
+      }
+    }
+  }
+  else if (G.mode === 'godslayer') {
+    // 屠神之路：所有敌人三体难度
+    G.spawnTimer -= dt;
+    if (G.spawnTimer <= 0 && aliveEnemies < 6) {
+      G.spawnTimer = Math.max(1.0, 2.5 - G.wave * 0.05);
+      spawnEnemy('trisolaris');
+    }
+    if (G.kills > 0 && G.kills % 8 === 0 && G.waveTimer <= 0) {
+      G.wave++;
+      G.waveTimer = 5;
+      toast('第 ' + G.wave + ' 波 · 三体强化');
+    }
+    G.waveTimer = Math.max(0, G.waveTimer - dt);
+  }
+  else if (G.mode === 'singularity') {
+    // 奇点：极限生存
+    G.spawnTimer -= dt;
+    const maxE = Math.min(15, 4 + Math.floor(G.survivalTime / 15));
+    if (G.spawnTimer <= 0 && aliveEnemies < maxE) {
+      G.spawnTimer = Math.max(0.4, 1.5 - G.survivalTime * 0.005);
+      const lvls = ['ashen','nightmare','inferno','abyss','chaos','voidLv','godlike','transcend','trisolaris','zeroHomer'];
+      const idx = Math.min(9, Math.floor(G.survivalTime / 12));
+      spawnEnemy(lvls[idx]);
     }
   }
   else if (G.mode === 'team') {
@@ -2971,7 +3132,6 @@ function drawTouchControls() {
   ctx.globalAlpha = 1;
 
   for (const b of TOUCH.uiBtns) {
-    // ★ 控制台禁用的按钮不绘制
     if (SAVE.skillButtons && SAVE.skillButtons[b.id] === false) continue;
 
     const pressed = TOUCH.btnPress[b.id] !== undefined;
@@ -3093,13 +3253,15 @@ function updateHUD() {
   document.getElementById('hKills').textContent = G.kills;
 
   let progressText = '--';
-  if (G.mode === 'time' || G.mode === 'rage' || G.mode === 'nightmare' || G.mode === 'darkOps' || G.mode === 'speedrun') {
+  if (G.mode === 'time' || G.mode === 'rage' || G.mode === 'nightmare' || G.mode === 'darkOps' || G.mode === 'speedrun' || G.mode === 'zenith' || G.mode === 'godslayer' || G.mode === 'apocalypse') {
     progressText = Math.max(0, G.timeLeft).toFixed(1) + 's';
   } else if (G.mode === 'campaign') {
     progressText = G.wave + '/10';
   } else if (G.mode === 'superCampaign') {
     progressText = G.wave + '/20';
-  } else if (G.mode === 'survival') {
+  } else if (G.mode === 'ascension') {
+    progressText = G.wave + '/30';
+  } else if (G.mode === 'survival' || G.mode === 'singularity') {
     progressText = G.survivalTime.toFixed(0) + 's';
   } else {
     progressText = 'W' + G.wave;
@@ -3194,6 +3356,11 @@ function refreshMenu() {
   for (const gName in groups) {
     const header = document.createElement('div');
     header.style.cssText = 'grid-column:1/-1;color:#7dd3fc;font-size:13px;font-weight:800;letter-spacing:3px;margin:8px 0 2px;padding-left:2px';
+    // 传说分组用特殊颜色
+    if (gName === '传说') {
+      header.style.color = '#fbbf24';
+      header.style.textShadow = '0 0 20px rgba(251,191,36,.5)';
+    }
     header.textContent = '— ' + gName + ' —';
     mg.appendChild(header);
 
@@ -3230,7 +3397,7 @@ function refreshMenu() {
 refreshMenu();
 
 /* =========================================================
-   ★ 新增：初始武器选择器
+   初始武器选择器
    ========================================================= */
 function refreshWeaponPicker() {
   const el = document.getElementById('weaponPicker');
@@ -3245,7 +3412,6 @@ function refreshWeaponPicker() {
     return;
   }
 
-  // 保证 startWeapon 有效
   if (!SAVE.weapons.includes(SAVE.startWeapon)) {
     SAVE.startWeapon = SAVE.weapons[0];
   }
@@ -3274,7 +3440,7 @@ function setStartWeapon(id) {
 }
 
 /* =========================================================
-   ★ 新增：控制台（启用/禁用技能按钮）
+   控制台
    ========================================================= */
 const CONSOLE_ITEMS = [
   { id: 'q', name: '力场护盾', icon: 'Q' },
@@ -3326,17 +3492,14 @@ function consoleAll(state) {
 }
 function consolePreset(name) {
   if (name === 'basic') {
-    // 基础：只保留 Q/E/R/F
     for (const item of CONSOLE_ITEMS) {
       SAVE.skillButtons[item.id] = ['q','e','r','f'].includes(item.id);
     }
   } else if (name === 'santi') {
-    // 三体：保留全部三体技能
     for (const item of CONSOLE_ITEMS) {
       SAVE.skillButtons[item.id] = true;
     }
   } else if (name === 'minimal') {
-    // 极简：只保留 Q
     for (const item of CONSOLE_ITEMS) {
       SAVE.skillButtons[item.id] = (item.id === 'q');
     }
@@ -3540,10 +3703,11 @@ function closeCodes() {
   refreshMenu();
 }
 const CODES = {
-  '100623': { points: 50000, msg: '兑换成功！+50,000 积分' },
+  '100623': { points: 500000, msg: '兑换成功！+50 万积分' },
   '798210': { points: 100000000000, msg: '兑换成功！+1,000 亿积分 👑' },
   '3BODY':  { points: 500000000000, msg: '三体文明认证：+5,000 亿积分 ☄' },
-  'ZERO':   { points: 5000000000000, msg: '归零者重启宇宙：+5 万亿积分 ∅' }
+  'ZERO':   { points: 5000000000000, msg: '归零者重启宇宙：+5 万亿积分 ∅' },
+  'FINAL':  { points: 50000000000000, msg: '最终版礼包：+50 万亿积分 ✦' }
 };
 function doRedeem() {
   const inp = document.getElementById('codeInput');
@@ -3582,20 +3746,19 @@ let helpTab = 'intro';
 const HELP_HTML = {
   intro: `
     <h3>星际射手 · Astro Shooter 最终版</h3>
-    <p><b>星际射手</b>是一款快节奏的俯视角太空竞技射击游戏。你驾驶一艘轻型战机，
-    在封闭的能量竞技场中与敌人、AI 或另一名玩家实时对射。</p>
-    <h3>本次最终版更新</h3>
+    <p><b>星际射手</b>是一款快节奏的俯视角太空竞技射击游戏。</p>
+    <h3>本版本更新</h3>
     <ul>
       <li><b>🎯 初始武器选择器</b>：菜单内可指定每局开局的第一把枪</li>
-      <li><b>⚙ 控制台</b>：菜单内可自由启用/禁用技能按钮，让画面更简洁</li>
-      <li><b>14 档 AI 难度</b>：简单 → 归零</li>
-      <li><b>18 种游戏模式</b>：基础 8 + 进阶 10</li>
-      <li><b>57 把武器</b>：常规 47 + 三体 10</li>
-      <li><b>15 类弹药</b>：常规 10 + 三体 5</li>
-      <li><b>24 个可升级技能</b>：常规 18 + 三体 6</li>
+      <li><b>⚙ 控制台</b>：菜单内可自由启用/禁用技能按钮</li>
+      <li><b>传说级模式</b>：新增 6 种超难模式（巅峰/屠神/无限/末日/奇点/飞升），积分倍率最高 ×15</li>
+      <li><b>积分全面提升</b>：基础击杀积分约 ×3，叠加模式倍率，收益大幅提升</li>
+      <li><b>修复</b>：黑暗行动 / 狂怒 / 噩梦模式立即结束 bug</li>
+      <li><b>修复</b>：玩家阵亡后无法退出游戏 bug</li>
+      <li><b>新增</b>：返回主菜单时自动保存记录</li>
     </ul>
     <h3>目标</h3>
-    <p>用最少的命，换最多的击杀与积分。<span class="hl">挑战三体级难度，解锁终极武器。</span></p>
+    <p>用最少的命，换最多的击杀与积分。<span class="hl">挑战传说级难度，快速解锁终极武器。</span></p>
   `,
   santi: `
     <h3>☄ 三体扩展 · 世界观</h3>
@@ -3634,6 +3797,7 @@ const HELP_HTML = {
     <ul>
       <li><code>3BODY</code> — +5,000 亿积分 ☄</li>
       <li><code>ZERO</code> — +5 万亿积分 ∅</li>
+      <li><code>FINAL</code> — +50 万亿积分 ✦</li>
     </ul>
   `,
   console: `
@@ -3659,7 +3823,7 @@ const HELP_HTML = {
 
     <h3>🎯 初始武器</h3>
     <p>菜单内「初始武器」区域可从已拥有的武器中选一把，作为每局开局的第一把枪。
-    它不会改变你的武器库，只影响开局默认武器。游戏中仍可用 <kbd>1</kbd>-<kbd>9</kbd> 或滚轮切换。</p>
+    它不会改变你的武器库，只影响开局默认武器。</p>
   `,
   play: `
     <h3>🖥 电脑端</h3>
@@ -3689,27 +3853,30 @@ const HELP_HTML = {
       <li><b>👥 双人对战</b>：同屏对战，每人 5 条命</li>
       <li><b>♾ 无尽模式</b>：无限波次</li>
       <li><b>🧟 尸潮模式</b>：海量感染者</li>
-      <li><b>👹 首领战</b>：单一 BOSS，奖励 5,000 积分</li>
+      <li><b>👹 首领战</b>：单一 BOSS</li>
       <li><b>🛡 团队战</b>：AI 队友协同</li>
     </ul>
     <h3>进阶模式（高难度 · 高奖励）</h3>
     <ul>
-      <li><b>💀 精英猎杀</b>：只刷精英敌人 · 击杀得分 ×2</li>
-      <li><b>💥 弹幕地狱</b>：敌人射速 ×2.5 · 单发伤害降低</li>
+      <li><b>💀 精英猎杀</b>：只刷精英敌人 · 击杀得分 ×2 · 积分倍率 ×3</li>
+      <li><b>💥 弹幕地狱</b>：敌人射速 ×2.5 · 积分倍率 ×2</li>
       <li><b>⚔ 死亡竞赛</b>：4 人自由混战</li>
-      <li><b>👹 双首领</b>：同时面对 2 个 BOSS</li>
-      <li><b>🌑 黑暗行动</b>：视野受限，只能看到周围</li>
-      <li><b>😡 狂怒</b>：敌人速度 +40% · 积分 ×2</li>
+      <li><b>👹 双首领</b>：同时面对 2 个 BOSS · 积分倍率 ×3</li>
+      <li><b>🌑 黑暗行动</b>：视野受限 · 积分倍率 ×2.5</li>
+      <li><b>😡 狂怒</b>：敌人速度 +40% · 积分倍率 ×3</li>
       <li><b>🏆 超级闯关</b>：20 关 · 通关奖励 20,000 积分</li>
-      <li><b>☠ 噩梦</b>：所有敌人骨灰难度 · 积分 ×3</li>
-      <li><b>🏃 速通</b>：45 秒内清尽可能多的波次</li>
-      <li><b>⏳ 生存</b>：敌人无尽 · 难度随时间提升</li>
+      <li><b>☠ 噩梦</b>：所有敌人骨灰难度 · 积分倍率 ×4</li>
+      <li><b>🏃 速通</b>：45 秒内清波</li>
+      <li><b>⏳ 生存</b>：敌人无尽 · 难度递增</li>
     </ul>
-    <h3>AI 难度（14 档）</h3>
+    <h3>传说模式（新增 · 超高奖励）</h3>
     <ul>
-      <li><b>基础</b>：简单 · 普通 · 困难 · 地狱 · 骨灰</li>
-      <li><b>三体扩展</b>：噩梦 · 炼狱 · 深渊 · 混沌 · 虚空 · 神级 · 超神 · 三体 · 归零</li>
-      <li>越难的模式和难度，击杀奖励越高（骨灰 250 → 归零 12000）</li>
+      <li><b>⛰ 巅峰对决</b>：精英 + 弹幕 + BOSS 混合 · 积分倍率 ×5</li>
+      <li><b>⚡ 屠神之路</b>：所有敌人三体难度 · 积分倍率 ×6</li>
+      <li><b>∞ 无限战争</b>：波次无限 · 敌人快速增强 · 积分倍率 ×4</li>
+      <li><b>☄ 末日审判</b>：BOSS 潮连续出现 · 积分倍率 ×5</li>
+      <li><b>◎ 奇点</b>：极限生存 · 积分倍率 ×10</li>
+      <li><b>☯ 飞升</b>：终极混合挑战 · 积分倍率 ×15</li>
     </ul>
   `,
   perk: `
@@ -3737,16 +3904,17 @@ const HELP_HTML = {
     </ul>
   `,
   shop: `
-    <h3>积分怎么来</h3>
+    <h3>积分怎么来（已全面提升）</h3>
     <ul>
-      <li>击杀敌人获得积分（简单 35 → 归零 12000）</li>
+      <li>击杀敌人获得积分（简单 120 → 归零 50,000，<b class="hl">基础值提升约 3 倍</b>）</li>
       <li>精英敌人击杀得分 ×2</li>
-      <li>击杀玩家（双人 / AI 对战）700 分</li>
-      <li>波次越高，分数加成越高（每波 +12%）</li>
-      <li>连杀奖励（3 秒内连续击杀额外 +10%）</li>
+      <li>击杀玩家（双人 / AI 对战）2,000 分</li>
+      <li>波次越高，分数加成越高（每波 +15%）</li>
+      <li>连杀奖励（3 秒内连续击杀额外 +12%）</li>
       <li>狂怒 ×2 · 噩梦 ×3</li>
-      <li>闯关赛通关 5,000 · 超级闯关 20,000 · 击败 BOSS 5,000</li>
-      <li>兑换码：<code>100623</code> 50,000 · <code>798210</code> 1,000 亿 · <code>3BODY</code> 5,000 亿 · <code>ZERO</code> 5 万亿</li>
+      <li><b class="hl">模式倍率</b>：传说模式最高 ×15</li>
+      <li>闯关赛通关 5,000 积分 × 模式倍率 · 超级闯关 20,000 积分 × 模式倍率</li>
+      <li>兑换码：<code>100623</code> 50 万 · <code>798210</code> 1,000 亿 · <code>3BODY</code> 5,000 亿 · <code>ZERO</code> 5 万亿 · <code>FINAL</code> 50 万亿</li>
     </ul>
 
     <h3>武器价格梯队</h3>
@@ -3762,24 +3930,30 @@ const HELP_HTML = {
   `,
   faq: `
     <h3>Q：怎么设置开局第一把武器？</h3>
-    <p>A：在主菜单的「🎯 初始武器」区域，点击任意已拥有的武器即可。
-    选择后每局都会以该武器开始，游戏中仍可切换。</p>
+    <p>A：在主菜单的「🎯 初始武器」区域，点击任意已拥有的武器即可。</p>
 
     <h3>Q：控制台是做什么的？</h3>
-    <p>A：在菜单点击「⚙ 控制台」，可启用/禁用触摸技能按钮。
-    禁用后触摸界面更简洁，但电脑端键盘快捷键不受影响。</p>
+    <p>A：在菜单点击「⚙ 控制台」，可启用/禁用触摸技能按钮。</p>
+
+    <h3>Q：黑暗行动 / 狂怒 / 噩梦为什么之前会立即结束？</h3>
+    <p>A：<b>已修复</b>。之前这些模式的 timeLeft 未初始化，导致第一帧就触发了时间耗尽。
+    现在它们的限时分别设为 60 秒。</p>
+
+    <h3>Q：玩家阵亡后为什么无法退出？</h3>
+    <p>A：<b>已修复</b>。现在玩家 lives 耗尽时，游戏会自动触发结束结算。
+    屏幕中央会显示复活倒计时，如果已无命则弹出结算面板。</p>
+
+    <h3>Q：返回主菜单时会保存吗？</h3>
+    <p>A：<b>会</b>。无论从暂停界面退出、点击右上角 ✕ 还是从结算面板返回，
+    都会自动保存当前积分、击杀记录和各模式最高分。</p>
+
+    <h3>Q：怎么快速赚积分？</h3>
+    <p>A：推荐挑战<b class="hl">传说级模式</b>：奇点（×10）、飞升（×15）。
+    搭配高难度 AI（归零每只 50,000 基础分），再叠加狂暴/噩梦倍率，
+    单局收益可达百万级。</p>
 
     <h3>Q：三体武器怎么获得？</h3>
-    <p>A：在军火商店的「☄ 三体军火库」标签页中购买。
-    最低价的水滴需要 8,000 万积分，建议先通过噩梦 / 狂怒 / 超级闯关等高难度模式积累积分。</p>
-
-    <h3>Q：AI 难度最高是？</h3>
-    <p>A：最高「归零」，它的瞄准误差为 0，射速极快，血量 650，伤害倍率 4.5 倍。
-    击杀一只归零级敌人可获得 12,000 基础积分（还要乘以波次和模式倍率）。</p>
-
-    <h3>Q：思想钢印怎么用？</h3>
-    <p>A：先解锁技能「思想钢印」，游戏中按 <kbd>X</kbd>，会将最近的敌人转化为友军，
-    持续 Lv.+2 秒。转化期间它会攻击其他敌人，但时间到了会恢复。</p>
+    <p>A：在军火商店的「☄ 三体军火库」标签页中购买。</p>
 
     <h3>Q：怎么分辨自己的角色？</h3>
     <p>A：你的角色有 <b style="color:#38bdf8">白色虚线旋转光环</b>、<b style="color:#38bdf8">内部青色实心环</b>，
@@ -3856,10 +4030,12 @@ window.addEventListener('error', e => {
   console.error('Game error:', e.message);
 });
 
-console.log('%c星际射手 · Astro Shooter 最终版', 'color:#22d3ee;font-size:18px;font-weight:bold');
-console.log('%c✦ 新增：菜单内「初始武器选择器」和「控制台」', 'color:#4ade80;font-size:13px');
-console.log('%c✦ 14 档 AI 难度 · 18 种模式 · 57 把武器 · 15 类弹药 · 24 个技能', 'color:#38bdf8;font-size:13px');
-console.log('%c✦ 所有原有代码完整保留', 'color:#a78bfa;font-size:13px');
+console.log('%c星际射手 · Astro Shooter 最终版 v7.1', 'color:#22d3ee;font-size:18px;font-weight:bold');
+console.log('%c✦ 修复：黑暗/狂怒/噩梦模式立即结束 bug', 'color:#4ade80;font-size:13px');
+console.log('%c✦ 修复：玩家阵亡后无法退出游戏 bug', 'color:#4ade80;font-size:13px');
+console.log('%c✦ 新增：返回主菜单自动保存', 'color:#4ade80;font-size:13px');
+console.log('%c✦ 新增：6 种传说模式（积分倍率最高 ×15）', 'color:#fbbf24;font-size:13px');
+console.log('%c✦ 积分基础值提升约 3 倍', 'color:#fbbf24;font-size:13px');
 </script>
 </body>
 </html>
