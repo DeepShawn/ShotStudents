@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#05070f">
-<title>星际射手 · Astro Shooter 最终版 v8</title>
+<title>星际射手 · Astro Shooter v9.2 · 神话</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#05070f;
@@ -23,11 +23,11 @@ canvas{display:block;background:#03050c;touch-action:none;
 
 .panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(4,7,15,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  z-index:30;padding:16px;animation:fadeIn .18s ease}
+  z-index:30;padding:14px;animation:fadeIn .18s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .panel.hidden{display:none}
 
-.box{width:min(1200px,96vw);max-height:92vh;overflow-y:auto;padding:26px 30px;
+.box{width:min(1200px,96vw);max-height:92vh;overflow-y:auto;padding:22px 26px;
   background:linear-gradient(150deg,rgba(15,24,45,.97),rgba(7,11,22,.99));
   border:1px solid rgba(56,189,248,.28);border-radius:18px;
   box-shadow:0 0 80px rgba(56,189,248,.10),0 24px 60px rgba(0,0,0,.6),
@@ -36,49 +36,54 @@ canvas{display:block;background:#03050c;touch-action:none;
 .box::-webkit-scrollbar{width:8px}
 .box::-webkit-scrollbar-thumb{background:rgba(56,189,248,.3);border-radius:4px}
 
-h1{font-size:clamp(28px,5vw,50px);letter-spacing:8px;text-align:center;font-weight:900;
+h1{font-size:clamp(26px,4.6vw,46px);letter-spacing:8px;text-align:center;font-weight:900;
   background:linear-gradient(100deg,#38bdf8 0%,#a78bfa 45%,#f472b6 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 0 26px rgba(56,189,248,.35));margin-bottom:2px}
-.sub{text-align:center;color:#4a6a94;letter-spacing:6px;font-size:11px;margin-bottom:18px;font-weight:600}
-h2{font-size:17px;color:#7dd3fc;letter-spacing:3px;margin-bottom:12px;font-weight:700;
+.sub{text-align:center;color:#4a6a94;letter-spacing:6px;font-size:11px;margin-bottom:14px;font-weight:600}
+h2{font-size:16px;color:#7dd3fc;letter-spacing:3px;margin-bottom:10px;font-weight:700;
   display:flex;align-items:center;gap:8px}
-h2::before{content:'';width:3px;height:16px;border-radius:2px;
+h2::before{content:'';width:3px;height:14px;border-radius:2px;
   background:linear-gradient(180deg,#38bdf8,#a78bfa)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:11px}
-.card{position:relative;padding:14px 16px;border-radius:12px;cursor:pointer;
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:9px}
+.card{position:relative;padding:12px 14px;border-radius:11px;cursor:pointer;
   background:linear-gradient(150deg,rgba(20,32,58,.75),rgba(10,17,32,.85));
   border:1px solid rgba(56,189,248,.16);transition:all .16s cubic-bezier(.4,0,.2,1);
   overflow:hidden}
 .card:hover{transform:translateY(-3px);border-color:rgba(56,189,248,.6);
   box-shadow:0 10px 32px rgba(56,189,248,.16)}
 .card:active{transform:translateY(-1px) scale(.99)}
-.card .t{font-size:15px;font-weight:800;margin-bottom:5px;letter-spacing:.5px}
-.card .d{font-size:11.5px;color:#6b87ab;line-height:1.55}
-.card .p{position:absolute;top:11px;right:13px;font-size:12px;color:#fbbf24;font-weight:800}
+.card .t{font-size:14px;font-weight:800;margin-bottom:4px;letter-spacing:.5px}
+.card .d{font-size:11px;color:#6b87ab;line-height:1.5}
+.card .p{position:absolute;top:10px;right:12px;font-size:11.5px;color:#fbbf24;font-weight:800}
 .card.owned{border-color:rgba(34,197,94,.4);background:linear-gradient(150deg,rgba(16,42,30,.7),rgba(8,20,14,.85))}
-.card.owned::after{content:'✓ 已拥有';position:absolute;right:11px;bottom:9px;
-  font-size:10px;color:#4ade80;letter-spacing:1px;font-weight:700}
+.card.owned::after{content:'✓ 已拥有';position:absolute;right:10px;bottom:8px;
+  font-size:9.5px;color:#4ade80;letter-spacing:1px;font-weight:700}
 .card.maxed{border-color:rgba(251,191,36,.55);background:linear-gradient(150deg,rgba(48,34,10,.75),rgba(24,17,5,.85))}
-.card.maxed::after{content:'★ 满级';position:absolute;right:11px;bottom:9px;
-  font-size:10px;color:#fbbf24;letter-spacing:1px;font-weight:900}
+.card.maxed::after{content:'★ 满级';position:absolute;right:10px;bottom:8px;
+  font-size:9.5px;color:#fbbf24;letter-spacing:1px;font-weight:900}
 .card.locked{opacity:.42;cursor:not-allowed}
 .card.locked:hover{transform:none;border-color:rgba(56,189,248,.16);box-shadow:none}
 .card.santi{border:1px solid rgba(34,211,238,.35);
   background:linear-gradient(150deg,rgba(15,40,55,.85),rgba(8,22,32,.92))}
-.card.santi::before{content:'☄ 三体';position:absolute;top:11px;left:13px;font-size:9px;
+.card.santi::before{content:'☄ 三体';position:absolute;top:10px;left:12px;font-size:9px;
   color:#22d3ee;font-weight:900;letter-spacing:1px;
   padding:1px 5px;border:1px solid rgba(34,211,238,.4);border-radius:8px}
+.card.myth{border:1px solid rgba(251,191,36,.5);
+  background:linear-gradient(150deg,rgba(50,32,12,.88),rgba(24,14,4,.95));
+  box-shadow:inset 0 0 26px rgba(251,191,36,.08)}
+/* ★ 修复：移除与卡片内容重叠的“✦ 神话”黄色徽章 */
+.card.myth::before{display:none}
 
 .lvBadge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:10px;
   background:linear-gradient(90deg,#fbbf24,#f97316);color:#1a0e00;font-weight:900;
   margin-left:6px;letter-spacing:.5px;vertical-align:middle}
-.lvBar{display:flex;gap:2px;margin-top:5px}
+.lvBar{display:flex;gap:2px;margin-top:4px}
 .lvBar i{display:block;flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.1)}
 .lvBar i.on{background:linear-gradient(90deg,#fbbf24,#f97316)}
 
-.btn{padding:10px 22px;border-radius:10px;font-size:13.5px;letter-spacing:1.5px;
+.btn{padding:9px 20px;border-radius:10px;font-size:13px;letter-spacing:1.5px;
   cursor:pointer;font-family:inherit;font-weight:700;white-space:nowrap;
   background:linear-gradient(150deg,rgba(26,48,82,.9),rgba(14,26,48,.95));
   border:1px solid rgba(56,189,248,.28);color:#9fd8f8;
@@ -93,10 +98,15 @@ h2::before{content:'';width:3px;height:16px;border-radius:2px;
 .btn.gold{background:linear-gradient(150deg,rgba(120,86,12,.85),rgba(70,48,6,.95));
   border-color:rgba(251,191,36,.5);color:#fde68a}
 .btn.gold:hover{background:linear-gradient(150deg,rgba(180,128,20,.95),rgba(110,76,10,.98))}
+.btn.myth{background:linear-gradient(150deg,rgba(160,60,10,.85),rgba(100,30,4,.95));
+  border-color:rgba(251,191,36,.7);color:#fde68a;
+  box-shadow:0 4px 20px rgba(251,191,36,.25)}
+.btn.myth:hover{background:linear-gradient(150deg,rgba(200,90,20,.95),rgba(140,50,10,.98));
+  border-color:#fbbf24;box-shadow:0 8px 30px rgba(251,191,36,.45)}
 .btn.danger{background:linear-gradient(150deg,rgba(110,25,48,.85),rgba(60,12,26,.95));
   border-color:rgba(244,63,94,.4);color:#fda4af}
 .btn.danger:hover{background:linear-gradient(150deg,rgba(160,35,68,.95),rgba(90,18,38,.98))}
-.btn.sm{padding:7px 14px;font-size:12px;letter-spacing:1px;border-radius:8px}
+.btn.sm{padding:6px 12px;font-size:11.5px;letter-spacing:1px;border-radius:7px}
 .btn.santi{background:linear-gradient(150deg,rgba(14,116,144,.85),rgba(8,51,68,.95));
   border-color:rgba(34,211,238,.45);color:#67e8f9}
 .btn.santi:hover{background:linear-gradient(150deg,rgba(21,94,117,.95),rgba(12,74,110,.98));
@@ -106,85 +116,87 @@ h2::before{content:'';width:3px;height:16px;border-radius:2px;
 .btn.console:hover{background:linear-gradient(150deg,rgba(110,60,160,.95),rgba(60,30,90,.98));
   border-color:#a855f7;box-shadow:0 6px 22px rgba(168,85,247,.25)}
 
-.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .spacer{flex:1}
 
-.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;
+.tabs{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap;
   border-bottom:1px solid rgba(56,189,248,.14)}
-.tab{padding:8px 18px;font-size:13px;cursor:pointer;font-weight:700;letter-spacing:1px;
-  border-radius:9px 9px 0 0;color:#5a7ba3;background:transparent;
+.tab{padding:7px 16px;font-size:12.5px;cursor:pointer;font-weight:700;letter-spacing:1px;
+  border-radius:8px 8px 0 0;color:#5a7ba3;background:transparent;
   border:1px solid transparent;border-bottom:none;transition:all .14s;
   position:relative;top:1px}
 .tab:hover{color:#8ec6ef;background:rgba(56,189,248,.06)}
 .tab.on{color:#7dd3fc;background:linear-gradient(180deg,rgba(28,52,88,.9),rgba(16,30,54,.95));
   border-color:rgba(56,189,248,.35);border-bottom:1px solid transparent}
 
-/* ============ HUD（减少遮挡） ============ */
+/* ============ HUD（布局重排，避免重叠） ============ */
 #hud{position:absolute;inset:0;pointer-events:none;z-index:10;font-size:13px;
   display:none;flex-direction:column}
 #hud.on{display:flex}
 
-.hudTop{display:flex;justify-content:center;gap:6px;padding-top:6px;flex-wrap:wrap;
-  opacity:.82}
+/* 顶部 HUD：居中显示，向上留边距 */
+.hudTop{position:absolute;top:6px;left:50%;transform:translateX(-50%);
+  display:flex;gap:5px;flex-wrap:wrap;justify-content:center;
+  opacity:.82;max-width:60vw;pointer-events:none}
 .hudBox{background:linear-gradient(160deg,rgba(10,20,38,.5),rgba(5,10,20,.6));
   border:1px solid rgba(56,189,248,.14);border-radius:8px;padding:2px 9px;
-  min-width:62px;text-align:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  min-width:60px;text-align:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
   box-shadow:0 2px 8px rgba(0,0,0,.25)}
 .hudBox .lb{font-size:8px;color:#4e6d94;letter-spacing:1.5px;font-weight:700;margin-bottom:0}
-.hudBox .vl{font-size:12.5px;color:#7dd3fc;font-weight:800;letter-spacing:.5px;font-variant-numeric:tabular-nums}
+.hudBox .vl{font-size:12px;color:#7dd3fc;font-weight:800;letter-spacing:.5px;font-variant-numeric:tabular-nums}
 .hudBox.gold .vl{color:#fbbf24}
 .hudBox.red .vl{color:#f43f5e}
 .hudBox.green .vl{color:#4ade80}
+.hudBox.myth .vl{color:#fde68a;text-shadow:0 0 12px rgba(251,191,36,.5)}
 
-/* 玩家状态面板（更小 · 更透明 · 自动淡化） */
-.pstat{position:absolute;padding:5px 9px;min-width:172px;
+/* 玩家面板：P1 左上、P2 右上（游戏控制按钮下方） */
+.pstat{position:absolute;padding:5px 9px;min-width:166px;
   background:linear-gradient(160deg,rgba(10,20,38,.45),rgba(5,10,20,.55));
   border:1px solid rgba(56,189,248,.12);border-radius:9px;
   backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
   box-shadow:0 3px 12px rgba(0,0,0,.28);pointer-events:none;
   transition:opacity .35s;opacity:.62}
-#p1stat{left:8px;top:8px;border-left:2px solid #38bdf8}
-#p2stat{right:8px;top:52px;text-align:right;border-right:2px solid #f43f5e;display:none}
-.pstat.faded{opacity:.28}
-.pstat .pname{font-size:9.5px;letter-spacing:1.5px;font-weight:800;color:#7dd3fc;margin-bottom:2px}
+#p1stat{left:8px;top:56px;border-left:2px solid #38bdf8}
+#p2stat{right:8px;top:56px;text-align:right;border-right:2px solid #f43f5e;display:none}
+.pstat .pname{font-size:9px;letter-spacing:1.5px;font-weight:800;color:#7dd3fc;margin-bottom:2px}
 #p2stat .pname{color:#fda4af}
 .pstat .wpRow{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:2px}
-.pstat .wname{font-size:10.5px;color:#fbbf24;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100px}
-.pstat .ammoBig{font-size:13.5px;font-weight:900;font-variant-numeric:tabular-nums;
+.pstat .wname{font-size:10.5px;color:#fbbf24;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:96px}
+.pstat .ammoBig{font-size:13px;font-weight:900;font-variant-numeric:tabular-nums;
   letter-spacing:.5px;color:#7dd3fc}
 #p2stat .ammoBig{color:#fda4af}
 .hpbar{height:4.5px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;margin-top:2px}
 .hpbar i{display:block;height:100%;border-radius:2px;transition:width .1s linear}
 .lives{letter-spacing:1.5px;font-size:11.5px;margin-top:2px;line-height:1.2}
 
-/* 击杀流（改到底部，不再遮挡视野） */
-#killfeed{position:absolute;bottom:104px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column-reverse;gap:2px;align-items:center;pointer-events:none;
-  opacity:.82}
+/* 击杀流：右上区域（在玩家面板下方） */
+#killfeed{position:absolute;right:8px;top:160px;
+  display:flex;flex-direction:column;gap:2px;align-items:flex-end;pointer-events:none;
+  opacity:.82;max-width:180px}
 .kfItem{background:rgba(6,14,28,.6);border:1px solid rgba(56,189,248,.15);
   border-radius:5px;padding:1.5px 8px;font-size:10.5px;color:#9bb4d0;
-  animation:kfIn .3s ease}
-@keyframes kfIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+  animation:kfIn .3s ease;white-space:nowrap}
+@keyframes kfIn{from{opacity:0;transform:translateX(6px)}to{opacity:1;transform:translateX(0)}}
 
-/* ============ 技能状态显示条（新增） ============ */
+/* 技能条：位于左下角（摇杆之上），避免与摇杆重叠 */
 #skillBar{
-  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-  display:flex;gap:5px;pointer-events:none;flex-wrap:wrap;justify-content:center;
-  max-width:72vw;padding:0 6px}
+  position:absolute;left:8px;bottom:8px;
+  display:flex;gap:4px;pointer-events:none;flex-wrap:wrap;
+  max-width:60vw;max-height:120px;overflow:hidden}
 .skChip{
-  display:flex;align-items:center;gap:5px;
-  padding:3px 9px;border-radius:9px;
+  display:flex;align-items:center;gap:4px;
+  padding:2.5px 8px;border-radius:9px;
   background:linear-gradient(150deg,rgba(10,20,38,.78),rgba(5,10,20,.86));
   border:1px solid rgba(56,189,248,.2);
-  font-size:10.5px;font-weight:800;letter-spacing:.5px;
+  font-size:10px;font-weight:800;letter-spacing:.5px;
   box-shadow:0 3px 12px rgba(0,0,0,.4);
   transition:all .15s;white-space:nowrap}
 .skChip .skKey{display:inline-flex;align-items:center;justify-content:center;
-  min-width:16px;height:16px;border-radius:5px;
-  background:rgba(56,189,248,.22);color:#7dd3fc;font-size:9.5px;font-weight:900;
+  min-width:15px;height:15px;border-radius:5px;
+  background:rgba(56,189,248,.22);color:#7dd3fc;font-size:9px;font-weight:900;
   padding:0 3px}
-.skChip .skIcon{font-size:11px}
-.skChip .skVal{font-variant-numeric:tabular-nums;font-size:10.5px}
+.skChip .skIcon{font-size:10.5px}
+.skChip .skVal{font-variant-numeric:tabular-nums;font-size:10px}
 .skChip.ready{border-color:rgba(74,222,128,.5);color:#bbf7d0}
 .skChip.ready .skKey{background:rgba(74,222,128,.25);color:#4ade80}
 .skChip.ready .skVal{color:#4ade80}
@@ -199,18 +211,19 @@ h2::before{content:'';width:3px;height:16px;border-radius:2px;
 @keyframes skPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 .skChip.santi .skKey{background:rgba(34,211,238,.22);color:#22d3ee}
 .skChip.santi.ready .skKey{background:rgba(74,222,128,.25);color:#4ade80}
-.skChip.santi.cool .skKey{background:rgba(34,211,238,.15);color:#0e7490}
+.skChip.myth .skKey{background:rgba(251,191,36,.28);color:#fbbf24}
+.skChip.myth{border-color:rgba(251,191,36,.4)}
 
 #gameCtrls{
-  position:absolute;top:8px;right:8px;display:none;gap:5px;
+  position:absolute;top:6px;right:8px;display:none;gap:5px;
   pointer-events:auto;z-index:25;flex-direction:row;
 }
 #gameCtrls.on{display:flex}
 .gcBtn{
-  width:38px;height:38px;border-radius:10px;
+  width:34px;height:34px;border-radius:9px;
   background:linear-gradient(160deg,rgba(12,22,42,.72),rgba(6,12,22,.82));
   border:1px solid rgba(56,189,248,.25);color:#7dd3fc;
-  font-size:15px;cursor:pointer;font-family:inherit;
+  font-size:14px;cursor:pointer;font-family:inherit;
   display:flex;align-items:center;justify-content:center;
   transition:all .14s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   box-shadow:0 3px 12px rgba(0,0,0,.4);opacity:.78}
@@ -226,9 +239,9 @@ h2::before{content:'';width:3px;height:16px;border-radius:2px;
   text-align:center;white-space:nowrap}
 #toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
-#fps{position:absolute;top:6px;left:8px;
+#fps{position:absolute;bottom:6px;right:8px;
   font-size:9.5px;color:#2e4a6b;font-family:Consolas,monospace;
-  letter-spacing:1px;font-weight:700;pointer-events:none;opacity:.5}
+  letter-spacing:1px;font-weight:700;pointer-events:none;opacity:.55}
 
 #respawnOverlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
   flex-direction:column;gap:12px;pointer-events:none;z-index:15}
@@ -239,9 +252,9 @@ h2::before{content:'';width:3px;height:16px;border-radius:2px;
   text-shadow:0 0 40px rgba(56,189,248,.7);font-variant-numeric:tabular-nums}
 #respawnOverlay .rsLives{font-size:16px;letter-spacing:3px;color:#9bb4d0}
 
-input[type=text]{padding:11px 16px;border-radius:10px;font-size:15px;letter-spacing:3px;
+input[type=text]{padding:10px 15px;border-radius:10px;font-size:14px;letter-spacing:3px;
   background:rgba(6,12,24,.9);border:1px solid rgba(56,189,248,.3);color:#9fe0ff;
-  outline:none;font-family:inherit;width:230px;font-weight:700;text-align:center;
+  outline:none;font-family:inherit;width:220px;font-weight:700;text-align:center;
   transition:all .15s}
 input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,.3)}
 
@@ -253,7 +266,7 @@ input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,
 .weaponPicker::-webkit-scrollbar{width:6px}
 .weaponPicker::-webkit-scrollbar-thumb{background:rgba(56,189,248,.3);border-radius:3px}
 .wpItem{
-  padding:5px 12px;border-radius:8px;font-size:11.5px;font-weight:700;
+  padding:4px 11px;border-radius:8px;font-size:11px;font-weight:700;
   cursor:pointer;letter-spacing:.5px;color:#8ec6ef;white-space:nowrap;
   background:rgba(20,40,70,.5);border:1px solid rgba(56,189,248,.18);
   transition:all .14s}
@@ -261,9 +274,10 @@ input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,
 .wpItem.sel{background:linear-gradient(90deg,#0ea5e9,#0369a1);color:#fff;
   border-color:#38bdf8;box-shadow:0 3px 14px rgba(56,189,248,.3)}
 .wpItem.santi{color:#67e8f9;border-color:rgba(34,211,238,.3)}
+.wpItem.myth{color:#fde68a;border-color:rgba(251,191,36,.5)}
 
 .consoleItem{
-  padding:12px 16px;border-radius:10px;cursor:pointer;
+  padding:11px 15px;border-radius:10px;cursor:pointer;
   background:linear-gradient(150deg,rgba(20,32,58,.75),rgba(10,17,32,.85));
   border:1px solid rgba(56,189,248,.16);transition:all .16s;
   display:flex;justify-content:space-between;align-items:center;
@@ -273,30 +287,33 @@ input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,
 .consoleItem.on{border-color:rgba(74,222,128,.5);
   background:linear-gradient(150deg,rgba(16,42,30,.7),rgba(8,20,14,.85))}
 .consoleItem.off{border-color:rgba(244,63,94,.3);opacity:.7}
-.consoleItem .ci-name{font-size:13.5px;color:#dbeafe}
-.consoleItem .ci-state{font-size:11px;font-weight:900;letter-spacing:1px}
+.consoleItem .ci-name{font-size:13px;color:#dbeafe}
+.consoleItem .ci-state{font-size:10.5px;font-weight:900;letter-spacing:1px}
 .consoleItem.on .ci-state{color:#4ade80}
 .consoleItem.off .ci-state{color:#f43f5e}
 
-/* 菜单已有技能清单 */
-#mySkillsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
-.skillCard{position:relative;padding:10px 12px;border-radius:10px;
+#mySkillsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:7px}
+.skillCard{position:relative;padding:9px 11px;border-radius:10px;
   background:linear-gradient(150deg,rgba(16,26,46,.7),rgba(8,14,26,.8));
   border:1px solid rgba(56,189,248,.15)}
 .skillCard.santi{border-color:rgba(34,211,238,.3);
   background:linear-gradient(150deg,rgba(12,32,46,.8),rgba(6,18,26,.85))}
+.skillCard.myth{border-color:rgba(251,191,36,.5);
+  background:linear-gradient(150deg,rgba(40,26,8,.85),rgba(20,12,2,.9));
+  box-shadow:inset 0 0 20px rgba(251,191,36,.06)}
 .skillCard.locked{opacity:.4}
 .skillCard .sc-head{display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:3px;font-size:13px;font-weight:800;color:#dbeafe}
+  margin-bottom:3px;font-size:12.5px;font-weight:800;color:#dbeafe}
 .skillCard .sc-name{display:flex;align-items:center;gap:5px}
-.skillCard .sc-lv{font-size:11.5px;font-weight:900;color:#fbbf24;
+.skillCard .sc-lv{font-size:11px;font-weight:900;color:#fbbf24;
   font-variant-numeric:tabular-nums}
-.skillCard .sc-detail{font-size:10.5px;color:#6b87ab;line-height:1.5}
+.skillCard .sc-detail{font-size:10px;color:#6b87ab;line-height:1.5}
 .skillCard .sc-lvBar{display:flex;gap:1.5px;margin-top:5px}
 .skillCard .sc-lvBar i{display:block;flex:1;height:3px;border-radius:1.5px;
   background:rgba(255,255,255,.1)}
 .skillCard .sc-lvBar i.on{background:linear-gradient(90deg,#fbbf24,#f97316)}
 .skillCard .sc-lvBar i.on.santi{background:linear-gradient(90deg,#22d3ee,#0891b2)}
+.skillCard .sc-lvBar i.on.myth{background:linear-gradient(90deg,#fbbf24,#fef3c7)}
 
 .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;
   border:1px solid currentColor;margin-left:6px;letter-spacing:1px;font-weight:700}
@@ -306,8 +323,8 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   border:1px solid rgba(56,189,248,.3);border-bottom-width:2px;border-radius:5px;
   color:#7dd3fc;font-family:Consolas,monospace;font-size:12px;font-weight:700}
 
-#helpContent{font-size:13.5px;line-height:1.95;color:#9bb4d0}
-#helpContent h3{color:#7dd3fc;font-size:15px;letter-spacing:2px;margin:18px 0 8px;font-weight:800}
+#helpContent{font-size:13px;line-height:1.9;color:#9bb4d0}
+#helpContent h3{color:#7dd3fc;font-size:14.5px;letter-spacing:2px;margin:16px 0 8px;font-weight:800}
 #helpContent h3:first-child{margin-top:0}
 #helpContent p{margin:6px 0}
 #helpContent ul{margin:6px 0 6px 4px;list-style:none}
@@ -319,25 +336,28 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   letter-spacing:1px;font-weight:700}
 .hl{color:#fbbf24;font-weight:800}
 .santiHl{color:#22d3ee;font-weight:800}
+.mythHl{color:#fde68a;font-weight:800;text-shadow:0 0 10px rgba(251,191,36,.5)}
 
 #overStats{font-size:14px;line-height:2.2;letter-spacing:1px;color:#9bb4d0}
 #overStats .big{font-size:30px;font-weight:900;color:#fbbf24;
   text-shadow:0 0 26px rgba(251,191,36,.5);font-variant-numeric:tabular-nums}
 
 @media (max-width:640px){
-  .box{padding:18px 14px;border-radius:14px}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
-  .card{padding:11px 12px}
-  .card .t{font-size:13px}
-  .card .d{font-size:10.5px}
-  .btn{padding:9px 15px;font-size:12px;letter-spacing:1px}
-  .hudBox{min-width:52px;padding:2px 6px}
+  .box{padding:16px 12px;border-radius:14px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px}
+  .card{padding:10px 11px}
+  .card .t{font-size:12.5px}
+  .card .d{font-size:10px}
+  .btn{padding:8px 14px;font-size:11.5px;letter-spacing:1px}
+  .hudBox{min-width:50px;padding:2px 6px}
   .hudBox .vl{font-size:11px}
-  .pstat{min-width:142px;padding:4px 7px;opacity:.55}
-  .pstat .wname{max-width:72px;font-size:10px}
-  .gcBtn{width:34px;height:34px;font-size:13px}
-  .skChip{font-size:9.5px;padding:2px 7px}
-  .skChip .skKey{min-width:14px;height:14px;font-size:8.5px}
+  .pstat{min-width:138px;padding:4px 7px;opacity:.55}
+  .pstat .wname{max-width:68px;font-size:10px}
+  .gcBtn{width:30px;height:30px;font-size:12px}
+  .skChip{font-size:9px;padding:2px 6px}
+  .skChip .skKey{min-width:13px;height:13px;font-size:8px}
+  #killfeed{top:150px;max-width:130px}
+  .kfItem{font-size:9.5px}
 }
 </style>
 </head>
@@ -373,9 +393,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
       </div>
     </div>
 
-    <!-- 技能状态显示条（新增） -->
     <div id="skillBar"></div>
-
     <div id="killfeed"></div>
     <div id="toast"></div>
     <div id="fps">-- FPS</div>
@@ -396,35 +414,35 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   <div class="panel" id="menu">
     <div class="box">
       <h1>星际射手</h1>
-      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; 最 终 版 v8</div>
+      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; V9.2 神 话</div>
 
-      <div class="row" style="justify-content:center;margin-bottom:20px">
-        <div class="hudBox gold" style="min-width:130px;opacity:1"><div class="lb">积分</div><div class="vl" id="mPoints">0</div></div>
-        <div class="hudBox green" style="min-width:130px;opacity:1"><div class="lb">总击杀</div><div class="vl" id="mKills">0</div></div>
+      <div class="row" style="justify-content:center;margin-bottom:16px">
+        <div class="hudBox gold" style="min-width:120px;opacity:1"><div class="lb">积分</div><div class="vl" id="mPoints">0</div></div>
+        <div class="hudBox green" style="min-width:120px;opacity:1"><div class="lb">总击杀</div><div class="vl" id="mKills">0</div></div>
       </div>
 
       <h2>选择模式</h2>
-      <div class="grid" id="modeGrid" style="margin-bottom:18px"></div>
+      <div class="grid" id="modeGrid" style="margin-bottom:16px"></div>
 
-      <h2>AI 难度</h2>
-      <div class="row" id="aiRow" style="margin-bottom:18px"></div>
+      <h2>AI 难度（所有对战模式通用）</h2>
+      <div class="row" id="aiRow" style="margin-bottom:16px"></div>
 
       <h2>🎯 初始武器</h2>
-      <p style="color:#6b87ab;font-size:12px;margin-bottom:8px;letter-spacing:1px">
+      <p style="color:#6b87ab;font-size:11.5px;margin-bottom:8px;letter-spacing:1px">
         选择每局游戏开始时的第一把武器。<b style="color:#fbbf24">仅列出已拥有的武器</b>。
       </p>
       <div class="weaponPicker" id="weaponPicker"></div>
 
-      <!-- 已有技能展示（新增） -->
-      <h2 style="margin-top:18px">⚔ 我的技能</h2>
-      <p style="color:#6b87ab;font-size:12px;margin-bottom:8px;letter-spacing:1px">
+      <h2 style="margin-top:16px">⚔ 我的技能</h2>
+      <p style="color:#6b87ab;font-size:11.5px;margin-bottom:8px;letter-spacing:1px">
         已解锁技能的当前等级与效果。升级请前往军火商店。
       </p>
       <div id="mySkillsGrid"></div>
 
-      <div class="row" style="margin-top:20px">
+      <div class="row" style="margin-top:18px">
         <button class="btn primary" onclick="openShop()">🛒 军火商店</button>
         <button class="btn santi" onclick="openShop(); shopTab='santi'; renderShop();">☄ 三体军火库</button>
+        <button class="btn myth" onclick="openShop(); shopTab='myth'; renderShop();">✦ 神话军火库</button>
         <button class="btn gold" onclick="openCodes()">🎁 兑换码</button>
         <button class="btn console" onclick="openConsole()">⚙ 控制台</button>
         <button class="btn" onclick="openHelp()">📖 简介 & 玩法</button>
@@ -437,29 +455,30 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
         <button class="btn danger sm" onclick="resetSave()">重置存档</button>
       </div>
 
-      <div style="margin-top:16px;font-size:11.5px;color:#3f5a7a;line-height:1.9">
+      <div style="margin-top:14px;font-size:11px;color:#3f5a7a;line-height:1.9">
         <b style="color:#5a7ba3">键盘：</b>
         <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 ·
         <b>自动瞄准</b> · 左键射击 · <kbd>1</kbd>-<kbd>9</kbd> 换枪 ·
-        <kbd>Q</kbd> 护盾 <kbd>E</kbd> 时缓 <kbd>R</kbd> 冲刺 <kbd>F</kbd> 治疗 <kbd>G</kbd> 超载 <kbd>T</kbd> 时停
+        <kbd>Q</kbd> 护盾 <kbd>E</kbd> 时缓 <kbd>R</kbd> 冲刺 <kbd>F</kbd> 治疗 <kbd>G</kbd> 超载 <kbd>T</kbd> 时停 <kbd>H</kbd> 湮灭
         · 三体技能 <kbd>Z</kbd><kbd>X</kbd><kbd>C</kbd><kbd>V</kbd><kbd>B</kbd><kbd>N</kbd>
+        · 神话 <kbd>O</kbd><kbd>P</kbd>
       </div>
     </div>
   </div>
 
   <div class="panel hidden" id="consolePanel">
     <div class="box" style="width:min(680px,94vw)">
-      <div class="row" style="margin-bottom:14px">
+      <div class="row" style="margin-bottom:12px">
         <h2 style="margin:0">⚙ 控制台</h2>
         <div class="spacer"></div>
         <button class="btn sm" onclick="closeConsole()">返回</button>
       </div>
-      <p style="color:#6b87ab;font-size:12.5px;margin-bottom:16px;line-height:1.9">
+      <p style="color:#6b87ab;font-size:12px;margin-bottom:14px;line-height:1.9">
         启用或禁用游戏中的技能按钮，让画面更简洁。<br>
         <span style="color:#4a6a94">禁用后触摸按钮会隐藏，但电脑端仍可通过键盘快捷键使用。</span>
       </p>
       <div class="grid" id="consoleGrid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))"></div>
-      <div class="row" style="margin-top:18px;justify-content:center">
+      <div class="row" style="margin-top:16px;justify-content:center">
         <button class="btn sm" onclick="consoleAll(true)">✓ 全部开启</button>
         <button class="btn sm danger" onclick="consoleAll(false)">✗ 全部关闭</button>
         <button class="btn sm gold" onclick="consolePreset('basic')">基础预设</button>
@@ -471,7 +490,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 
   <div class="panel hidden" id="help">
     <div class="box">
-      <div class="row" style="margin-bottom:14px">
+      <div class="row" style="margin-bottom:12px">
         <h2 style="margin:0">📖 游戏简介 & 玩法说明</h2>
         <div class="spacer"></div>
         <button class="btn sm" onclick="closeHelp()">返回</button>
@@ -483,7 +502,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 
   <div class="panel hidden" id="shop">
     <div class="box">
-      <div class="row" style="margin-bottom:14px">
+      <div class="row" style="margin-bottom:12px">
         <h2 style="margin:0">🛒 军火商店</h2>
         <div class="spacer"></div>
         <div class="hudBox gold" style="opacity:1"><div class="lb">可用积分</div><div class="vl" id="sPoints">0</div></div>
@@ -497,7 +516,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   <div class="panel hidden" id="codePanel">
     <div class="box" style="width:min(540px,94vw);text-align:center">
       <h2 style="justify-content:center">🎁 兑换码</h2>
-      <p style="color:#6b87ab;font-size:12.5px;margin-bottom:20px;line-height:1.9">
+      <p style="color:#6b87ab;font-size:12px;margin-bottom:18px;line-height:1.9">
         输入兑换码领取积分奖励<br>
         <span style="color:#4a6a94">提示：积分非常珍贵，请谨慎消费</span>
       </p>
@@ -505,15 +524,15 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
         <input type="text" id="codeInput" placeholder="输入兑换码" maxlength="12" inputmode="numeric">
         <button class="btn primary" onclick="doRedeem()">兑换</button>
       </div>
-      <div id="codeMsg" style="margin-top:18px;min-height:28px;font-size:14px;letter-spacing:1px;font-weight:700"></div>
-      <div style="margin-top:24px"><button class="btn" onclick="closeCodes()">返回</button></div>
+      <div id="codeMsg" style="margin-top:16px;min-height:26px;font-size:14px;letter-spacing:1px;font-weight:700"></div>
+      <div style="margin-top:20px"><button class="btn" onclick="closeCodes()">返回</button></div>
     </div>
   </div>
 
   <div class="panel hidden" id="over">
     <div class="box" style="width:min(600px,94vw);text-align:center">
       <h1 id="overTitle" style="font-size:clamp(24px,4.5vw,38px)">对战结束</h1>
-      <div id="overStats" style="margin:24px 0"></div>
+      <div id="overStats" style="margin:22px 0"></div>
       <div class="row" style="justify-content:center">
         <button class="btn primary" onclick="restart()">🔄 再来一局</button>
         <button class="btn" onclick="backToMenu()">🏠 返回主菜单</button>
@@ -524,16 +543,16 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   <div class="panel hidden" id="pause">
     <div class="box" style="width:min(460px,94vw);text-align:center">
       <h2 style="justify-content:center">⏸ 已暂停</h2>
-      <div class="row" style="justify-content:center;margin-top:20px">
+      <div class="row" style="justify-content:center;margin-top:18px">
         <button class="btn primary" onclick="togglePause()">▶ 继续</button>
         <button class="btn" onclick="openHelpFromPause()">📖 玩法</button>
       </div>
-      <div class="row" style="justify-content:center;margin-top:14px">
+      <div class="row" style="justify-content:center;margin-top:12px">
         <button class="btn sm fsBtn" onclick="toggleFullscreen()">⛶ 全屏</button>
         <button class="btn sm lsBtn" onclick="toggleLandscape()">🔄 横屏</button>
         <button class="btn sm asciiBtn" onclick="toggleASCII()">🖥 ASCII</button>
       </div>
-      <div style="margin-top:20px">
+      <div style="margin-top:18px">
         <button class="btn danger" onclick="quitGame()">✕ 退出到主菜单</button>
       </div>
     </div>
@@ -543,31 +562,31 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 <script>
 'use strict';
 /* =========================================================
-   星际射手 · Astro Shooter 最终版 v8
+   星际射手 · Astro Shooter v9.2 · 神话
    =========================================================
-   本次更新：
-   ✦ 技能等级上限 5 → 10，全面重新平衡
-   ✦ 新增 6 个技能（弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场）
-   ✦ 游戏内新增「技能状态显示条」——显示每个技能的持续时间与冷却时间
-   ✦ 菜单内新增「我的技能」展示区——展示已解锁技能与等级
-   ✦ 修复 UI 遮挡画布问题（面板缩小、更透明、自动淡化、击杀流移到底部）
+   v9.2 更新（仅修复）：
+   ✦ 移除神话卡片上与标题内容重叠的“✦ 神话”黄色徽章
+   ✦ 其余所有内容完整保留
    ========================================================= */
 
 const W = 1600, H = 900, TAU = Math.PI * 2;
 const STEP = 1 / 60;
 const MAX_STEPS = 3;
-const MAX_PARTICLES = 300;
-const MAX_BULLETS = 240;
-const MAX_FLOATS = 20;
+const MAX_PARTICLES = 320;
+const MAX_BULLETS = 260;
+const MAX_FLOATS = 22;
+
+const _cos = Math.cos, _sin = Math.sin, _sqrt = Math.sqrt, _abs = Math.abs;
 
 const rand = (a, b) => a + Math.random() * (b - a);
 const randInt = (a, b) => Math.floor(rand(a, b + 1));
 const clamp = (v, a, b) => v < a ? a : (v > b ? b : v);
 const dist2 = (x1, y1, x2, y2) => (x2 - x1) ** 2 + (y2 - y1) ** 2;
-const dist = (x1, y1, x2, y2) => Math.sqrt(dist2(x1, y1, x2, y2));
+const dist = (x1, y1, x2, y2) => _sqrt(dist2(x1, y1, x2, y2));
 
 function fmt(n) {
   n = Math.floor(n);
+  if (n >= 1e16) return (n / 1e16).toFixed(2) + '京';
   if (n >= 1e12) return (n / 1e12).toFixed(2) + '万亿';
   if (n >= 1e8) return (n / 1e8).toFixed(2) + '亿';
   if (n >= 1e4) return (n / 1e4).toFixed(2) + '万';
@@ -581,13 +600,13 @@ function hexRgba(hex, a) {
 /* =========================================================
    存档
    ========================================================= */
-const SKEY = 'astro_shooter_v7_final';
-const PERK_MAX_LV = 10;   // ★ 新上限
+const SKEY = 'astro_shooter_v9_myth';
+const PERK_MAX_LV = 10;
 const DEFAULT_SKILL_BUTTONS = {
   fire: true, swap: true,
   q: true, e: true, r: true, f: true, g: true, t: true,
   z: true, x: true, v: true, b: true, n: true, c: true,
-  d: true, h: true, j: true, k: true
+  d: true, h: true, j: true, k: true, o: true, p: true
 };
 const DEFAULT_SAVE = {
   points: 0,
@@ -597,7 +616,8 @@ const DEFAULT_SAVE = {
   ammo: {
     light: 3000, heavy: 600, energy: 400, exotic: 80,
     burn: 400, plasma: 200, ion: 100, void: 30, dark: 10, sing: 0,
-    strongForce: 20, quantum: 15, graviton: 10, dimFragment: 5, zeroParticle: 2
+    strongForce: 20, quantum: 15, graviton: 10, dimFragment: 5, zeroParticle: 2,
+    mythEssence: 10, chaos: 5, cosmic: 3
   },
   perks: {},
   high: {},
@@ -606,7 +626,7 @@ const DEFAULT_SAVE = {
 };
 let SAVE = (() => {
   try {
-    const raw = localStorage.getItem(SKEY);
+    const raw = localStorage.getItem(SKEY) || localStorage.getItem('astro_shooter_v7_final');
     if (raw) {
       const s = JSON.parse(raw);
       const o = Object.assign(JSON.parse(JSON.stringify(DEFAULT_SAVE)), s);
@@ -615,7 +635,6 @@ let SAVE = (() => {
       o.perks = {};
       for (const k in (s.perks || {})) {
         const v = s.perks[k];
-        // ★ 兼容旧存档 5 级 → 新上限 10 级
         o.perks[k] = (typeof v === 'number' && v > 0) ? Math.min(PERK_MAX_LV, Math.round(v)) : 1;
       }
       o.high = Object.assign({}, s.high || {});
@@ -653,7 +672,10 @@ const AMMO = {
   quantum:     { name: '量子纠缠粒子',   color: '#c4b5fd', price: 50000000,  qty: 20, icon: '⌬' },
   graviton:    { name: '引力子',         color: '#a78bfa', price: 200000000, qty: 15, icon: '◎' },
   dimFragment: { name: '降维碎片',       color: '#c4b5fd', price: 1000000000, qty: 10, icon: '▦' },
-  zeroParticle:{ name: '归零粒子',       color: '#ffffff', price: 10000000000, qty: 5, icon: '∅' }
+  zeroParticle:{ name: '归零粒子',       color: '#ffffff', price: 10000000000, qty: 5, icon: '∅' },
+  mythEssence: { name: '神话精华', color: '#fde68a', price: 100000000000,   qty: 20, icon: '✧' },
+  chaos:       { name: '混沌原质', color: '#dc2626', price: 1000000000000,  qty: 15, icon: '◉' },
+  cosmic:      { name: '宇宙本源', color: '#c084fc', price: 10000000000000, qty: 10, icon: '☯' }
 };
 
 /* =========================================================
@@ -797,7 +819,47 @@ const WEAPONS = {
     name: '归零者之钟', dmg: 99999, speed: 800, cd: 8.00, spread: 0.00,
     ammo: 'zeroParticle', pellets: 1, size: 20, color: '#ffffff',
     price: 200000000000, explode: 1800, eDmg: 99999, blackhole: true, shake: 80, santi: true,
-    desc: '归零者的钟声 · 重启一小片宇宙' }
+    desc: '归零者的钟声 · 重启一小片宇宙' },
+  mythBlade: {
+    name: '神话裁决', dmg: 5000, speed: 2200, cd: 1.20, spread: 0.00,
+    ammo: 'mythEssence', pellets: 1, size: 15, color: '#fde68a',
+    price: 500000000000, pierce: 99, explode: 800, eDmg: 3000, shake: 40, myth: true,
+    desc: '神话级裁决之刃 · 一击必杀' },
+  chaosBringer: {
+    name: '混沌使者', dmg: 3500, speed: 1500, cd: 1.60, spread: 0.10,
+    ammo: 'chaos', pellets: 5, size: 12, color: '#dc2626',
+    price: 2000000000000, explode: 600, eDmg: 2000, pierce: 20, shake: 45, myth: true,
+    desc: '混沌使者 · 5 发混沌裂弹' },
+  cosmicJudge: {
+    name: '宇宙审判', dmg: 12000, speed: 3000, cd: 2.50, spread: 0.00,
+    ammo: 'cosmic', pellets: 1, size: 18, color: '#c084fc',
+    price: 10000000000000, pierce: 99, explode: 1500, eDmg: 8000, blackhole: true, shake: 60, myth: true,
+    desc: '宇宙审判 · 抹除一切存在' },
+  divineShieldBreaker: {
+    name: '神盾破坏者', dmg: 2800, speed: 1800, cd: 0.90, spread: 0.02,
+    ammo: 'mythEssence', pellets: 1, size: 10, color: '#fbbf24',
+    price: 800000000000, pierce: 99, explode: 400, eDmg: 1500, shake: 25, myth: true,
+    desc: '无视护盾 · 破防穿透' },
+  eternalFlame: {
+    name: '永恒之焰', dmg: 1800, speed: 1000, cd: 0.30, spread: 0.15,
+    ammo: 'chaos', pellets: 1, size: 8, color: '#f97316',
+    price: 5000000000000, explode: 200, eDmg: 800, burn: 8, shake: 20, myth: true,
+    desc: '永恒燃烧 · 灼烧不可熄灭' },
+  voidSovereign: {
+    name: '虚空君主', dmg: 8000, speed: 1400, cd: 2.00, spread: 0.00,
+    ammo: 'cosmic', pellets: 1, size: 16, color: '#8b5cf6',
+    price: 20000000000000, pierce: 99, explode: 1000, eDmg: 5000, blackhole: true, shake: 50, myth: true,
+    desc: '虚空君主之怒 · 领域吞噬' },
+  primordialLight: {
+    name: '原初之光', dmg: 30000, speed: 4000, cd: 3.50, spread: 0.00,
+    ammo: 'mythEssence', ammoPer: 3, pellets: 1, size: 22, color: '#ffffff',
+    price: 50000000000000, pierce: 99, explode: 2500, eDmg: 20000, shake: 75, myth: true,
+    desc: '宇宙原初之光 · 万物归一' },
+  genesisCore: {
+    name: '创世核心', dmg: 15000, speed: 2000, cd: 4.00, spread: 0.00,
+    ammo: 'cosmic', pellets: 1, size: 20, color: '#fef3c7',
+    price: 100000000000000, pierce: 99, explode: 3000, eDmg: 15000, blackhole: true, shake: 90, myth: true,
+    desc: '创世核心 · 重启整个宇宙' }
 };
 
 const WEAPON_ORDER = [
@@ -811,19 +873,24 @@ const WEAPON_ORDER = [
   'zeusWrath','entropyCannon','dimensionRipper',
   'bigBang','timeLord','genesisBlade','endBlade','originLight',
   'waterDrop','sophonGun','thoughtSealGun','wallfacerSword','gravitationalAntenna',
-  'curvatureShip','darkDomainGenerator','singerFoil','trisolaranFleetCannon','zeroHomerBell'
+  'curvatureShip','darkDomainGenerator','singerFoil','trisolaranFleetCannon','zeroHomerBell',
+  'mythBlade','divineShieldBreaker','chaosBringer','eternalFlame',
+  'cosmicJudge','voidSovereign','primordialLight','genesisCore'
 ];
 
 const SANTI_WEAPONS = new Set([
   'waterDrop','sophonGun','thoughtSealGun','wallfacerSword','gravitationalAntenna',
   'curvatureShip','darkDomainGenerator','singerFoil','trisolaranFleetCannon','zeroHomerBell'
 ]);
+const MYTH_WEAPONS = new Set([
+  'mythBlade','divineShieldBreaker','chaosBringer','eternalFlame',
+  'cosmicJudge','voidSovereign','primordialLight','genesisCore'
+]);
 
 /* =========================================================
-   技能（★ 上限 10 · 新增 6 个 · 重新平衡）
+   技能
    ========================================================= */
 const PERKS = {
-  // ===== 常规主动技能 =====
   speed:     { name:'曲速引擎', icon:'⚡', maxLv:10, basePrice: 8000,
     detail: lv => `移动速度 +${lv * 4}%` },
   dash:      { name:'相位冲刺', icon:'💨', maxLv:10, basePrice: 10000,
@@ -840,8 +907,6 @@ const PERKS = {
     detail: lv => `冻结敌人 ${(0.8 + lv * 0.22).toFixed(1)}s · CD ${(40 - lv * 2).toFixed(0)}s` },
   blink:     { name:'瞬步',     icon:'👻', maxLv:10, basePrice: 1500000,
     detail: lv => `R 瞬移 · 距离 ${180 + lv * 55} · CD ${(12 - lv * 0.8).toFixed(1)}s` },
-
-  // ===== 被动技能 =====
   bounce:    { name:'弹跳涂层', icon:'🔃', maxLv:10, basePrice: 22000,
     detail: lv => `子弹反弹 ${Math.min(lv, 8)} 次` },
   homing:    { name:'追踪弹头', icon:'🎯', maxLv:10, basePrice: 30000,
@@ -864,8 +929,6 @@ const PERKS = {
     detail: lv => `子弹数量 +${Math.floor(lv / 2)} 发` },
   lifesteal: { name:'生命汲取', icon:'🩸', maxLv:10, basePrice: 800000,
     detail: lv => `伤害 ${(lv * 1.2).toFixed(1)}% 转化为生命` },
-
-  // ===== 三体技能 =====
   wallfacer: {
     name:'面壁计划', icon:'🧱', maxLv:10, basePrice: 5000000, santi: true,
     detail: lv => `Z 隐身 ${(1.5 + lv * 0.4).toFixed(1)}s · CD ${(32 - lv * 2).toFixed(0)}s` },
@@ -884,8 +947,6 @@ const PERKS = {
   cosmicConstant: {
     name:'宇宙常数修改', icon:'✴', maxLv:10, basePrice: 10000000000, santi: true,
     detail: lv => `N 时缓 ${(2 + lv * 0.7).toFixed(1)}s · 自身 ${(1 + lv * 0.08).toFixed(2)}× 速 · CD 60s` },
-
-  // ===== ★ 新增 6 个技能 =====
   ammoRegen: {
     name:'弹药再生', icon:'♻', maxLv:10, basePrice: 300000,
     detail: lv => `每 5 秒回复全部弹药 × ${(lv * 0.5).toFixed(1)}%` },
@@ -904,9 +965,20 @@ const PERKS = {
   annihilation: {
     name:'湮灭立场', icon:'☢', maxLv:10, basePrice: 30000000, santi: true,
     detail: lv => `H 键在自身周围生成湮灭领域 · 伤害 ${(30 + lv * 15)} · 持续 ${(1 + lv * 0.3).toFixed(1)}s · CD 40s` },
+  divineShield: {
+    name:'神圣护盾', icon:'✨', maxLv:10, basePrice: 100000000000, myth: true,
+    detail: lv => `O 键全屏无敌 ${(1.5 + lv * 0.3).toFixed(1)}s · CD ${(50 - lv * 2).toFixed(0)}s` },
+  timeWarp: {
+    name:'时间扭曲', icon:'⏳', maxLv:10, basePrice: 500000000000, myth: true,
+    detail: lv => `P 键时缓 3 倍 ${(2 + lv * 0.5).toFixed(1)}s · 自身加速 · CD 50s` },
+  soulHarvest: {
+    name:'灵魂收割', icon:'💀', maxLv:10, basePrice: 2000000000000, myth: true,
+    detail: lv => `击杀回血 ${10 + lv * 8} · 每击杀额外 +${lv * 2}% 积分` },
+  realityBreak: {
+    name:'现实崩坏', icon:'💠', maxLv:10, basePrice: 10000000000000, myth: true,
+    detail: lv => `子弹有 ${lv * 4}% 概率造成 5 倍伤害` },
 };
 
-/* 主动技能的按钮映射（用于技能条） */
 const ACTIVE_SKILLS = [
   { id:'q', key:'Q', perk:'shield',     name:'护盾' },
   { id:'e', key:'E', perk:'slow',       name:'时缓' },
@@ -921,10 +993,12 @@ const ACTIVE_SKILLS = [
   { id:'b', key:'B', perk:'curvatureJump', name:'光速' },
   { id:'n', key:'N', perk:'cosmicConstant',name:'常数' },
   { id:'h', key:'H', perk:'annihilation', name:'湮灭' },
+  { id:'o', key:'O', perk:'divineShield', name:'圣盾' },
+  { id:'p', key:'P', perk:'timeWarp',    name:'时扭' },
 ];
 
 /* =========================================================
-   AI 难度（14 档）
+   AI 难度（24 档）
    ========================================================= */
 const DIFFICULTY = {
   easy:      { name:'简单', aimErr:0.45, react:1.20, speed:0.42, dmgMul:0.30, hp:70,  dodge:0.00, aggro:0.40, fireGap:1.6,  color:'#4ade80' },
@@ -940,7 +1014,17 @@ const DIFFICULTY = {
   godlike:   { name:'神级', aimErr:0.012, react:0.07, speed:1.38, dmgMul:2.30, hp:330, dodge:0.90, aggro:1.55, fireGap:0.16, color:'#fbbf24' },
   transcend: { name:'超神', aimErr:0.007, react:0.05, speed:1.48, dmgMul:2.80, hp:400, dodge:0.95, aggro:1.68, fireGap:0.12, color:'#f0abfc' },
   trisolaris:{ name:'三体', aimErr:0.003, react:0.03, speed:1.62, dmgMul:3.50, hp:500, dodge:0.98, aggro:1.82, fireGap:0.09, color:'#22d3ee' },
-  zeroHomer: { name:'归零', aimErr:0.000, react:0.02, speed:1.80, dmgMul:4.50, hp:650, dodge:1.00, aggro:2.00, fireGap:0.06, color:'#ffffff' }
+  zeroHomer: { name:'归零', aimErr:0.000, react:0.02, speed:1.80, dmgMul:4.50, hp:650, dodge:1.00, aggro:2.00, fireGap:0.06, color:'#ffffff' },
+  titan:     { name:'泰坦', aimErr:0.000, react:0.018, speed:1.90, dmgMul:5.50, hp:800,  dodge:1.00, aggro:2.10, fireGap:0.055, color:'#c084fc' },
+  myth:      { name:'神话', aimErr:0.000, react:0.015, speed:2.00, dmgMul:7.00, hp:1000, dodge:1.00, aggro:2.20, fireGap:0.048, color:'#fde68a' },
+  eternal:   { name:'永恒', aimErr:0.000, react:0.012, speed:2.15, dmgMul:9.00, hp:1300, dodge:1.00, aggro:2.35, fireGap:0.040, color:'#fef3c7' },
+  cosmic:    { name:'宇宙', aimErr:0.000, react:0.010, speed:2.30, dmgMul:12.0, hp:1700, dodge:1.00, aggro:2.50, fireGap:0.032, color:'#ffffff' },
+  primordial:{ name:'原初', aimErr:0.000, react:0.008, speed:2.45, dmgMul:16.0, hp:2200, dodge:1.00, aggro:2.65, fireGap:0.026, color:'#a855f7' },
+  genesis:   { name:'创世', aimErr:0.000, react:0.006, speed:2.60, dmgMul:22.0, hp:3000, dodge:1.00, aggro:2.80, fireGap:0.020, color:'#f0abfc' },
+  apocalypse:{ name:'天启', aimErr:0.000, react:0.005, speed:2.75, dmgMul:30.0, hp:4000, dodge:1.00, aggro:3.00, fireGap:0.016, color:'#dc2626' },
+  omniscient:{ name:'全知', aimErr:0.000, react:0.004, speed:2.90, dmgMul:42.0, hp:5500, dodge:1.00, aggro:3.20, fireGap:0.012, color:'#06b6d4' },
+  omnipotent:{ name:'全能', aimErr:0.000, react:0.003, speed:3.10, dmgMul:60.0, hp:7500, dodge:1.00, aggro:3.50, fireGap:0.008, color:'#e0f2fe' },
+  godhead:   { name:'神格', aimErr:0.000, react:0.002, speed:3.30, dmgMul:88.0, hp:10000, dodge:1.00, aggro:3.80, fireGap:0.005, color:'#ffffff' }
 };
 let AI_LEVEL = 'normal';
 
@@ -966,28 +1050,92 @@ const MODES = {
   nightmare:   { name:'噩梦',     icon:'☠', color:'#7e22ce', desc:'所有敌人骨灰难度 · 积分 ×4',          group:'进阶' },
   speedrun:    { name:'速通',     icon:'🏃', color:'#22d3ee', desc:'限时清波 · 越快越好',                 group:'进阶' },
   survival:    { name:'生存',     icon:'⏳', color:'#f97316', desc:'敌人无尽 · 难度持续提升',             group:'进阶' },
+  biohazard:   { name:'生化危机', icon:'☣', color:'#84cc16', desc:'感染机制 · 击杀感染体回收血清',       group:'进阶' },
   zenith:      { name:'巅峰对决', icon:'⛰', color:'#fbbf24', desc:'精英 + 弹幕 + 双 BOSS 混合 · 积分 ×5', group:'传说' },
   godslayer:   { name:'屠神之路', icon:'⚡', color:'#c084fc', desc:'所有敌人三体难度 · 积分 ×6',          group:'传说' },
   infinity:    { name:'无限战争', icon:'∞', color:'#38bdf8', desc:'波次无限 · 敌人快速增强 · 积分 ×4',    group:'传说' },
-  apocalypse:  { name:'末日审判', icon:'☄', color:'#dc2626', desc:'BOSS 潮 · 连续出现 · 积分 ×5',         group:'传说' },
+  apocalypseMode:{name:'末日审判',icon:'☄', color:'#dc2626', desc:'BOSS 潮 · 连续出现 · 积分 ×5',        group:'传说' },
   singularity: { name:'奇点',     icon:'◎', color:'#8b5cf6', desc:'极限生存 · 积分 ×10',                  group:'传说' },
   ascension:   { name:'飞升',     icon:'☯', color:'#ffffff', desc:'终极混合挑战 · 积分 ×15',              group:'传说' },
+  godRealm:    { name:'神域',     icon:'⚜', color:'#fde68a', desc:'神话级敌人 · 积分 ×20',                group:'神话', myth: true },
+  chronoVortex:{ name:'时空涡旋', icon:'🌀', color:'#c084fc', desc:'时间流速波动 · 敌人随机穿越 · 积分 ×25', group:'神话', myth: true },
+  realityRift: { name:'现实裂隙', icon:'💠', color:'#67e8f9', desc:'空间崩塌 · 战场不断缩小 · 积分 ×30',   group:'神话', myth: true },
+  eternalWar:  { name:'永恒战争', icon:'♾', color:'#fbbf24', desc:'无尽波次 · 敌人随时间飞升 · 积分 ×35', group:'神话', myth: true },
+  soulReaper:  { name:'灵魂收割', icon:'💀', color:'#a855f7', desc:'击杀回复生命 · 连杀奖励翻倍 · 积分 ×40', group:'神话', myth: true },
+  chaosStorm:  { name:'混沌风暴', icon:'🌪', color:'#dc2626', desc:'随机事件 · 高倍奖励 · 积分 ×50',       group:'神话', myth: true },
+  cosmicEnd:   { name:'宇宙终焉', icon:'✦', color:'#ffffff', desc:'终极神话挑战 · 积分 ×75',              group:'神话', myth: true },
+  genesisWar:  { name:'创世之战', icon:'☯', color:'#fde68a', desc:'对抗创世神 · 积分 ×100',               group:'神话', myth: true },
 };
 
 const MODE_SCORE_MUL = {
   time: 1, campaign: 1, vsai: 1, pvp: 1, endless: 1.5, zombie: 1.5, boss: 1.5, team: 1.5,
   eliteHunt: 3, bulletHell: 2, deathmatch: 1.5, dualBoss: 3, darkOps: 2.5,
   rage: 3, superCampaign: 3, nightmare: 4, speedrun: 2, survival: 2.5,
-  zenith: 5, godslayer: 6, infinity: 4, apocalypse: 5, singularity: 10, ascension: 15
+  biohazard: 3.5,
+  zenith: 5, godslayer: 6, infinity: 4, apocalypseMode: 5, singularity: 10, ascension: 15,
+  godRealm: 20, chronoVortex: 25, realityRift: 30, eternalWar: 35,
+  soulReaper: 40, chaosStorm: 50, cosmicEnd: 75, genesisWar: 100
 };
 
 /* =========================================================
    画布
    ========================================================= */
 const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d', { alpha: false });
+const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
 canvas.width = W; canvas.height = H;
 const appEl = document.getElementById('app');
+
+const DOM = {
+  menu: document.getElementById('menu'),
+  shop: document.getElementById('shop'),
+  codePanel: document.getElementById('codePanel'),
+  over: document.getElementById('over'),
+  pause: document.getElementById('pause'),
+  help: document.getElementById('help'),
+  consolePanel: document.getElementById('consolePanel'),
+  hud: document.getElementById('hud'),
+  gameCtrls: document.getElementById('gameCtrls'),
+  respawnOverlay: document.getElementById('respawnOverlay'),
+  skillBar: document.getElementById('skillBar'),
+  killfeed: document.getElementById('killfeed'),
+  toast: document.getElementById('toast'),
+  fps: document.getElementById('fps'),
+  p2stat: document.getElementById('p2stat'),
+  hBossBox: document.getElementById('hBossBox'),
+  hScore: document.getElementById('hScore'),
+  hTime: document.getElementById('hTime'),
+  hKills: document.getElementById('hKills'),
+  hBoss: document.getElementById('hBoss'),
+  p1hp: document.getElementById('p1hp'),
+  p1lives: document.getElementById('p1lives'),
+  p1wp: document.getElementById('p1wp'),
+  p1ammo: document.getElementById('p1ammo'),
+  p2hp: document.getElementById('p2hp'),
+  p2lives: document.getElementById('p2lives'),
+  p2wp: document.getElementById('p2wp'),
+  p2ammo: document.getElementById('p2ammo'),
+  rsTimer: document.querySelector('#respawnOverlay .rsTimer'),
+  rsLives: document.getElementById('rsLives'),
+  modeGrid: document.getElementById('modeGrid'),
+  aiRow: document.getElementById('aiRow'),
+  weaponPicker: document.getElementById('weaponPicker'),
+  mySkillsGrid: document.getElementById('mySkillsGrid'),
+  mPoints: document.getElementById('mPoints'),
+  mKills: document.getElementById('mKills'),
+  sPoints: document.getElementById('sPoints'),
+  shopTabs: document.getElementById('shopTabs'),
+  shopContent: document.getElementById('shopContent'),
+  consoleGrid: document.getElementById('consoleGrid'),
+  helpTabs: document.getElementById('helpTabs'),
+  helpContent: document.getElementById('helpContent'),
+  overTitle: document.getElementById('overTitle'),
+  overStats: document.getElementById('overStats'),
+  codeInput: document.getElementById('codeInput'),
+  codeMsg: document.getElementById('codeMsg'),
+  gcFull: document.getElementById('gcFull'),
+  gcPause: document.getElementById('gcPause'),
+  gcExit: document.getElementById('gcExit')
+};
 
 const bgCanvas = (() => {
   const c = document.createElement('canvas');
@@ -1123,10 +1271,8 @@ function syncUI() {
   document.querySelectorAll('.fsBtn').forEach(b => b.textContent = fsTxt);
   document.querySelectorAll('.asciiBtn').forEach(b =>
     b.textContent = '🖥 ASCII 模式' + (G.ascii ? ' ✓' : ''));
-  const gf = document.getElementById('gcFull');
-  if (gf) gf.textContent = isFS() ? '⤢' : '⛶';
-  const gp = document.getElementById('gcPause');
-  if (gp) gp.textContent = G.paused ? '▶' : '⏸';
+  if (DOM.gcFull) DOM.gcFull.textContent = isFS() ? '⤢' : '⛶';
+  if (DOM.gcPause) DOM.gcPause.textContent = G.paused ? '▶' : '⏸';
 }
 window.addEventListener('resize', applyOrient);
 window.addEventListener('orientationchange', () => setTimeout(applyOrient, 200));
@@ -1139,16 +1285,23 @@ resize();
 const keys = {};
 const mouse = { x: W * 0.5, y: H * 0.5, down: false };
 
+let _canvasRectCache = null;
+let _canvasRectDirty = true;
 function ptrPos(e) {
   const cw = canvas.clientWidth || 1, chh = canvas.clientHeight || 1;
   let ox = e.offsetX, oy = e.offsetY;
   if (ox === undefined || ox === null || isNaN(ox)) {
-    const r = canvas.getBoundingClientRect();
-    ox = e.clientX - r.left;
-    oy = e.clientY - r.top;
+    if (_canvasRectDirty || !_canvasRectCache) {
+      _canvasRectCache = canvas.getBoundingClientRect();
+      _canvasRectDirty = false;
+    }
+    ox = e.clientX - _canvasRectCache.left;
+    oy = e.clientY - _canvasRectCache.top;
   }
   return { x: clamp(ox * W / cw, 0, W), y: clamp(oy * H / chh, 0, H) };
 }
+window.addEventListener('resize', () => { _canvasRectDirty = true; });
+window.addEventListener('scroll', () => { _canvasRectDirty = true; });
 
 const TOUCH = {
   enabled: false,
@@ -1172,15 +1325,18 @@ function buildUIButtons() {
     { id: 'x',      x: 1360, y: 530, r: 28, label: '钢印', icon: 'X' },
     { id: 'v',      x: 1440, y: 560, r: 28, label: '智子', icon: 'V' },
     { id: 'h',      x: 1440, y: 480, r: 26, label: '湮灭', icon: 'H' },
+    { id: 'o',      x: 1510, y: 500, r: 26, label: '圣盾', icon: 'O' },
     { id: 'swap',   x: 1540, y: 640, r: 34, label: '换枪', icon: '⇄' }
   ];
 }
 buildUIButtons();
 
 function hitUI(x, y) {
-  for (const b of TOUCH.uiBtns) {
+  for (let i = 0; i < TOUCH.uiBtns.length; i++) {
+    const b = TOUCH.uiBtns[i];
     if (SAVE.skillButtons && SAVE.skillButtons[b.id] === false) continue;
-    if (dist2(x, y, b.x, b.y) < b.r * b.r) return b;
+    const dx = x - b.x, dy = y - b.y;
+    if (dx*dx + dy*dy < b.r * b.r) return b;
   }
   return null;
 }
@@ -1221,7 +1377,7 @@ function onMove(e) {
   if (!isTouch) { mouse.x = p.x; mouse.y = p.y; return; }
   if (e.pointerId === TOUCH.moveId) {
     let dx = p.x - TOUCH.mcx, dy = p.y - TOUCH.mcy;
-    const d = Math.hypot(dx, dy);
+    const d = _sqrt(dx*dx + dy*dy);
     const maxR = TOUCH.mrad;
     if (d > maxR) { dx = dx / d * maxR; dy = dy / d * maxR; }
     TOUCH.mx = dx / maxR;
@@ -1253,6 +1409,7 @@ function handleUIButton(b) {
   else if (b.id === 'x') useSkill('thoughtSeal');
   else if (b.id === 'v') useSkill('sophonJamming');
   else if (b.id === 'h') useSkill('annihilation');
+  else if (b.id === 'o') useSkill('divineShield');
   else if (b.id === 'swap') cycleWeapon();
 }
 
@@ -1277,10 +1434,10 @@ window.addEventListener('keydown', e => {
   if (['arrowup','arrowdown','arrowleft','arrowright',' ','/','.'].includes(k)) e.preventDefault();
 
   if (k === 'escape') {
-    if (!document.getElementById('help').classList.contains('hidden')) { closeHelp(); return; }
-    if (!document.getElementById('shop').classList.contains('hidden')) { closeShop(); return; }
-    if (!document.getElementById('codePanel').classList.contains('hidden')) { closeCodes(); return; }
-    if (!document.getElementById('consolePanel').classList.contains('hidden')) { closeConsole(); return; }
+    if (!DOM.help.classList.contains('hidden')) { closeHelp(); return; }
+    if (!DOM.shop.classList.contains('hidden')) { closeShop(); return; }
+    if (!DOM.codePanel.classList.contains('hidden')) { closeCodes(); return; }
+    if (!DOM.consolePanel.classList.contains('hidden')) { closeConsole(); return; }
     if (G.running) togglePause();
     return;
   }
@@ -1302,6 +1459,8 @@ window.addEventListener('keydown', e => {
   if (k === 'b') useSkill('curvatureJump');
   if (k === 'n') useSkill('cosmicConstant');
   if (k === 'h') useSkill('annihilation');
+  if (k === 'o') useSkill('divineShield');
+  if (k === 'p') useSkill('timeWarp');
 });
 window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
 
@@ -1340,11 +1499,16 @@ const G = {
   wallfacerT: 0,
   _activeEnemyCount: 0,
   _cacheFrame: 0,
-  // 新增：湮灭领域
   annihilationT: 0,
   annihilationDmg: 0,
-  // UI 淡化
-  _lastInputT: 0
+  divineShieldT: 0,
+  timeWarpT: 0,
+  serum: 0,
+  timeScale: 1,
+  riftRadius: Math.max(W, H),
+  chaosEvent: 0, chaosEventT: 0,
+  _lastInputT: 0,
+  _annTick: 0
 };
 
 function refreshCache() {
@@ -1372,7 +1536,7 @@ function burst(x, y, color, n, power = 200) {
   const cnt = Math.min(n, 12);
   for (let i = 0; i < cnt; i++) {
     const a = rand(0, TAU), s = rand(power * 0.2, power);
-    addP(x, y, Math.cos(a) * s, Math.sin(a) * s, rand(0.18, 0.45), color, rand(1.5, 3));
+    addP(x, y, _cos(a) * s, _sin(a) * s, rand(0.18, 0.45), color, rand(1.5, 3));
   }
 }
 function addFloat(x, y, text, color, size = 18) {
@@ -1382,25 +1546,23 @@ function addFloat(x, y, text, color, size = 18) {
 
 let toastTimer = null;
 function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('on');
+  DOM.toast.textContent = msg;
+  DOM.toast.classList.add('on');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('on'), 900);
+  toastTimer = setTimeout(() => DOM.toast.classList.remove('on'), 900);
 }
 
-const killfeedEl = document.getElementById('killfeed');
 function addKillfeed(text, color) {
   const d = document.createElement('div');
   d.className = 'kfItem';
   d.innerHTML = `<span style="color:${color}">${text}</span>`;
-  killfeedEl.appendChild(d);
+  DOM.killfeed.appendChild(d);
   setTimeout(() => d.remove(), 2200);
-  while (killfeedEl.children.length > 4) killfeedEl.removeChild(killfeedEl.firstChild);
+  while (DOM.killfeed.children.length > 4) DOM.killfeed.removeChild(DOM.killfeed.firstChild);
 }
 
 /* =========================================================
-   玩家
+   玩家工厂
    ========================================================= */
 function makePlayer(id, x, y, color, team, isAI) {
   const p = {
@@ -1412,11 +1574,9 @@ function makePlayer(id, x, y, color, team, isAI) {
     team, color, isAI: !!isAI,
     weapon: 'pistol', cd: 0, recoil: 0,
     shield: 0, shieldCd: 0, slowCd: 0, dashCd: 0, healCd: 0, odCd: 0, odT: 0, tsCd: 0,
-    wfCd: 0, tsCdS: 0, dfCd: 0, sjCd: 0, cjCd: 0, ccCd: 0, anCd: 0,
-    // 技能状态计时（仅玩家）
-    shieldT: 0, slowT2: 0, odT2: 0, tsT: 0, wfT: 0, tsST: 0, dfT: 0, sjT: 0, cjT: 0, ccT: 0, anT: 0,
+    wfCd: 0, tsCdS: 0, dfCd: 0, sjCd: 0, cjCd: 0, ccCd: 0, anCd: 0, dsCd: 0, twCd: 0,
+    shieldT: 0, slowT2: 0, odT2: 0, tsT: 0, wfT: 0, tsST: 0, dfT: 0, sjT: 0, cjT: 0, ccT: 0, anT: 0, dsT: 0, twT: 0,
     dashCharges: 0, dashMaxCharges: 0,
-    // 弹药再生计时
     ammoRegenT: 0,
     mx: 0, my: 0,
     perks: {},
@@ -1427,12 +1587,13 @@ function makePlayer(id, x, y, color, team, isAI) {
     isElite: false, isEliteBuff: false,
     isConverted: 0,
     darkForestMark: 0,
-    aimJam: 0
+    aimJam: 0,
+    isInfected: false,
+    serumDrop: 0
   };
   if (!isAI) {
     const armorLv = SAVE.perks.armor || 0;
     if (armorLv > 0) { p.maxHp += 30 + armorLv * 12; p.hp = p.maxHp; }
-    // 二段冲刺充能
     const ddLv = SAVE.perks.doubleDash || 0;
     p.dashMaxCharges = 1 + Math.floor(ddLv / 2);
     p.dashCharges = p.dashMaxCharges;
@@ -1449,10 +1610,10 @@ function perkLv(p, name) {
    开始 / 结束
    ========================================================= */
 function showGameUI(show) {
-  document.getElementById('hud').classList.toggle('on', show);
-  document.getElementById('gameCtrls').classList.toggle('on', show);
-  document.getElementById('respawnOverlay').classList.remove('on');
-  if (!show) document.getElementById('skillBar').innerHTML = '';
+  DOM.hud.classList.toggle('on', show);
+  DOM.gameCtrls.classList.toggle('on', show);
+  DOM.respawnOverlay.classList.remove('on');
+  if (!show) DOM.skillBar.innerHTML = '';
 }
 
 function startGame(mode) {
@@ -1481,8 +1642,16 @@ function startGame(mode) {
   G.wallfacerT = 0;
   G.annihilationT = 0;
   G.annihilationDmg = 0;
+  G.divineShieldT = 0;
+  G.timeWarpT = 0;
+  G.serum = 0;
+  G.timeScale = 1;
+  G.riftRadius = Math.max(W, H);
+  G.chaosEvent = 0;
+  G.chaosEventT = 0;
   G._lastInputT = 0;
-  killfeedEl.innerHTML = '';
+  G._annTick = 0;
+  DOM.killfeed.innerHTML = '';
 
   if (mode === 'time') G.timeLeft = 60;
   else if (mode === 'darkOps') G.timeLeft = 60;
@@ -1491,7 +1660,13 @@ function startGame(mode) {
   else if (mode === 'speedrun') G.timeLeft = 45;
   else if (mode === 'zenith') G.timeLeft = 75;
   else if (mode === 'godslayer') G.timeLeft = 90;
-  else if (mode === 'apocalypse') G.timeLeft = 90;
+  else if (mode === 'apocalypseMode') G.timeLeft = 90;
+  else if (mode === 'godRealm') G.timeLeft = 90;
+  else if (mode === 'chronoVortex') G.timeLeft = 120;
+  else if (mode === 'realityRift') G.timeLeft = 120;
+  else if (mode === 'chaosStorm') G.timeLeft = 100;
+  else if (mode === 'cosmicEnd') G.timeLeft = 150;
+  else if (mode === 'genesisWar') G.timeLeft = 180;
   else G.timeLeft = 0;
 
   if (mode === 'rage') { G.rageMul = 2; G.modeScoreMul = MODE_SCORE_MUL.rage; }
@@ -1499,6 +1674,8 @@ function startGame(mode) {
   else G.modeScoreMul = MODE_SCORE_MUL[mode] || 1;
 
   if (mode === 'darkOps') G.darkVision = true;
+  if (mode === 'realityRift') G.riftRadius = Math.max(W, H) * 0.75;
+  if (mode === 'biohazard') G.serum = 0;
 
   const p1 = makePlayer(0, W * 0.28, H * 0.5, '#38bdf8', 0, false);
   const startW = SAVE.startWeapon;
@@ -1510,8 +1687,8 @@ function startGame(mode) {
   G.players.push(p1);
 
   const needP2 = (mode === 'pvp' || mode === 'deathmatch');
-  document.getElementById('p2stat').style.display = needP2 ? 'block' : 'none';
-  document.getElementById('hBossBox').style.display = 'none';
+  DOM.p2stat.style.display = needP2 ? 'block' : 'none';
+  DOM.hBossBox.style.display = 'none';
 
   if (mode === 'vsai') {
     const ai = makePlayer(1, W * 0.72, H * 0.5, DIFFICULTY[AI_LEVEL].color, 1, true);
@@ -1552,7 +1729,7 @@ function startGame(mode) {
     spawnBoss(W * 0.35, H * 0.3);
     spawnBoss(W * 0.65, H * 0.3);
   }
-  else if (mode === 'apocalypse') {
+  else if (mode === 'apocalypseMode') {
     spawnBoss(W * 0.5, 140);
   }
   else if (mode === 'eliteHunt') {
@@ -1563,6 +1740,34 @@ function startGame(mode) {
   }
   else if (mode === 'singularity') {
     for (let i = 0; i < 2; i++) spawnEnemy('zeroHomer');
+  }
+  else if (mode === 'godRealm') {
+    for (let i = 0; i < 4; i++) spawnEnemy('myth');
+  }
+  else if (mode === 'chronoVortex') {
+    for (let i = 0; i < 4; i++) spawnEnemy('eternal');
+  }
+  else if (mode === 'realityRift') {
+    for (let i = 0; i < 4; i++) spawnEnemy('cosmic');
+  }
+  else if (mode === 'eternalWar') {
+    for (let i = 0; i < 4; i++) spawnEnemy('primordial');
+  }
+  else if (mode === 'soulReaper') {
+    for (let i = 0; i < 4; i++) spawnEnemy('genesis');
+  }
+  else if (mode === 'chaosStorm') {
+    for (let i = 0; i < 5; i++) spawnEnemy('apocalypse');
+  }
+  else if (mode === 'cosmicEnd') {
+    for (let i = 0; i < 5; i++) spawnEnemy('omniscient');
+  }
+  else if (mode === 'genesisWar') {
+    for (let i = 0; i < 3; i++) spawnEnemy('omnipotent');
+    spawnEnemy('godhead');
+  }
+  else if (mode === 'biohazard') {
+    for (let i = 0; i < 6; i++) spawnEnemy('normal');
   }
   else if (mode === 'superCampaign' || mode === 'zenith' || mode === 'infinity' || mode === 'ascension') {
     for (let i = 0; i < 3; i++) spawnEnemy(pickLevel(1));
@@ -1616,6 +1821,11 @@ function spawnEnemy(level, isElite) {
     e.maxHp = e.hp = 160;
     e.color = '#7e22ce';
   }
+  if (G.mode === 'biohazard') {
+    e.isInfected = Math.random() < 0.3;
+    e.color = e.isInfected ? '#84cc16' : cfg.color;
+    e.maxHp = e.hp = Math.round(cfg.hp * 1.2);
+  }
 
   if (G.mode === 'zombie') {
     e.isZombie = true;
@@ -1624,11 +1834,14 @@ function spawnEnemy(level, isElite) {
     e.maxHp = e.hp = 40 + G.wave * 6;
   } else {
     const pool = ['pistol', 'smg', 'rifle', 'shotgun'];
-    if (level === 'hard' || level === 'hell') pool.push('sniper', 'minigun', 'grenade');
-    if (level === 'ashen' || level === 'nightmare' || level === 'inferno') pool.push('rocket', 'laser', 'shockwave');
-    if (level === 'abyss' || level === 'chaos' || level === 'voidLv') pool.push('plasmaRifle', 'frostNova', 'empGun');
-    if (level === 'godlike' || level === 'transcend') pool.push('ionCannon', 'photonCannon', 'plasmaOrb');
-    if (level === 'trisolaris' || level === 'zeroHomer') pool.push('waterDrop', 'sophonGun');
+    if (['hard','hell'].includes(level)) pool.push('sniper', 'minigun', 'grenade');
+    if (['ashen','nightmare','inferno'].includes(level)) pool.push('rocket', 'laser', 'shockwave');
+    if (['abyss','chaos','voidLv'].includes(level)) pool.push('plasmaRifle', 'frostNova', 'empGun');
+    if (['godlike','transcend'].includes(level)) pool.push('ionCannon', 'photonCannon', 'plasmaOrb');
+    if (['trisolaris','zeroHomer'].includes(level)) pool.push('waterDrop', 'sophonGun');
+    if (['titan','myth','eternal','cosmic'].includes(level)) pool.push('antimatterRifle', 'starCannon', 'quasarCannon');
+    if (['primordial','genesis','apocalypse','omniscient'].includes(level)) pool.push('darkMatterCannon', 'supernova', 'zeusWrath');
+    if (['omnipotent','godhead'].includes(level)) pool.push('mythBlade', 'cosmicJudge', 'voidSovereign');
     e.weapon = pool[randInt(0, pool.length - 1)];
   }
   G.players.push(e);
@@ -1645,7 +1858,7 @@ function spawnBoss(x, y) {
   b.aiLevel = 'hard';
   G.players.push(b);
   G.bossRef = b;
-  document.getElementById('hBossBox').style.display = 'block';
+  DOM.hBossBox.style.display = 'block';
   return b;
 }
 
@@ -1654,7 +1867,7 @@ function endGame(reason) {
   G.over = true;
   G.running = false;
   showGameUI(false);
-  document.getElementById('hBossBox').style.display = 'none';
+  DOM.hBossBox.style.display = 'none';
 
   const base = G.score;
   const best = SAVE.high[G.mode] || 0;
@@ -1662,12 +1875,12 @@ function endGame(reason) {
   if (isNew) SAVE.high[G.mode] = base;
   saveGame(); flushSave();
 
-  const title = document.getElementById('overTitle');
+  const title = DOM.overTitle;
   if (reason === 'win') { title.textContent = '🏆 胜  利'; title.style.filter = 'drop-shadow(0 0 30px rgba(74,222,128,.6))'; }
   else if (reason === 'lose') { title.textContent = '💀 战  败'; title.style.filter = 'drop-shadow(0 0 30px rgba(244,63,94,.6))'; }
   else { title.textContent = '⏱ 对 战 结 束'; title.style.filter = 'none'; }
 
-  document.getElementById('overStats').innerHTML =
+  DOM.overStats.innerHTML =
     `<div class="big">${fmt(base)}</div>
      <div style="color:#5a7ba3;font-size:12px;letter-spacing:3px;margin-bottom:14px">本 局 得 分</div>
      <div>击杀 <b style="color:#4ade80">${G.kills}</b> &nbsp;·&nbsp; 存活 <b style="color:#7dd3fc">${G.time.toFixed(1)}s</b> &nbsp;·&nbsp; 波次 <b style="color:#fbbf24">${G.wave}</b>${G.modeScoreMul > 1 ? ` &nbsp;·&nbsp; 倍率 <b style="color:#f472b6">×${G.modeScoreMul}</b>` : ''}</div>
@@ -1676,7 +1889,7 @@ function endGame(reason) {
        ${isNew ? '<span class="tag" style="color:#4ade80">新纪录</span>' : ''}
      </div>`;
 
-  document.getElementById('over').classList.remove('hidden');
+  DOM.over.classList.remove('hidden');
 }
 
 function restart() { startGame(G.mode); }
@@ -1691,7 +1904,7 @@ function backToMenu() {
   G.running = false; G.paused = false; G.over = false;
   showGameUI(false);
   hideAllPanels();
-  document.getElementById('menu').classList.remove('hidden');
+  DOM.menu.classList.remove('hidden');
   refreshMenu();
 }
 function quitGame() {
@@ -1704,20 +1917,20 @@ function quitGame() {
 
   G.running = false; G.paused = false; G.over = false;
   showGameUI(false);
-  document.getElementById('pause').classList.add('hidden');
-  document.getElementById('menu').classList.remove('hidden');
+  DOM.pause.classList.add('hidden');
+  DOM.menu.classList.remove('hidden');
   refreshMenu();
   toast('已退出到主菜单（记录已保存）');
 }
 function togglePause() {
   if (!G.running) return;
   G.paused = !G.paused;
-  document.getElementById('pause').classList.toggle('hidden', !G.paused);
+  DOM.pause.classList.toggle('hidden', !G.paused);
   syncUI();
 }
 function hideAllPanels() {
-  ['menu', 'shop', 'codePanel', 'over', 'pause', 'help', 'consolePanel'].forEach(id =>
-    document.getElementById(id).classList.add('hidden'));
+  [DOM.menu, DOM.shop, DOM.codePanel, DOM.over, DOM.pause, DOM.help, DOM.consolePanel].forEach(el =>
+    el.classList.add('hidden'));
 }
 
 /* =========================================================
@@ -1737,16 +1950,14 @@ function refreshWeaponUI() {
   const p = G.players[0];
   if (!p) return;
   const w = WEAPONS[p.weapon];
-  const el = document.getElementById('p1wp');
-  const ammoEl = document.getElementById('p1ammo');
-  if (el && w) {
-    el.textContent = w.name;
+  if (DOM.p1wp && w) {
+    DOM.p1wp.textContent = w.name;
     if (w.ammo) {
-      ammoEl.textContent = (SAVE.ammo[w.ammo] || 0);
-      ammoEl.style.color = (SAVE.ammo[w.ammo] || 0) < 30 ? '#f43f5e' : '#7dd3fc';
+      DOM.p1ammo.textContent = (SAVE.ammo[w.ammo] || 0);
+      DOM.p1ammo.style.color = (SAVE.ammo[w.ammo] || 0) < 30 ? '#f43f5e' : '#7dd3fc';
     } else {
-      ammoEl.textContent = '∞';
-      ammoEl.style.color = '#7dd3fc';
+      DOM.p1ammo.textContent = '∞';
+      DOM.p1ammo.style.color = '#7dd3fc';
     }
   }
 }
@@ -1787,8 +1998,8 @@ function tryFire(p) {
   const explosiveLv = perkLv(p, 'explosive');
   const critLv = perkLv(p, 'crit');
   const berserkLv = perkLv(p, 'berserk');
+  const realityLv = perkLv(p, 'realityBreak');
 
-  // 狂暴加成（生命低于 40%）
   let berserkMul = 1;
   if (berserkLv > 0 && p.hp < p.maxHp * 0.4) {
     berserkMul = 1 + berserkLv * 0.08;
@@ -1807,6 +2018,12 @@ function tryFire(p) {
       dmgFinal *= (1 + Math.min(G._activeEnemyCount, 10) * 0.15);
     }
 
+    let isRealityCrit = false;
+    if (realityLv > 0 && Math.random() < realityLv * 0.04) {
+      dmgFinal *= 5;
+      isRealityCrit = true;
+    }
+
     let isCrit = false;
     if (critLv > 0 && Math.random() < critLv * 0.03) {
       dmgFinal *= 2;
@@ -1816,16 +2033,16 @@ function tryFire(p) {
     const dfBonus = (!p.isAI && G.darkForestT > 0) ? 1 + (15 + (perkLv(p, 'darkForest')) * 6) / 100 : 1;
 
     G.bullets.push({
-      x: p.x + Math.cos(p.angle) * muzzle,
-      y: p.y + Math.sin(p.angle) * muzzle,
-      vx: Math.cos(a) * sp + p.vx * 0.3,
-      vy: Math.sin(a) * sp + p.vy * 0.3,
+      x: p.x + _cos(p.angle) * muzzle,
+      y: p.y + _sin(p.angle) * muzzle,
+      vx: _cos(a) * sp + p.vx * 0.3,
+      vy: _sin(a) * sp + p.vy * 0.3,
       r: w.size,
       dmg: dmgFinal * dfBonus,
       team: p.team,
       ownerId: p.id,
-      color: isCrit ? '#fbbf24' : w.color,
-      life: w.santi ? 4.0 : 2.6,
+      color: (isCrit || isRealityCrit) ? '#fbbf24' : w.color,
+      life: (w.santi || w.myth) ? 4.5 : 2.6,
       pierce: (w.pierce || 0) + Math.floor(pierceLv / 2),
       bounce: Math.min(bounceLv, 8),
       homing: (w.homing || 0) + homingLv * 0.35,
@@ -1837,8 +2054,9 @@ function tryFire(p) {
       poison: w.poison || 0,
       burn: w.burn || 0,
       knockback: w.knockback || 0,
-      isCrit,
+      isCrit: isCrit || isRealityCrit,
       isSanti: !!w.santi,
+      isMyth: !!w.myth,
       darkForestMark: (!p.isAI && G.darkForestT > 0),
       trail: []
     });
@@ -1849,13 +2067,13 @@ function tryFire(p) {
 
   for (let i = 0; i < 3; i++) {
     const a = p.angle + rand(-0.45, 0.45), s = rand(100, 300);
-    addP(p.x + Math.cos(p.angle) * muzzle, p.y + Math.sin(p.angle) * muzzle,
-      Math.cos(a) * s, Math.sin(a) * s, rand(0.06, 0.15), w.color, rand(1.5, 3.5));
+    addP(p.x + _cos(p.angle) * muzzle, p.y + _sin(p.angle) * muzzle,
+      _cos(a) * s, _sin(a) * s, rand(0.06, 0.15), w.color, rand(1.5, 3.5));
   }
 }
 
 /* =========================================================
-   技能使用（★ 上限 10 · 重新平衡）
+   技能使用
    ========================================================= */
 function useSkill(name) {
   const p = G.players[0];
@@ -1881,8 +2099,8 @@ function useSkill(name) {
     if (p.dashCharges <= 0) return;
     p.dashCharges--;
     if (p.dashCd <= 0) p.dashCd = Math.max(2, 18 - lv * 1.2);
-    p.vx += Math.cos(p.angle) * (900 + lv * 80);
-    p.vy += Math.sin(p.angle) * (900 + lv * 80);
+    p.vx += _cos(p.angle) * (900 + lv * 80);
+    p.vy += _sin(p.angle) * (900 + lv * 80);
     for (let i = 0; i < 10; i++)
       addP(p.x, p.y, rand(-120, 120), rand(-120, 120), rand(0.18, 0.4), '#a78bfa', rand(1.5, 3.5));
   } else if (name === 'heal') {
@@ -1911,8 +2129,8 @@ function useSkill(name) {
     if (p.dashCd > 0) return;
     p.dashCd = Math.max(2, 12 - lv * 0.8);
     const range = 180 + lv * 55;
-    p.x += Math.cos(p.angle) * range;
-    p.y += Math.sin(p.angle) * range;
+    p.x += _cos(p.angle) * range;
+    p.y += _sin(p.angle) * range;
     p.x = clamp(p.x, p.r, W - p.r);
     p.y = clamp(p.y, p.r, H - p.r);
     for (let i = 0; i < 12; i++)
@@ -1963,8 +2181,8 @@ function useSkill(name) {
     p.cjCd = Math.max(8, 28 - lv * 2);
     p.invuln = 0.4 + lv * 0.12;
     p.cjT = p.invuln;
-    p.vx = Math.cos(p.angle) * 3000;
-    p.vy = Math.sin(p.angle) * 3000;
+    p.vx = _cos(p.angle) * 3000;
+    p.vy = _sin(p.angle) * 3000;
     p.vx = clamp(p.vx, -4000, 4000);
     p.vy = clamp(p.vy, -4000, 4000);
     toast(`曲率光速 Lv.${lv}`);
@@ -1987,6 +2205,24 @@ function useSkill(name) {
     toast(`湮灭立场 Lv.${lv} · 伤害 ${G.annihilationDmg}`);
     burst(p.x, p.y, '#f43f5e', 36, 420);
   }
+  else if (name === 'divineShield') {
+    if (p.dsCd > 0) { toast('神圣护盾冷却 ' + p.dsCd.toFixed(1) + 's'); return; }
+    p.dsCd = Math.max(20, 50 - lv * 2);
+    p.invuln = 1.5 + lv * 0.3;
+    p.shield = 1.5 + lv * 0.3;
+    p.dsT = p.invuln;
+    G.divineShieldT = p.invuln;
+    toast(`神圣护盾 Lv.${lv} · 全屏无敌 ${(1.5 + lv*0.3).toFixed(1)}s`);
+    burst(p.x, p.y, '#fde68a', 40, 500);
+  } else if (name === 'timeWarp') {
+    if (p.twCd > 0) { toast('时间扭曲冷却 ' + p.twCd.toFixed(1) + 's'); return; }
+    p.twCd = 50;
+    G.slowmo = 3;
+    G.timeWarpT = 2 + lv * 0.5;
+    p.twT = G.timeWarpT;
+    toast(`时间扭曲 Lv.${lv} · 时缓 3 倍 · 自身加速`);
+    burst(p.x, p.y, '#fbbf24', 40, 500);
+  }
 }
 
 /* =========================================================
@@ -1996,13 +2232,11 @@ function damage(target, amount, sourceId) {
   if (!target.alive || target.respawn > 0) return;
   if (target.invuln > 0 && !target.isBoss) return;
   if (target.shield > 0) {
-    // ★ 荆棘护盾：反弹一部分伤害
     const thornsLv = perkLv(target, 'thorns');
     const src = G.players.find(q => q.id === sourceId);
     if (thornsLv > 0 && src && src !== target && src.alive) {
       const reflect = amount * thornsLv * 0.04;
       if (reflect > 0) {
-        // 直接扣血避免递归
         src.hp -= reflect;
         addFloat(src.x, src.y - 30, '-' + Math.round(reflect), '#f43f5e', 13);
         if (src.hp <= 0) killPlayer(src, target.id);
@@ -2015,7 +2249,6 @@ function damage(target, amount, sourceId) {
 
   if (target.darkForestMark > 0) amount *= 1.3;
 
-  // ★ 荆棘护盾：直接命中也可反弹
   const thornsLv2 = perkLv(target, 'thorns');
   const src2 = G.players.find(q => q.id === sourceId);
   if (thornsLv2 > 0 && src2 && src2 !== target && src2.alive) {
@@ -2038,8 +2271,8 @@ function damage(target, amount, sourceId) {
     }
   }
 
-  if (target.isBoss && (G.mode === 'boss' || G.mode === 'dualBoss' || G.mode === 'apocalypse')) {
-    document.getElementById('hBoss').textContent =
+  if (target.isBoss && (G.mode === 'boss' || G.mode === 'dualBoss' || G.mode === 'apocalypseMode')) {
+    DOM.hBoss.textContent =
       Math.max(0, Math.ceil(target.hp / target.maxHp * 100)) + '%';
   }
 
@@ -2057,7 +2290,7 @@ function killPlayer(p, sourceId) {
 
   if (p.isBoss) {
     G.bossRef = null;
-    if (G.mode === 'dualBoss' || G.mode === 'apocalypse') {
+    if (G.mode === 'dualBoss' || G.mode === 'apocalypseMode') {
       const otherBoss = G.players.find(q => q.isBoss && q.alive);
       if (otherBoss) {
         G.score += 5000 * G.modeScoreMul;
@@ -2067,7 +2300,7 @@ function killPlayer(p, sourceId) {
         return;
       }
     }
-    document.getElementById('hBossBox').style.display = 'none';
+    DOM.hBossBox.style.display = 'none';
     G.score += 5000 * G.modeScoreMul;
     SAVE.points += 5000 * G.modeScoreMul;
     saveGame();
@@ -2106,15 +2339,30 @@ function killPlayer(p, sourceId) {
         easy: 120, normal: 200, hard: 350, hell: 550, ashen: 900,
         nightmare: 1500, inferno: 2200, abyss: 3200, chaos: 4500,
         voidLv: 6500, godlike: 10000, transcend: 16000,
-        trisolaris: 28000, zeroHomer: 50000
+        trisolaris: 28000, zeroHomer: 50000,
+        titan: 80000, myth: 150000, eternal: 300000, cosmic: 600000,
+        primordial: 1200000, genesis: 2500000, apocalypse: 5000000,
+        omniscient: 10000000, omnipotent: 25000000, godhead: 60000000
       };
       gain = baseGain[p.aiLevel] || 200;
       if (p.isZombie) gain = 150;
       if (p.isElite) gain *= 2;
+      if (p.isInfected) gain = Math.round(gain * 1.5);
     } else {
       gain = 2000;
     }
-    gain = Math.round(gain * (1 + G.wave * 0.15) * G.modeScoreMul * G.rageMul * G.nightmareMul);
+
+    const soulLv = perkLv(src, 'soulHarvest');
+    let soulBonus = 1;
+    if (soulLv > 0) soulBonus = 1 + soulLv * 0.02;
+
+    gain = Math.round(
+      gain * (1 + G.wave * 0.15) *
+      G.modeScoreMul *
+      G.rageMul *
+      G.nightmareMul *
+      soulBonus
+    );
     if (G.combo > 1) gain = Math.round(gain * (1 + Math.min(G.combo, 10) * 0.12));
 
     if (p.team !== 0 || G.mode === 'deathmatch') {
@@ -2123,12 +2371,16 @@ function killPlayer(p, sourceId) {
         SAVE.points += gain;
         SAVE.kills++;
         saveGame();
-        addFloat(p.x, p.y - 26, '+' + gain, '#fbbf24', 20);
+        addFloat(p.x, p.y - 26, '+' + fmt(gain), '#fbbf24', 20);
       }
 
       const vampLv = perkLv(src, 'vampire');
       if (vampLv > 0) {
         const amount = 3 + vampLv * 2;
+        src.hp = Math.min(src.maxHp, src.hp + amount);
+      }
+      if (soulLv > 0) {
+        const amount = 10 + soulLv * 8;
         src.hp = Math.min(src.maxHp, src.hp + amount);
       }
       if (G.combo >= 3) addKillfeed(`${G.combo} 连杀!`, '#fbbf24');
@@ -2138,7 +2390,11 @@ function killPlayer(p, sourceId) {
     }
   }
 
-  if (Math.random() < 0.35 && p.team === 1) {
+  if (G.mode === 'biohazard' && p.team === 1) {
+    if (p.isInfected || Math.random() < 0.3) {
+      G.pickups.push({ x: p.x, y: p.y, life: 14, r: 13, phase: rand(0, TAU), serum: true });
+    }
+  } else if (Math.random() < 0.35 && p.team === 1) {
     G.pickups.push({ x: p.x, y: p.y, life: 14, r: 13, phase: rand(0, TAU) });
   }
 }
@@ -2183,6 +2439,8 @@ function updatePlayer(p, dt) {
   p.cjCd = Math.max(0, p.cjCd - dt);
   p.ccCd = Math.max(0, p.ccCd - dt);
   p.anCd = Math.max(0, p.anCd - dt);
+  p.dsCd = Math.max(0, p.dsCd - dt);
+  p.twCd = Math.max(0, p.twCd - dt);
   if (p.odT > 0) p.odT -= dt;
   p.hitFlash = Math.max(0, p.hitFlash - dt);
   p.invuln = Math.max(0, p.invuln - dt);
@@ -2190,7 +2448,6 @@ function updatePlayer(p, dt) {
   p.slowT = Math.max(0, p.slowT - dt);
   if (p.darkForestMark > 0) p.darkForestMark -= dt;
 
-  // ★ 技能状态计时递减（用于技能条显示）
   p.shieldT = Math.max(0, p.shieldT - dt);
   p.slowT2 = Math.max(0, p.slowT2 - dt);
   p.odT2 = Math.max(0, p.odT2 - dt);
@@ -2202,8 +2459,9 @@ function updatePlayer(p, dt) {
   p.cjT = Math.max(0, p.cjT - dt);
   p.ccT = Math.max(0, p.ccT - dt);
   p.anT = Math.max(0, p.anT - dt);
+  p.dsT = Math.max(0, p.dsT - dt);
+  p.twT = Math.max(0, p.twT - dt);
 
-  // ★ 二段冲刺充能恢复
   if (!p.isAI && p.dashMaxCharges > 1) {
     if (p.dashCharges < p.dashMaxCharges && p.dashCd <= 0) {
       p.dashCharges++;
@@ -2216,7 +2474,6 @@ function updatePlayer(p, dt) {
     p.dashCharges = 1;
   }
 
-  // ★ 弹药再生
   if (!p.isAI) {
     const arLv = perkLv(p, 'ammoRegen');
     if (arLv > 0) {
@@ -2290,7 +2547,7 @@ function updatePlayer(p, dt) {
   while (d < -Math.PI) d += TAU;
   p.angle += d * Math.min(1, 18 * dt);
 
-  const ml = Math.hypot(p.mx, p.my);
+  const ml = _sqrt(p.mx*p.mx + p.my*p.my);
   let dx = 0, dy = 0;
   if (ml > 0.01) { dx = p.mx / ml; dy = p.my / ml; }
 
@@ -2299,6 +2556,7 @@ function updatePlayer(p, dt) {
   if (p.odT > 0) spd *= 1.25;
   if (p.slowT > 0) spd *= 0.45;
   if (G.slowmo > 0 && !p.isAI) spd *= 1.5;
+  if (G.timeWarpT > 0 && !p.isAI) spd *= 1.8;
   if (p.isAI) {
     spd *= (DIFFICULTY[p.aiLevel] ? DIFFICULTY[p.aiLevel].speed : 0.6);
     if (G.mode === 'rage') spd *= 1.4;
@@ -2319,6 +2577,16 @@ function updatePlayer(p, dt) {
   if (p.x > W - p.r) { p.x = W - p.r; p.vx = -Math.abs(p.vx) * 0.3; }
   if (p.y < p.r) { p.y = p.r; p.vy = Math.abs(p.vy) * 0.3; }
   if (p.y > H - p.r) { p.y = H - p.r; p.vy = -Math.abs(p.vy) * 0.3; }
+
+  if (G.mode === 'realityRift' && G.riftRadius < Math.max(W, H)) {
+    const cx = W / 2, cy = H / 2;
+    const dx2 = p.x - cx, dy2 = p.y - cy;
+    const d2 = _sqrt(dx2*dx2 + dy2*dy2);
+    if (d2 > G.riftRadius) {
+      p.x = cx + (dx2 / d2) * G.riftRadius;
+      p.y = cy + (dy2 / d2) * G.riftRadius;
+    }
+  }
 
   if (ml > 0.1 && Math.random() < 0.25) {
     addP(p.x, p.y, rand(-20, 20), rand(-20, 20), rand(0.1, 0.25), p.color, rand(1.5, 3));
@@ -2360,10 +2628,10 @@ function updateAI(p, dt) {
     p.aiStrafe = Math.random() < 0.5 ? 1 : -1;
   }
   let mx = 0, my = 0;
-  if (d > ideal + 80) { mx = Math.cos(baseAng); my = Math.sin(baseAng); }
-  else if (d < ideal - 100) { mx = -Math.cos(baseAng); my = -Math.sin(baseAng); }
-  mx += Math.cos(baseAng + Math.PI / 2) * p.aiStrafe * 0.85;
-  my += Math.sin(baseAng + Math.PI / 2) * p.aiStrafe * 0.85;
+  if (d > ideal + 80) { mx = _cos(baseAng); my = _sin(baseAng); }
+  else if (d < ideal - 100) { mx = -_cos(baseAng); my = -_sin(baseAng); }
+  mx += _cos(baseAng + Math.PI / 2) * p.aiStrafe * 0.85;
+  my += _sin(baseAng + Math.PI / 2) * p.aiStrafe * 0.85;
 
   if (cfg.dodge > 0 && G.bullets.length < 120) {
     for (let bi = 0; bi < G.bullets.length; bi++) {
@@ -2374,14 +2642,14 @@ function updateAI(p, dt) {
       const dot = b.vx * (p.x - b.x) + b.vy * (p.y - b.y);
       if (dot < 0) continue;
       const px = -b.vy, py = b.vx;
-      const pl = Math.hypot(px, py) || 1;
+      const pl = _sqrt(px*px + py*py) || 1;
       mx += (px / pl) * cfg.dodge * 1.6 * p.aiStrafe;
       my += (py / pl) * cfg.dodge * 1.6 * p.aiStrafe;
       break;
     }
   }
 
-  const ml = Math.hypot(mx, my);
+  const ml = _sqrt(mx*mx + my*my);
   if (ml > 0.01) { p.mx = mx / ml; p.my = my / ml; }
 
   const fireMul = (G.mode === 'bulletHell') ? 0.4 : 1;
@@ -2404,8 +2672,8 @@ function updateZombie(p, dt) {
   const ang = Math.atan2(target.y - p.y, target.x - p.x);
   const d = dist(p.x, p.y, target.x, target.y);
   p.angle = ang; p.aimAngle = ang;
-  p.mx = Math.cos(ang);
-  p.my = Math.sin(ang);
+  p.mx = _cos(ang);
+  p.my = _sin(ang);
   if (d < p.r + target.r + 4 && p.cd <= 0) {
     damage(target, 8, p.id);
     p.cd = 1.0;
@@ -2421,11 +2689,11 @@ function updateBoss(p, dt) {
   p.angle = ang; p.aimAngle = ang;
   const d = dist(p.x, p.y, target.x, target.y);
   if (d > 380) {
-    p.mx = Math.cos(ang) * 0.45;
-    p.my = Math.sin(ang) * 0.45;
+    p.mx = _cos(ang) * 0.45;
+    p.my = _sin(ang) * 0.45;
   } else {
-    p.mx = Math.cos(ang + Math.PI / 2) * 0.35;
-    p.my = Math.sin(ang + Math.PI / 2) * 0.35;
+    p.mx = _cos(ang + Math.PI / 2) * 0.35;
+    p.my = _sin(ang + Math.PI / 2) * 0.35;
   }
   if (p.bossT <= 0) {
     p.bossPhase = (p.bossPhase + 1) % 3;
@@ -2454,14 +2722,14 @@ function updateBoss(p, dt) {
 
 function mkBossBullet(p, a, sp, dmg, homing = 0) {
   return {
-    x: p.x + Math.cos(a) * (p.r + 6),
-    y: p.y + Math.sin(a) * (p.r + 6),
-    vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+    x: p.x + _cos(a) * (p.r + 6),
+    y: p.y + _sin(a) * (p.r + 6),
+    vx: _cos(a) * sp, vy: _sin(a) * sp,
     r: 8, dmg, team: 1, ownerId: p.id,
     color: '#f43f5e', life: 5,
     pierce: 0, bounce: 0, homing, explode: 0, eDmg: 0,
     blackhole: false, chain: 0, slow: 0, poison: 0, burn: 0, knockback: 0,
-    isCrit: false, isSanti: false, darkForestMark: false,
+    isCrit: false, isSanti: false, isMyth: false, darkForestMark: false,
     trail: []
   };
 }
@@ -2496,9 +2764,9 @@ function updateBullets(dt) {
         while (df > Math.PI) df -= TAU;
         while (df < -Math.PI) df += TAU;
         const na = ca + clamp(df, -b.homing * bdt, b.homing * bdt);
-        const sp = Math.hypot(b.vx, b.vy);
-        b.vx = Math.cos(na) * sp;
-        b.vy = Math.sin(na) * sp;
+        const sp = _sqrt(b.vx*b.vx + b.vy*b.vy);
+        b.vx = _cos(na) * sp;
+        b.vy = _sin(na) * sp;
       }
     }
 
@@ -2546,8 +2814,8 @@ function updateBullets(dt) {
         }
         if (b.knockback) {
           const ka = Math.atan2(p.y - b.y, p.x - b.x);
-          p.vx += Math.cos(ka) * b.knockback;
-          p.vy += Math.sin(ka) * b.knockback;
+          p.vx += _cos(ka) * b.knockback;
+          p.vy += _sin(ka) * b.knockback;
         }
         if (b.darkForestMark) p.darkForestMark = Math.max(p.darkForestMark, 3);
         if (b.chain > 0) chainLightning(p, b, b.chain);
@@ -2605,7 +2873,7 @@ function explode(x, y, b) {
       const p = G.players[pi];
       if (!p.alive) continue;
       const dx = x - p.x, dy = y - p.y;
-      const d = Math.hypot(dx, dy);
+      const d = _sqrt(dx*dx + dy*dy);
       if (d > 1 && d < 500) {
         const f = (1 - d / 500) * 1400;
         p.vx += (dx / d) * f;
@@ -2652,14 +2920,19 @@ function updatePickups(dt) {
       if (dist2(p.x, p.y, k.x, k.y) < grabR2 * grabR2) {
         if (magnetLv > 0) {
           const dx = p.x - k.x, dy = p.y - k.y;
-          const d = Math.hypot(dx, dy) || 1;
+          const d = _sqrt(dx*dx + dy*dy) || 1;
           k.x += (dx / d) * 380 * dt;
           k.y += (dy / d) * 380 * dt;
         }
         if (dist2(p.x, p.y, k.x, k.y) < (p.r + k.r + 8) ** 2) {
-          p.hp = Math.min(p.maxHp, p.hp + 45);
-          addFloat(p.x, p.y - 30, '+45', '#4ade80', 18);
-          burst(k.x, k.y, '#4ade80', 10, 180);
+          if (k.serum) {
+            G.serum += 1;
+            addFloat(p.x, p.y - 30, '+血清', '#84cc16', 18);
+          } else {
+            p.hp = Math.min(p.maxHp, p.hp + 45);
+            addFloat(p.x, p.y - 30, '+45', '#4ade80', 18);
+          }
+          burst(k.x, k.y, k.serum ? '#84cc16' : '#4ade80', 10, 180);
           G.pickups.splice(i, 1);
           break;
         }
@@ -2690,36 +2963,47 @@ function updateMode(dt) {
 
   if (G.darkForestT > 0) G.darkForestT -= dt;
   if (G.sophonJamT > 0) G.sophonJamT -= dt;
+  if (G.timeWarpT > 0) G.timeWarpT -= dt;
 
-  // ★ 湮灭立场：周期性范围伤害
   if (G.annihilationT > 0) {
     G.annihilationT -= dt;
     const p1 = G.players[0];
     if (p1 && p1.alive) {
-      // 每 0.15s 造成一次伤害
-      if (!G._annTick) G._annTick = 0;
       G._annTick += dt;
       if (G._annTick >= 0.15) {
         G._annTick = 0;
         for (const q of G.players) {
           if (q.team === p1.team || !q.alive) continue;
           const d = dist(p1.x, p1.y, q.x, q.y);
-          if (d < 220) {
-            damage(q, G.annihilationDmg * 0.15, p1.id);
-          }
+          if (d < 220) damage(q, G.annihilationDmg * 0.15, p1.id);
         }
-        // 视觉粒子
         for (let i = 0; i < 6; i++) {
           const a = rand(0, TAU), r = rand(80, 220);
-          addP(p1.x + Math.cos(a) * r, p1.y + Math.sin(a) * r,
-            Math.cos(a) * -100, Math.sin(a) * -100,
+          addP(p1.x + _cos(a) * r, p1.y + _sin(a) * r,
+            _cos(a) * -100, _sin(a) * -100,
             rand(0.2, 0.5), '#f43f5e', rand(2, 4));
         }
       }
     }
   }
 
-  // 主玩家阵亡兜底
+  if (G.mode === 'chronoVortex') {
+    G.timeScale = 0.5 + _sin(G.time * 0.4) * 0.5;
+  }
+  if (G.mode === 'realityRift') {
+    G.riftRadius = Math.max(200, G.riftRadius - 8 * dt);
+  }
+  if (G.mode === 'chaosStorm') {
+    G.chaosEventT -= dt;
+    if (G.chaosEventT <= 0) {
+      G.chaosEventT = rand(8, 15);
+      G.chaosEvent = randInt(0, 4);
+      const evNames = ['敌人狂暴', '时间加速', '积分狂潮', '双倍敌人', '无伤害'];
+      toast('⚡ ' + evNames[G.chaosEvent]);
+      burst(W/2, H/2, '#dc2626', 60, 800);
+    }
+  }
+
   const myP = G.players[0];
   if (myP && !myP.alive && myP.lives <= 0 && G.running && !G.over && myP.respawn <= 0) {
     endGame('lose');
@@ -2801,6 +3085,23 @@ function updateMode(dt) {
       }
     }
   }
+  else if (G.mode === 'biohazard') {
+    G.spawnTimer -= dt;
+    const maxZ = Math.min(24, 8 + G.wave * 2);
+    if (G.spawnTimer <= 0 && aliveEnemies < maxZ) {
+      G.spawnTimer = Math.max(0.3, 1.2 - G.wave * 0.05);
+      const lvls = ['easy','normal','hard','hell','ashen'];
+      spawnEnemy(lvls[Math.min(Math.floor(G.wave/2), 4)]);
+    }
+    if (aliveEnemies === 0 && G.kills > 0) {
+      G.waveTimer -= dt;
+      if (G.waveTimer <= 0) {
+        G.wave++;
+        G.waveTimer = 3;
+        toast('感染潮 · 第 ' + G.wave + ' 波');
+      }
+    }
+  }
   else if (G.mode === 'boss' || G.mode === 'dualBoss') {
     const anyBoss = G.players.some(q => q.isBoss && q.alive);
     if (!anyBoss) {
@@ -2812,7 +3113,7 @@ function updateMode(dt) {
       }
     }
   }
-  else if (G.mode === 'apocalypse') {
+  else if (G.mode === 'apocalypseMode') {
     G.spawnTimer -= dt;
     const bossCount = G.players.filter(q => q.isBoss && q.alive).length;
     if (bossCount < 2 && G.spawnTimer <= 0) {
@@ -2821,9 +3122,7 @@ function updateMode(dt) {
       G.wave++;
       toast('BOSS 来袭 · 第 ' + G.wave + ' 波');
     }
-    if (aliveEnemies < 4 && Math.random() < 0.02) {
-      spawnEnemy(pickLevel(G.wave));
-    }
+    if (aliveEnemies < 4 && Math.random() < 0.02) spawnEnemy(pickLevel(G.wave));
   }
   else if (G.mode === 'zenith') {
     G.spawnTimer -= dt;
@@ -2835,11 +3134,8 @@ function updateMode(dt) {
     if (aliveEnemies < 8) {
       if (G.spawnTimer <= 0) {
         G.spawnTimer = 1.5;
-        if (Math.random() < 0.5) {
-          spawnEnemy(['hard','hell','ashen'][randInt(0,2)], true);
-        } else {
-          spawnEnemy('hard');
-        }
+        if (Math.random() < 0.5) spawnEnemy(['hard','hell','ashen'][randInt(0,2)], true);
+        else spawnEnemy('hard');
       }
     }
   }
@@ -2864,6 +3160,86 @@ function updateMode(dt) {
       const lvls = ['ashen','nightmare','inferno','abyss','chaos','voidLv','godlike','transcend','trisolaris','zeroHomer'];
       const idx = Math.min(9, Math.floor(G.survivalTime / 12));
       spawnEnemy(lvls[idx]);
+    }
+  }
+  else if (G.mode === 'godRealm') {
+    G.timeLeft -= dt;
+    if (G.timeLeft <= 0) { endGame(); return; }
+    G.spawnTimer -= dt;
+    if (G.spawnTimer <= 0 && aliveEnemies < 7) {
+      G.spawnTimer = Math.max(0.5, 1.8 - G.time * 0.01);
+      spawnEnemy('myth');
+    }
+  }
+  else if (G.mode === 'chronoVortex') {
+    G.timeLeft -= dt;
+    if (G.timeLeft <= 0) { endGame(); return; }
+    G.spawnTimer -= dt;
+    if (G.spawnTimer <= 0 && aliveEnemies < 8) {
+      G.spawnTimer = Math.max(0.4, 1.5 - G.time * 0.01);
+      spawnEnemy('eternal');
+    }
+  }
+  else if (G.mode === 'realityRift') {
+    G.timeLeft -= dt;
+    if (G.timeLeft <= 0) { endGame(); return; }
+    G.spawnTimer -= dt;
+    if (G.spawnTimer <= 0 && aliveEnemies < 7) {
+      G.spawnTimer = Math.max(0.5, 1.6 - G.time * 0.008);
+      spawnEnemy('cosmic');
+    }
+  }
+  else if (G.mode === 'eternalWar') {
+    G.spawnTimer -= dt;
+    const maxE = Math.min(14, 5 + Math.floor(G.time / 20));
+    if (G.spawnTimer <= 0 && aliveEnemies < maxE) {
+      G.spawnTimer = Math.max(0.4, 1.6 - G.time * 0.008);
+      const lvls = ['primordial','genesis','apocalypse'];
+      const idx = Math.min(2, Math.floor(G.time / 40));
+      spawnEnemy(lvls[idx]);
+    }
+    if (G.kills > 0 && G.kills % 10 === 0 && G.waveTimer <= 0) {
+      G.wave++;
+      G.waveTimer = 4;
+      toast('第 ' + G.wave + ' 波');
+    }
+    G.waveTimer = Math.max(0, G.waveTimer - dt);
+  }
+  else if (G.mode === 'soulReaper') {
+    G.spawnTimer -= dt;
+    const maxE = Math.min(12, 5 + Math.floor(G.time / 25));
+    if (G.spawnTimer <= 0 && aliveEnemies < maxE) {
+      G.spawnTimer = Math.max(0.5, 1.8 - G.time * 0.006);
+      spawnEnemy('genesis');
+    }
+  }
+  else if (G.mode === 'chaosStorm') {
+    G.timeLeft -= dt;
+    if (G.timeLeft <= 0) { endGame(); return; }
+    G.spawnTimer -= dt;
+    if (G.spawnTimer <= 0 && aliveEnemies < 10) {
+      G.spawnTimer = Math.max(0.3, 1.2 - G.time * 0.008);
+      spawnEnemy('apocalypse');
+      if (G.chaosEvent === 3 && Math.random() < 0.5) spawnEnemy('apocalypse');
+    }
+  }
+  else if (G.mode === 'cosmicEnd') {
+    G.timeLeft -= dt;
+    if (G.timeLeft <= 0) { endGame(); return; }
+    G.spawnTimer -= dt;
+    if (G.spawnTimer <= 0 && aliveEnemies < 9) {
+      G.spawnTimer = Math.max(0.4, 1.5 - G.time * 0.006);
+      spawnEnemy('omniscient');
+    }
+  }
+  else if (G.mode === 'genesisWar') {
+    G.timeLeft -= dt;
+    if (G.timeLeft <= 0) { endGame(); return; }
+    G.spawnTimer -= dt;
+    if (G.spawnTimer <= 0 && aliveEnemies < 8) {
+      G.spawnTimer = Math.max(0.4, 1.4 - G.time * 0.006);
+      spawnEnemy('omnipotent');
+      if (Math.random() < 0.05) spawnEnemy('godhead');
     }
   }
   else if (G.mode === 'team') {
@@ -2986,17 +3362,20 @@ function updateMode(dt) {
    主更新
    ========================================================= */
 function update(dt) {
+  const globalScale = G.mode === 'chronoVortex' ? G.timeScale : 1;
+  const sdt = dt * globalScale;
+
   G.time += dt;
   if (G.timeStop > 0) G.timeStop -= dt;
 
-  for (let i = 0; i < G.players.length; i++) updatePlayer(G.players[i], dt);
+  for (let i = 0; i < G.players.length; i++) updatePlayer(G.players[i], sdt);
 
   refreshCache();
 
-  updateBullets(dt);
-  updateParticles(dt);
-  updatePickups(dt);
-  updateFloats(dt);
+  updateBullets(sdt);
+  updateParticles(sdt);
+  updatePickups(sdt);
+  updateFloats(sdt);
 
   const ps = G.players;
   for (let i = 0; i < ps.length; i++) {
@@ -3006,9 +3385,10 @@ function update(dt) {
       const b = ps[j];
       if (!b.alive) continue;
       const dx = b.x - a.x, dy = b.y - a.y;
-      const d = Math.hypot(dx, dy);
+      const d2v = dx*dx + dy*dy;
       const min = a.r + b.r;
-      if (d > 0.001 && d < min) {
+      if (d2v > 0.0001 && d2v < min * min) {
+        const d = _sqrt(d2v);
         const push = (min - d) * 0.5;
         const nx = dx / d, ny = dy / d;
         a.x -= nx * push; a.y -= ny * push;
@@ -3031,13 +3411,12 @@ function update(dt) {
   }
 
   const p1 = G.players[0];
-  const rsEl = document.getElementById('respawnOverlay');
   if (p1 && !p1.alive && p1.respawn > 0 && G.running) {
-    rsEl.classList.add('on');
-    rsEl.querySelector('.rsTimer').textContent = Math.max(0, p1.respawn).toFixed(1);
-    document.getElementById('rsLives').textContent = p1.lives;
+    DOM.respawnOverlay.classList.add('on');
+    DOM.rsTimer.textContent = Math.max(0, p1.respawn).toFixed(1);
+    DOM.rsLives.textContent = p1.lives;
   } else {
-    rsEl.classList.remove('on');
+    DOM.respawnOverlay.classList.remove('on');
   }
 
   if (G.shake > 0.2) G.shake *= Math.pow(0.0006, dt);
@@ -3047,7 +3426,7 @@ function update(dt) {
 /* =========================================================
    渲染
    ========================================================= */
-let fpsAcc = 0, fpsCount = 0;
+let fpsAcc = 0, fpsCount = 0, fpsUpdateTimer = 0;
 
 function render() {
   if (G.ascii) { renderASCII(); return; }
@@ -3066,6 +3445,21 @@ function render() {
 
   ctx.translate(sx, sy);
 
+  if (G.mode === 'realityRift' && G.riftRadius < Math.max(W, H)) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.75)';
+    ctx.beginPath();
+    ctx.rect(0, 0, W, H);
+    ctx.arc(W/2, H/2, G.riftRadius, 0, TAU, true);
+    ctx.fill('evenodd');
+    ctx.beginPath();
+    ctx.arc(W/2, H/2, G.riftRadius, 0, TAU);
+    ctx.strokeStyle = `rgba(103,232,249,${(0.6 + 0.3*_sin(G.time*5)).toFixed(2)})`;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.restore();
+  }
+
   drawPickups();
   drawParticles();
   drawBullets();
@@ -3079,23 +3473,35 @@ function render() {
     ctx.fillRect(0, 0, W, H);
   }
   if (G.timeStop > 0) {
-    ctx.fillStyle = `rgba(251,191,36,${(0.06 * Math.sin(G.time * 20)).toFixed(3)})`;
+    ctx.fillStyle = `rgba(251,191,36,${(0.06 * _sin(G.time * 20)).toFixed(3)})`;
     ctx.fillRect(0, 0, W, H);
   }
   if (G.darkForestT > 0) {
-    ctx.fillStyle = `rgba(124,58,237,${(0.05 + 0.03 * Math.sin(G.time * 8)).toFixed(3)})`;
+    ctx.fillStyle = `rgba(124,58,237,${(0.05 + 0.03 * _sin(G.time * 8)).toFixed(3)})`;
     ctx.fillRect(0, 0, W, H);
   }
   if (G.sophonJamT > 0) {
-    ctx.fillStyle = `rgba(196,181,253,${(0.04 + 0.02 * Math.sin(G.time * 10)).toFixed(3)})`;
+    ctx.fillStyle = `rgba(196,181,253,${(0.04 + 0.02 * _sin(G.time * 10)).toFixed(3)})`;
     ctx.fillRect(0, 0, W, H);
   }
-  // 湮灭领域视觉
+  if (G.divineShieldT > 0) {
+    ctx.fillStyle = `rgba(253,230,138,${(0.08 + 0.04 * _sin(G.time * 15)).toFixed(3)})`;
+    ctx.fillRect(0, 0, W, H);
+  }
+  if (G.timeWarpT > 0) {
+    ctx.fillStyle = `rgba(192,132,252,${(0.06 + 0.03 * _sin(G.time * 12)).toFixed(3)})`;
+    ctx.fillRect(0, 0, W, H);
+  }
+  if (G.mode === 'chaosStorm' && G.chaosEvent >= 0 && G.chaosEventT > 0) {
+    const c = ['rgba(220,38,38,0.06)','rgba(56,189,248,0.06)','rgba(251,191,36,0.06)','rgba(168,85,247,0.06)','rgba(74,222,128,0.06)'][G.chaosEvent] || 'rgba(0,0,0,0)';
+    ctx.fillStyle = c;
+    ctx.fillRect(0, 0, W, H);
+  }
   if (G.annihilationT > 0) {
     const p1 = G.players[0];
     if (p1) {
       const g = ctx.createRadialGradient(p1.x, p1.y, 0, p1.x, p1.y, 220);
-      g.addColorStop(0, `rgba(244,63,94,${(0.18 + 0.08 * Math.sin(G.time * 20)).toFixed(3)})`);
+      g.addColorStop(0, `rgba(244,63,94,${(0.18 + 0.08 * _sin(G.time * 20)).toFixed(3)})`);
       g.addColorStop(0.6, 'rgba(244,63,94,0.06)');
       g.addColorStop(1, 'rgba(244,63,94,0)');
       ctx.fillStyle = g;
@@ -3117,7 +3523,7 @@ function render() {
 
   const p1 = G.players[0];
   if (p1 && p1.alive && p1.hp < p1.maxHp * 0.35) {
-    const a = 0.08 + Math.sin(G.time * 9) * 0.05;
+    const a = 0.08 + _sin(G.time * 9) * 0.05;
     const g = ctx.createRadialGradient(W / 2, H / 2, H * 0.34, W / 2, H / 2, H * 0.86);
     g.addColorStop(0, 'rgba(255,0,0,0)');
     g.addColorStop(1, `rgba(255,0,40,${a.toFixed(3)})`);
@@ -3130,11 +3536,12 @@ function render() {
 
 function drawPickups() {
   for (const k of G.pickups) {
-    const pulse = 0.78 + Math.sin(k.phase) * 0.22;
+    const pulse = 0.78 + _sin(k.phase) * 0.22;
     const a = Math.min(1, k.life);
-    drawGlow(k.x, k.y, k.r * 2.2 * pulse, '#22c55e', 0.4 * a);
+    const col = k.serum ? '#84cc16' : '#22c55e';
+    drawGlow(k.x, k.y, k.r * 2.2 * pulse, col, 0.4 * a);
     ctx.globalAlpha = a;
-    ctx.fillStyle = '#22c55e';
+    ctx.fillStyle = col;
     ctx.beginPath();
     ctx.arc(k.x, k.y, k.r * pulse * 0.78, 0, TAU);
     ctx.fill();
@@ -3142,7 +3549,7 @@ function drawPickups() {
     ctx.font = 'bold 15px system-ui';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('+', k.x, k.y + 1);
+    ctx.fillText(k.serum ? 'S' : '+', k.x, k.y + 1);
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.globalAlpha = 1;
@@ -3170,13 +3577,13 @@ function drawBullets() {
       for (let j = 2; j < b.trail.length; j += 2) ctx.lineTo(b.trail[j], b.trail[j + 1]);
       ctx.lineTo(b.x, b.y);
       ctx.strokeStyle = b.color;
-      ctx.globalAlpha = b.isSanti ? 0.35 : 0.24;
-      ctx.lineWidth = b.r * 1.1;
+      ctx.globalAlpha = b.isMyth ? 0.5 : (b.isSanti ? 0.35 : 0.24);
+      ctx.lineWidth = b.r * (b.isMyth ? 1.5 : 1.1);
       ctx.lineCap = 'round';
       ctx.stroke();
       ctx.globalAlpha = 1;
     }
-    if (b.isSanti) drawGlow(b.x, b.y, b.r * 3.5, b.color, 0.5);
+    if (b.isSanti || b.isMyth) drawGlow(b.x, b.y, b.r * (b.isMyth ? 4.5 : 3.5), b.color, 0.5);
     ctx.fillStyle = b.color;
     ctx.beginPath();
     ctx.arc(b.x, b.y, b.r, 0, TAU);
@@ -3202,7 +3609,7 @@ function drawPlayers() {
     }
 
     if (isSelf) {
-      const pulse = 1 + Math.sin(G.time * 4) * 0.1;
+      const pulse = 1 + _sin(G.time * 4) * 0.1;
       ctx.beginPath();
       ctx.arc(p.x, p.y, (p.r + 13) * pulse, 0, TAU);
       ctx.strokeStyle = 'rgba(255,255,255,0.65)';
@@ -3227,11 +3634,18 @@ function drawPlayers() {
     }
 
     if (p.shield > 0) {
-      const a = 0.3 + Math.sin(G.time * 15) * 0.18;
+      const a = 0.3 + _sin(G.time * 15) * 0.18;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r + 15, 0, TAU);
       ctx.strokeStyle = `rgba(56,189,248,${a.toFixed(2)})`;
       ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+    if (isSelf && G.divineShieldT > 0) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r + 22, 0, TAU);
+      ctx.strokeStyle = `rgba(253,230,138,${(0.5 + 0.3*_sin(G.time*12)).toFixed(2)})`;
+      ctx.lineWidth = 4;
       ctx.stroke();
     }
 
@@ -3239,12 +3653,12 @@ function drawPlayers() {
     if (!inv) drawGlow(p.x, p.y, p.r * 3, p.color, isSelf ? 0.5 : (p.isAI ? 0.3 : 0.4));
 
     if (p.odT > 0) {
-      drawGlow(p.x, p.y, p.r * 4, '#fbbf24', 0.45 + Math.sin(G.time * 12) * 0.2);
+      drawGlow(p.x, p.y, p.r * 4, '#fbbf24', 0.45 + _sin(G.time * 12) * 0.2);
     }
     if (p.darkForestMark > 0) {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r + 20, 0, TAU);
-      ctx.strokeStyle = `rgba(124,58,237,${(0.5 + 0.3 * Math.sin(G.time * 8)).toFixed(2)})`;
+      ctx.strokeStyle = `rgba(124,58,237,${(0.5 + 0.3 * _sin(G.time * 8)).toFixed(2)})`;
       ctx.lineWidth = 2;
       ctx.setLineDash([4, 4]);
       ctx.stroke();
@@ -3253,13 +3667,22 @@ function drawPlayers() {
     if (p.isConverted > 0) {
       drawGlow(p.x, p.y, p.r * 5, '#f0abfc', 0.6);
     }
+    if (p.isInfected) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r + 8, 0, TAU);
+      ctx.strokeStyle = 'rgba(132,204,22,0.5)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([3, 5]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
 
-    const spd = Math.hypot(p.vx, p.vy);
+    const spd = _sqrt(p.vx*p.vx + p.vy*p.vy);
     if (spd > 40 && Math.random() < 0.35) {
       const a = Math.atan2(p.vy, p.vx);
-      addP(p.x - Math.cos(a) * p.r * 0.8, p.y - Math.sin(a) * p.r * 0.8,
-        -Math.cos(a) * rand(30, 100) + rand(-35, 35),
-        -Math.sin(a) * rand(30, 100) + rand(-35, 35),
+      addP(p.x - _cos(a) * p.r * 0.8, p.y - _sin(a) * p.r * 0.8,
+        -_cos(a) * rand(30, 100) + rand(-35, 35),
+        -_sin(a) * rand(30, 100) + rand(-35, 35),
         rand(0.1, 0.24), p.color, rand(1.5, 3));
     }
 
@@ -3272,8 +3695,8 @@ function drawPlayers() {
       for (let i = 0; i < 8; i++) {
         const a = (i / 8) * TAU;
         const rr = i % 2 === 0 ? p.r : p.r * 0.68;
-        if (i === 0) ctx.moveTo(Math.cos(a) * rr, Math.sin(a) * rr);
-        else ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
+        if (i === 0) ctx.moveTo(_cos(a) * rr, _sin(a) * rr);
+        else ctx.lineTo(_cos(a) * rr, _sin(a) * rr);
       }
       ctx.closePath();
       ctx.fill();
@@ -3301,7 +3724,7 @@ function drawPlayers() {
     const rec = p.recoil;
     ctx.fillStyle = inv ? '#ffffff' : (p.hitFlash > 0 ? '#ffffff' : p.color);
     ctx.beginPath();
-    if (p.isZombie) {
+    if (p.isZombie || p.isInfected) {
       ctx.arc(0, 0, p.r * 0.9, 0, TAU);
     } else {
       ctx.moveTo(p.r + 7 - rec, 0);
@@ -3312,7 +3735,7 @@ function drawPlayers() {
     ctx.closePath();
     ctx.fill();
 
-    if (!p.isZombie) {
+    if (!p.isZombie && !p.isInfected) {
       ctx.fillStyle = inv ? 'rgba(0,0,0,.4)' : 'rgba(255,255,255,0.88)';
       ctx.beginPath();
       ctx.arc(p.r * 0.2 - rec, 0, p.r * 0.26, 0, TAU);
@@ -3397,12 +3820,13 @@ function drawTouchControls() {
     const pressed = TOUCH.btnPress[b.id] !== undefined;
     const isFire = b.id === 'fire';
     const isSanti = (b.id === 'z' || b.id === 'x' || b.id === 'v' || b.id === 'h');
+    const isMyth = (b.id === 'o');
     const scale = pressed ? 0.92 : 1;
     const rr = b.r * scale;
 
     ctx.globalAlpha = pressed ? 0.5 : 0.26;
     ctx.beginPath(); ctx.arc(b.x, b.y, rr + 4, 0, TAU);
-    ctx.fillStyle = isFire ? '#f43f5e' : (isSanti ? '#22d3ee' : '#38bdf8');
+    ctx.fillStyle = isFire ? '#f43f5e' : (isMyth ? '#fbbf24' : (isSanti ? '#22d3ee' : '#38bdf8'));
     ctx.fill();
 
     ctx.globalAlpha = pressed ? 0.82 : 0.5;
@@ -3410,6 +3834,9 @@ function drawTouchControls() {
     if (isFire) {
       grd.addColorStop(0, 'rgba(244,63,94,.95)');
       grd.addColorStop(1, 'rgba(120,20,45,.9)');
+    } else if (isMyth) {
+      grd.addColorStop(0, 'rgba(251,191,36,.9)');
+      grd.addColorStop(1, 'rgba(70,40,4,.9)');
     } else if (isSanti) {
       grd.addColorStop(0, 'rgba(34,211,238,.9)');
       grd.addColorStop(1, 'rgba(8,51,68,.9)');
@@ -3422,7 +3849,7 @@ function drawTouchControls() {
 
     ctx.globalAlpha = pressed ? 1 : 0.7;
     ctx.beginPath(); ctx.arc(b.x, b.y, rr, 0, TAU);
-    ctx.strokeStyle = isFire ? '#fda4af' : (isSanti ? '#67e8f9' : '#7dd3fc');
+    ctx.strokeStyle = isFire ? '#fda4af' : (isMyth ? '#fde68a' : (isSanti ? '#67e8f9' : '#7dd3fc'));
     ctx.lineWidth = 2.5; ctx.stroke();
     ctx.globalAlpha = 1;
 
@@ -3475,11 +3902,11 @@ function renderASCII() {
   for (let i = 0; i < pCount; i++) {
     if (Math.random() < 0.5) put(particles[i].x, particles[i].y, '.');
   }
-  for (const k of G.pickups) put(k.x, k.y, '§');
-  for (const b of G.bullets) put(b.x, b.y, b.explode ? 'O' : (b.isSanti ? '◈' : '*'));
+  for (const k of G.pickups) put(k.x, k.y, k.serum ? 'S' : '§');
+  for (const b of G.bullets) put(b.x, b.y, b.explode ? 'O' : (b.isMyth ? '✦' : (b.isSanti ? '◈' : '*')));
   for (const p of G.players) {
     if (!p.alive) continue;
-    put(p.x, p.y, p.isBoss ? 'B' : p.isZombie ? 'z' : (p.isAI ? 'X' : (p === G.players[0] ? '@' : 'Ω')));
+    put(p.x, p.y, p.isBoss ? 'B' : (p.isZombie || p.isInfected) ? 'z' : (p.isAI ? 'X' : (p === G.players[0] ? '@' : 'Ω')));
   }
 
   ctx.font = `${AC.fs}px "Courier New",Consolas,monospace`;
@@ -3504,33 +3931,36 @@ function renderASCII() {
 }
 
 /* =========================================================
-   ★ 技能状态显示条
+   技能状态显示条
    ========================================================= */
-let skillBarEls = {};   // id -> { el, val, chip }
+let skillBarEls = {};
 
 function buildSkillBar() {
-  const bar = document.getElementById('skillBar');
-  bar.innerHTML = '';
+  DOM.skillBar.innerHTML = '';
   skillBarEls = {};
   for (const sk of ACTIVE_SKILLS) {
     const lv = SAVE.perks[sk.perk] || 0;
     if (lv <= 0) continue;
     if (SAVE.skillButtons && SAVE.skillButtons[sk.id] === false) continue;
     const chip = document.createElement('div');
-    chip.className = 'skChip santi-lv';
     const perkDef = PERKS[sk.perk];
     const isSanti = perkDef && perkDef.santi;
-    if (isSanti) chip.classList.add('santi');
+    const isMyth = perkDef && perkDef.myth;
+    chip.className = 'skChip' + (isSanti ? ' santi' : '') + (isMyth ? ' myth' : '');
     chip.innerHTML =
       `<span class="skKey">${sk.key}</span>` +
       `<span class="skIcon">${perkDef ? perkDef.icon : ''}</span>` +
       `<span class="skName">${sk.name}</span>` +
       `<span class="skVal">--</span>`;
-    bar.appendChild(chip);
+    DOM.skillBar.appendChild(chip);
     skillBarEls[sk.id] = {
       el: chip,
       val: chip.querySelector('.skVal'),
-      perk: sk.perk
+      perk: sk.perk,
+      isSanti,
+      isMyth,
+      _lastText: '',
+      _lastCls: ''
     };
   }
 }
@@ -3538,11 +3968,11 @@ function buildSkillBar() {
 function updateSkillBar() {
   const p = G.players[0];
   if (!p || !p.alive) {
-    // 全部置灰
     for (const id in skillBarEls) {
       const r = skillBarEls[id];
-      r.el.className = 'skChip cool' + (PERKS[r.perk] && PERKS[r.perk].santi ? ' santi' : '');
-      r.val.textContent = '--';
+      const cls = 'skChip cool' + (r.isSanti ? ' santi' : '') + (r.isMyth ? ' myth' : '');
+      if (r._lastCls !== cls) { r.el.className = cls; r._lastCls = cls; }
+      if (r._lastText !== '--') { r.val.textContent = '--'; r._lastText = '--'; }
     }
     return;
   }
@@ -3552,9 +3982,8 @@ function updateSkillBar() {
     const perk = ref.perk;
     const lv = SAVE.perks[perk] || 0;
     const def = PERKS[perk];
-    if (!def || lv <= 0) { ref.val.textContent = '--'; continue; }
+    if (!def || lv <= 0) continue;
 
-    // 判断冷却 / 持续时间 / 就绪
     let cd = 0, activeT = 0;
     switch (perk) {
       case 'shield':     cd = p.shieldCd; activeT = p.shieldT; break;
@@ -3570,20 +3999,25 @@ function updateSkillBar() {
       case 'curvatureJump': cd = p.cjCd;  activeT = p.cjT; break;
       case 'cosmicConstant': cd = p.ccCd; activeT = p.ccT; break;
       case 'annihilation': cd = p.anCd;   activeT = p.anT; break;
+      case 'divineShield': cd = p.dsCd;   activeT = p.dsT; break;
+      case 'timeWarp':   cd = p.twCd;     activeT = p.twT; break;
     }
 
-    const cls = 'skChip' + (def.santi ? ' santi' : '');
-
+    const baseCls = 'skChip' + (ref.isSanti ? ' santi' : '') + (ref.isMyth ? ' myth' : '');
+    let cls, txt;
     if (activeT > 0.01) {
-      ref.el.className = cls + ' active';
-      ref.val.textContent = activeT.toFixed(1) + 's';
+      cls = baseCls + ' active';
+      txt = activeT.toFixed(1) + 's';
     } else if (cd > 0.01) {
-      ref.el.className = cls + ' cool';
-      ref.val.textContent = cd.toFixed(1) + 's';
+      cls = baseCls + ' cool';
+      txt = cd.toFixed(1) + 's';
     } else {
-      ref.el.className = cls + ' ready';
-      ref.val.textContent = '就绪';
+      cls = baseCls + ' ready';
+      txt = '就绪';
     }
+
+    if (ref._lastCls !== cls) { ref.el.className = cls; ref._lastCls = cls; }
+    if (ref._lastText !== txt) { ref.val.textContent = txt; ref._lastText = txt; }
   }
 }
 
@@ -3591,51 +4025,49 @@ function updateSkillBar() {
    HUD
    ========================================================= */
 let hudTimer = 0;
-let skillBarTimer = 0;
+let _lastHUDVals = { score: '', kills: '', time: '', p1hp: '', p1lives: '', p1wp: '', p1ammo: '' };
 
 function updateHUD() {
   const p1 = G.players[0];
-  document.getElementById('hScore').textContent = fmt(G.score);
-  document.getElementById('hKills').textContent = G.kills;
+  const scoreStr = fmt(G.score);
+  if (_lastHUDVals.score !== scoreStr) { DOM.hScore.textContent = scoreStr; _lastHUDVals.score = scoreStr; }
+
+  const killStr = String(G.kills);
+  if (_lastHUDVals.kills !== killStr) { DOM.hKills.textContent = killStr; _lastHUDVals.kills = killStr; }
 
   let progressText = '--';
-  if (G.mode === 'time' || G.mode === 'rage' || G.mode === 'nightmare' || G.mode === 'darkOps' || G.mode === 'speedrun' || G.mode === 'zenith' || G.mode === 'godslayer' || G.mode === 'apocalypse') {
+  if (['time','rage','nightmare','darkOps','speedrun','zenith','godslayer','apocalypseMode',
+       'godRealm','chronoVortex','realityRift','chaosStorm','cosmicEnd','genesisWar'].includes(G.mode)) {
     progressText = Math.max(0, G.timeLeft).toFixed(1) + 's';
-  } else if (G.mode === 'campaign') {
-    progressText = G.wave + '/10';
-  } else if (G.mode === 'superCampaign') {
-    progressText = G.wave + '/20';
-  } else if (G.mode === 'ascension') {
-    progressText = G.wave + '/30';
-  } else if (G.mode === 'survival' || G.mode === 'singularity') {
-    progressText = G.survivalTime.toFixed(0) + 's';
-  } else {
-    progressText = 'W' + G.wave;
-  }
-  document.getElementById('hTime').textContent = progressText;
+  } else if (G.mode === 'campaign') progressText = G.wave + '/10';
+  else if (G.mode === 'superCampaign') progressText = G.wave + '/20';
+  else if (G.mode === 'ascension') progressText = G.wave + '/30';
+  else if (G.mode === 'survival' || G.mode === 'singularity' || G.mode === 'eternalWar') progressText = G.survivalTime.toFixed(0) + 's';
+  else progressText = 'W' + G.wave;
+  if (_lastHUDVals.time !== progressText) { DOM.hTime.textContent = progressText; _lastHUDVals.time = progressText; }
 
   if (p1) {
-    document.getElementById('p1hp').style.width = clamp(p1.hp / p1.maxHp * 100, 0, 100) + '%';
-    document.getElementById('p1lives').textContent = '❤'.repeat(Math.max(0, Math.min(p1.lives, 9)));
+    const hpW = clamp(p1.hp / p1.maxHp * 100, 0, 100).toFixed(1) + '%';
+    if (_lastHUDVals.p1hp !== hpW) { DOM.p1hp.style.width = hpW; _lastHUDVals.p1hp = hpW; }
+    const livesStr = '❤'.repeat(Math.max(0, Math.min(p1.lives, 9)));
+    if (_lastHUDVals.p1lives !== livesStr) { DOM.p1lives.textContent = livesStr; _lastHUDVals.p1lives = livesStr; }
     const w = WEAPONS[p1.weapon];
     if (w) {
-      document.getElementById('p1wp').textContent = w.name;
-      const ammoEl = document.getElementById('p1ammo');
-      if (w.ammo) {
-        ammoEl.textContent = (SAVE.ammo[w.ammo] || 0);
-        ammoEl.style.color = (SAVE.ammo[w.ammo] || 0) < 30 ? '#f43f5e' : '#7dd3fc';
-      } else {
-        ammoEl.textContent = '∞';
-        ammoEl.style.color = '#7dd3fc';
+      if (_lastHUDVals.p1wp !== w.name) { DOM.p1wp.textContent = w.name; _lastHUDVals.p1wp = w.name; }
+      const ammoStr = w.ammo ? String(SAVE.ammo[w.ammo] || 0) : '∞';
+      if (_lastHUDVals.p1ammo !== ammoStr) {
+        DOM.p1ammo.textContent = ammoStr;
+        DOM.p1ammo.style.color = w.ammo && (SAVE.ammo[w.ammo] || 0) < 30 ? '#f43f5e' : '#7dd3fc';
+        _lastHUDVals.p1ammo = ammoStr;
       }
     }
   }
   if ((G.mode === 'pvp' || G.mode === 'deathmatch') && G.players[1]) {
     const p2 = G.players[1];
-    document.getElementById('p2hp').style.width = clamp(p2.hp / p2.maxHp * 100, 0, 100) + '%';
-    document.getElementById('p2lives').textContent = '❤'.repeat(Math.max(0, Math.min(p2.lives, 9)));
+    DOM.p2hp.style.width = clamp(p2.hp / p2.maxHp * 100, 0, 100) + '%';
+    DOM.p2lives.textContent = '❤'.repeat(Math.max(0, Math.min(p2.lives, 9)));
     const w2 = WEAPONS[p2.weapon];
-    if (w2) document.getElementById('p2wp').textContent = w2.name;
+    if (w2) DOM.p2wp.textContent = w2.name;
   }
 }
 
@@ -3656,7 +4088,7 @@ function loop(now) {
     fpsAcc += dt; fpsCount++;
     if (fpsAcc >= 0.5) {
       const fps = Math.round(fpsCount / fpsAcc);
-      document.getElementById('fps').textContent = fps + ' FPS';
+      DOM.fps.textContent = fps + ' FPS';
       fpsAcc = 0; fpsCount = 0;
     }
 
@@ -3674,9 +4106,11 @@ function loop(now) {
     render();
 
     hudTimer += dt;
-    if (hudTimer > 0.08) { hudTimer = 0; updateHUD(); }
-    // 技能条高频更新（每帧）
-    if (G.running) updateSkillBar();
+    if (hudTimer > 0.1) { hudTimer = 0; updateHUD(); }
+    if (G.running) {
+      fpsUpdateTimer += dt;
+      if (fpsUpdateTimer > 0.08) { fpsUpdateTimer = 0; updateSkillBar(); }
+    }
   } catch (err) {
     console.error('Loop error:', err);
   }
@@ -3687,10 +4121,10 @@ requestAnimationFrame(loop);
    菜单
    ========================================================= */
 function refreshMenu() {
-  document.getElementById('mPoints').textContent = fmt(SAVE.points);
-  document.getElementById('mKills').textContent = fmt(SAVE.kills);
+  DOM.mPoints.textContent = fmt(SAVE.points);
+  DOM.mKills.textContent = fmt(SAVE.kills);
 
-  const mg = document.getElementById('modeGrid');
+  const mg = DOM.modeGrid;
   mg.innerHTML = '';
 
   const groups = {};
@@ -3701,12 +4135,18 @@ function refreshMenu() {
     groups[g].push({ k, m });
   }
 
-  for (const gName in groups) {
+  const groupOrder = ['基础','进阶','传说','神话'];
+  for (const gName of groupOrder) {
+    if (!groups[gName]) continue;
     const header = document.createElement('div');
     header.style.cssText = 'grid-column:1/-1;color:#7dd3fc;font-size:13px;font-weight:800;letter-spacing:3px;margin:8px 0 2px;padding-left:2px';
     if (gName === '传说') {
       header.style.color = '#fbbf24';
       header.style.textShadow = '0 0 20px rgba(251,191,36,.5)';
+    }
+    if (gName === '神话') {
+      header.style.color = '#fde68a';
+      header.style.textShadow = '0 0 24px rgba(253,230,138,.7),0 0 48px rgba(251,191,36,.4)';
     }
     header.textContent = '— ' + gName + ' —';
     mg.appendChild(header);
@@ -3714,7 +4154,7 @@ function refreshMenu() {
     for (const { k, m } of groups[gName]) {
       const best = SAVE.high[k] || 0;
       const d = document.createElement('div');
-      d.className = 'card';
+      d.className = 'card' + (m.myth ? ' myth' : '');
       d.innerHTML = `<div class="t" style="color:${m.color}">${m.icon} ${m.name}</div>
         <div class="d">${m.desc}</div>
         <div class="p">最高 ${fmt(best)}</div>`;
@@ -3723,7 +4163,7 @@ function refreshMenu() {
     }
   }
 
-  const ar = document.getElementById('aiRow');
+  const ar = DOM.aiRow;
   ar.innerHTML = '';
   for (const k in DIFFICULTY) {
     const a = DIFFICULTY[k];
@@ -3745,10 +4185,10 @@ function refreshMenu() {
 refreshMenu();
 
 /* =========================================================
-   ★ 菜单「我的技能」展示
+   菜单「我的技能」
    ========================================================= */
 function refreshMySkills() {
-  const el = document.getElementById('mySkillsGrid');
+  const el = DOM.mySkillsGrid;
   if (!el) return;
   el.innerHTML = '';
   let anyOwned = false;
@@ -3759,11 +4199,11 @@ function refreshMySkills() {
     if (lv <= 0) continue;
     anyOwned = true;
     const d = document.createElement('div');
-    d.className = 'skillCard' + (pk.santi ? ' santi' : '');
+    d.className = 'skillCard' + (pk.santi ? ' santi' : '') + (pk.myth ? ' myth' : '');
 
     let lvBar = '<div class="sc-lvBar">';
     for (let i = 0; i < pk.maxLv; i++) {
-      lvBar += `<i class="${i < lv ? 'on' + (pk.santi ? ' santi' : '') : ''}"></i>`;
+      lvBar += `<i class="${i < lv ? 'on' + (pk.santi ? ' santi' : '') + (pk.myth ? ' myth' : '') : ''}"></i>`;
     }
     lvBar += '</div>';
 
@@ -3790,7 +4230,7 @@ function refreshMySkills() {
    初始武器选择器
    ========================================================= */
 function refreshWeaponPicker() {
-  const el = document.getElementById('weaponPicker');
+  const el = DOM.weaponPicker;
   if (!el) return;
   el.innerHTML = '';
 
@@ -3812,7 +4252,8 @@ function refreshWeaponPicker() {
     const d = document.createElement('div');
     d.className = 'wpItem' +
       (id === SAVE.startWeapon ? ' sel' : '') +
-      (w.santi ? ' santi' : '');
+      (w.santi ? ' santi' : '') +
+      (w.myth ? ' myth' : '');
     d.textContent = w.name;
     d.title = '伤害 ' + w.dmg + ' · ' + (w.desc || '');
     d.onclick = () => setStartWeapon(id);
@@ -3843,20 +4284,21 @@ const CONSOLE_ITEMS = [
   { id: 'x', name: '思想钢印', icon: 'X' },
   { id: 'v', name: '智子干扰', icon: 'V' },
   { id: 'h', name: '湮灭立场', icon: 'H' },
+  { id: 'o', name: '神圣护盾', icon: 'O' },
 ];
 
 function openConsole() {
-  document.getElementById('consolePanel').classList.remove('hidden');
-  document.getElementById('menu').classList.add('hidden');
+  DOM.consolePanel.classList.remove('hidden');
+  DOM.menu.classList.add('hidden');
   renderConsole();
 }
 function closeConsole() {
-  document.getElementById('consolePanel').classList.add('hidden');
-  document.getElementById('menu').classList.remove('hidden');
+  DOM.consolePanel.classList.add('hidden');
+  DOM.menu.classList.remove('hidden');
   refreshMenu();
 }
 function renderConsole() {
-  const c = document.getElementById('consoleGrid');
+  const c = DOM.consoleGrid;
   c.innerHTML = '';
   for (const item of CONSOLE_ITEMS) {
     const on = SAVE.skillButtons[item.id] !== false;
@@ -3874,26 +4316,18 @@ function renderConsole() {
   }
 }
 function consoleAll(state) {
-  for (const item of CONSOLE_ITEMS) {
-    SAVE.skillButtons[item.id] = state;
-  }
+  for (const item of CONSOLE_ITEMS) SAVE.skillButtons[item.id] = state;
   saveGame(); flushSave();
   renderConsole();
   toast(state ? '已全部开启' : '已全部关闭');
 }
 function consolePreset(name) {
   if (name === 'basic') {
-    for (const item of CONSOLE_ITEMS) {
-      SAVE.skillButtons[item.id] = ['q','e','r','f'].includes(item.id);
-    }
+    for (const item of CONSOLE_ITEMS) SAVE.skillButtons[item.id] = ['q','e','r','f'].includes(item.id);
   } else if (name === 'santi') {
-    for (const item of CONSOLE_ITEMS) {
-      SAVE.skillButtons[item.id] = true;
-    }
+    for (const item of CONSOLE_ITEMS) SAVE.skillButtons[item.id] = true;
   } else if (name === 'minimal') {
-    for (const item of CONSOLE_ITEMS) {
-      SAVE.skillButtons[item.id] = (item.id === 'q');
-    }
+    for (const item of CONSOLE_ITEMS) SAVE.skillButtons[item.id] = (item.id === 'q');
   }
   saveGame(); flushSave();
   renderConsole();
@@ -3923,35 +4357,34 @@ let shopWeaponPage = 0;
 const WEAPONS_PER_PAGE = 24;
 
 function openShop() {
-  document.getElementById('shop').classList.remove('hidden');
-  document.getElementById('menu').classList.add('hidden');
+  DOM.shop.classList.remove('hidden');
+  DOM.menu.classList.add('hidden');
   shopWeaponPage = 0;
   renderShop();
 }
 function closeShop() {
-  document.getElementById('shop').classList.add('hidden');
-  document.getElementById('menu').classList.remove('hidden');
+  DOM.shop.classList.add('hidden');
+  DOM.menu.classList.remove('hidden');
   refreshMenu();
 }
 
-/* ★ 上限 10 的价格曲线 */
 function perkUpgradePrice(key, currentLv) {
   const base = PERKS[key].basePrice;
   if (currentLv === 0) return base;
-  // 每级 × 1.7，10 级时约 118 倍 base
   return Math.round(base * Math.pow(1.7, currentLv));
 }
 
 function renderShop() {
-  document.getElementById('sPoints').textContent = fmt(SAVE.points);
+  DOM.sPoints.textContent = fmt(SAVE.points);
 
   const tabs = [
     ['weapon', '🔫 武器库'],
     ['santi',  '☄ 三体军火库'],
+    ['myth',   '✦ 神话军火库'],
     ['ammo',   '📦 弹药库'],
     ['perk',   '⚙ 配件与技能']
   ];
-  const tb = document.getElementById('shopTabs');
+  const tb = DOM.shopTabs;
   tb.innerHTML = '';
   for (const [k, n] of tabs) {
     const d = document.createElement('div');
@@ -3961,13 +4394,16 @@ function renderShop() {
     tb.appendChild(d);
   }
 
-  const c = document.getElementById('shopContent');
+  const c = DOM.shopContent;
   c.innerHTML = '';
 
-  if (shopTab === 'weapon' || shopTab === 'santi') {
+  if (shopTab === 'weapon' || shopTab === 'santi' || shopTab === 'myth') {
     const list = WEAPON_ORDER.filter(id => {
       const isSanti = SANTI_WEAPONS.has(id);
-      return shopTab === 'santi' ? isSanti : !isSanti;
+      const isMyth = MYTH_WEAPONS.has(id);
+      if (shopTab === 'santi') return isSanti;
+      if (shopTab === 'myth') return isMyth;
+      return !isSanti && !isMyth;
     });
 
     const totalPages = Math.ceil(list.length / WEAPONS_PER_PAGE);
@@ -3980,7 +4416,7 @@ function renderShop() {
       const owned = SAVE.weapons.includes(id);
       const can = SAVE.points >= w.price;
       const d = document.createElement('div');
-      d.className = 'card' + (w.santi ? ' santi' : '') + (owned ? ' owned' : (can ? '' : ' locked'));
+      d.className = 'card' + (w.santi ? ' santi' : '') + (w.myth ? ' myth' : '') + (owned ? ' owned' : (can ? '' : ' locked'));
       const ammoName = w.ammo ? AMMO[w.ammo].name : '无限';
       d.innerHTML = `<div class="t" style="color:${w.color}">${w.name}</div>
         <div class="p">${owned ? '' : fmt(w.price)}</div>
@@ -4021,8 +4457,9 @@ function renderShop() {
       const a = AMMO[k];
       const can = SAVE.points >= a.price;
       const isSanti = ['strongForce','quantum','graviton','dimFragment','zeroParticle'].includes(k);
+      const isMyth = ['mythEssence','chaos','cosmic'].includes(k);
       const d = document.createElement('div');
-      d.className = 'card' + (isSanti ? ' santi' : '') + (can ? '' : ' locked');
+      d.className = 'card' + (isSanti ? ' santi' : '') + (isMyth ? ' myth' : '') + (can ? '' : ' locked');
       d.innerHTML = `<div class="t" style="color:${a.color}">${a.icon} ${a.name}</div>
         <div class="p">${fmt(a.price)}</div>
         <div class="d">
@@ -4048,7 +4485,7 @@ function renderShop() {
       const price = maxed ? 0 : perkUpgradePrice(k, lv);
       const can = maxed || SAVE.points >= price;
       const d = document.createElement('div');
-      d.className = 'card' + (pk.santi ? ' santi' : '') +
+      d.className = 'card' + (pk.santi ? ' santi' : '') + (pk.myth ? ' myth' : '') +
         (maxed ? ' maxed' : (lv > 0 ? ' owned' : (can ? '' : ' locked')));
 
       let lvBar = '<div class="lvBar">';
@@ -4062,9 +4499,7 @@ function renderShop() {
         <div class="p">${maxed ? '★ 满级' : fmt(price)}</div>
         <div class="d">${curDetail}${nextDetail}${lvBar}</div>`;
 
-      if (maxed) {
-        // no-op
-      } else if (can) {
+      if (maxed) {} else if (can) {
         d.onclick = () => {
           SAVE.points -= price;
           SAVE.perks[k] = lv + 1;
@@ -4084,15 +4519,15 @@ function renderShop() {
    兑换码
    ========================================================= */
 function openCodes() {
-  document.getElementById('codePanel').classList.remove('hidden');
-  document.getElementById('menu').classList.add('hidden');
-  document.getElementById('codeMsg').textContent = '';
-  document.getElementById('codeInput').value = '';
-  setTimeout(() => document.getElementById('codeInput').focus(), 80);
+  DOM.codePanel.classList.remove('hidden');
+  DOM.menu.classList.add('hidden');
+  DOM.codeMsg.textContent = '';
+  DOM.codeInput.value = '';
+  setTimeout(() => DOM.codeInput.focus(), 80);
 }
 function closeCodes() {
-  document.getElementById('codePanel').classList.add('hidden');
-  document.getElementById('menu').classList.remove('hidden');
+  DOM.codePanel.classList.add('hidden');
+  DOM.menu.classList.remove('hidden');
   refreshMenu();
 }
 const CODES = {
@@ -4101,11 +4536,13 @@ const CODES = {
   '3BODY':  { points: 500000000000, msg: '三体文明认证：+5,000 亿积分 ☄' },
   'ZERO':   { points: 5000000000000, msg: '归零者重启宇宙：+5 万亿积分 ∅' },
   'FINAL':  { points: 50000000000000, msg: '最终版礼包：+50 万亿积分 ✦' },
-  'V8SKILL':{ points: 100000000000000, msg: 'V8 技能礼包：+100 万亿积分 ⚔' }
+  'V8SKILL':{ points: 100000000000000, msg: 'V8 技能礼包：+100 万亿积分 ⚔' },
+  'MYTH':   { points: 1000000000000000, msg: '神话礼包：+1,000 万亿积分 ✧' },
+  'V9GOD':  { points: 10000000000000000, msg: '神格认证：+1 京积分 ☯' }
 };
 function doRedeem() {
-  const inp = document.getElementById('codeInput');
-  const msg = document.getElementById('codeMsg');
+  const inp = DOM.codeInput;
+  const msg = DOM.codeMsg;
   const code = inp.value.trim();
   if (!code) { msg.style.color = '#f43f5e'; msg.textContent = '请输入兑换码'; return; }
   const c = CODES[code];
@@ -4118,7 +4555,7 @@ function doRedeem() {
   inp.value = '';
   toast('兑换成功');
 }
-document.getElementById('codeInput').addEventListener('keydown', e => {
+DOM.codeInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') doRedeem();
 });
 
@@ -4127,6 +4564,7 @@ document.getElementById('codeInput').addEventListener('keydown', e => {
    ========================================================= */
 const HELP_TABS = [
   ['intro', '📌 简介'],
+  ['myth', '✦ 神话'],
   ['skill', '⚔ 技能系统'],
   ['santi', '☄ 三体'],
   ['console', '⚙ 控制台'],
@@ -4138,66 +4576,59 @@ let helpTab = 'intro';
 
 const HELP_HTML = {
   intro: `
-    <h3>星际射手 · Astro Shooter v8</h3>
+    <h3>星际射手 · Astro Shooter v9.2 · 神话</h3>
     <p><b>星际射手</b>是一款快节奏的俯视角太空竞技射击游戏。</p>
-    <h3>v8 主要更新</h3>
+    <h3>v9.2 更新</h3>
     <ul>
-      <li><b>技能上限 5 → 10 级</b>：所有技能最高 10 级，效果曲线重新平衡</li>
-      <li><b>新增 6 个技能</b>：弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场</li>
-      <li><b>技能状态显示条</b>：屏幕底部实时显示每个技能的冷却与持续时间</li>
-      <li><b>菜单「我的技能」</b>：菜单内直观展示所有已解锁技能与等级</li>
-      <li><b>UI 遮挡修复</b>：面板缩小、更透明、击杀流移到底部</li>
+      <li><b>✦ 修复神话卡片徽章重叠</b>：移除与卡片标题内容重叠的“✦ 神话”黄色徽章</li>
+      <li><b>✦ 神话级模式 × 8</b>：神域 / 时空涡旋 / 现实裂隙 / 永恒战争 / 灵魂收割 / 混沌风暴 / 宇宙终焉 / 创世之战</li>
+      <li><b>☣ 生化危机模式</b>：感染机制 + 血清收集</li>
+      <li><b>AI 难度 × 24 档</b>：新增 10 档神话级</li>
+      <li><b>✦ 神话武器 × 8 · 弹药 × 3 · 技能 × 4</b></li>
+      <li><b>高积分适配</b>：基础击杀积分大幅提升</li>
     </ul>
   `,
+  myth: `
+    <h3>✦ 神话级模式（8 个）</h3>
+    <p>在传说级之上，全新神话级挑战。积分倍率从 ×20 到 ×100。</p>
+    <ul>
+      <li><b>⚜ 神域</b>（×20）· <b>🌀 时空涡旋</b>（×25）· <b>💠 现实裂隙</b>（×30）</li>
+      <li><b>♾ 永恒战争</b>（×35）· <b>💀 灵魂收割</b>（×40）· <b>🌪 混沌风暴</b>（×50）</li>
+      <li><b>✦ 宇宙终焉</b>（×75）· <b>☯ 创世之战</b>（×100）</li>
+    </ul>
+    <h3>✦ 神话武器（8 把）</h3>
+    <p>神话裁决 / 神盾破坏者 / 混沌使者 / 永恒之焰 / 宇宙审判 / 虚空君主 / 原初之光 / 创世核心</p>
+    <h3>✦ 神话弹药（3 种）</h3>
+    <p>神话精华 / 混沌原质 / 宇宙本源</p>
+    <h3>✦ 神话技能（4 个）</h3>
+    <p>✨ 神圣护盾（O）· ⏳ 时间扭曲（P）· 💀 灵魂收割 · 💠 现实崩坏</p>
+  `,
   skill: `
-    <h3>⚔ 技能系统（v8 全面升级）</h3>
-    <p>技能上限从 5 级提升到 <b class="hl">10 级</b>，价格曲线为每级 ×1.7，
-    10 级时约为基础价格的 118 倍。</p>
-
+    <h3>⚔ 技能系统</h3>
+    <p>技能上限 <b class="hl">10 级</b>，价格曲线为每级 ×1.7。</p>
     <h3>技能状态显示条</h3>
-    <p>游戏中屏幕底部有一排技能芯片，实时显示每个技能的状态：</p>
     <ul>
       <li><b style="color:#4ade80">绿色「就绪」</b>：技能可使用</li>
-      <li><b style="color:#fda4af">灰红倒计时</b>：技能冷却中（显示剩余秒数）</li>
-      <li><b style="color:#fbbf24">金色脉冲「Xs」</b>：技能正在生效（显示剩余持续时间）</li>
+      <li><b style="color:#fda4af">灰红倒计时</b>：技能冷却中</li>
+      <li><b style="color:#fbbf24">金色脉冲「Xs」</b>：技能正在生效</li>
     </ul>
-
-    <h3>24 个技能（最高 Lv.10）</h3>
+    <h3>技能列表</h3>
     <ul>
-      <li><b>主动技能</b>：护盾 / 时缓 / 冲刺 / 治疗 / 超载 / 时停 / 瞬步 / 面壁计划 / 思想钢印 / 黑暗森林 / 智子干扰 / 曲率光速 / 宇宙常数 / 湮灭立场</li>
-      <li><b>被动技能</b>：曲速引擎 / 弹跳 / 追踪 / 装甲 / 穿甲 / 超频冷却 / 爆裂弹头 / 磁力吸引 / 吸血纳米 / 致命打击 / 多重射击 / 生命汲取</li>
-      <li><b class="hl">新增 6 个</b>：弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场</li>
+      <li><b>主动</b>：护盾 / 时缓 / 冲刺 / 治疗 / 超载 / 时停 / 瞬步 / 面壁 / 钢印 / 黑森 / 智子 / 光速 / 常数 / 湮灭</li>
+      <li><b>被动</b>：曲速 / 弹跳 / 追踪 / 装甲 / 穿甲 / 冷却 / 爆裂 / 磁力 / 吸血 / 暴击 / 多重 / 汲取 / 弹药再生 / 荆棘 / 狂暴 / 快速射击 / 二段冲刺</li>
+      <li><b class="mythHl">神话</b>：神圣护盾 / 时间扭曲 / 灵魂收割 / 现实崩坏</li>
     </ul>
-
-    <h3>菜单「我的技能」</h3>
-    <p>在菜单中可以一目了然地查看已解锁的所有技能、当前等级、当前效果以及下一级效果，
-    方便规划升级路线。</p>
   `,
   santi: `
     <h3>☄ 三体扩展 · 世界观</h3>
     <p>刘慈欣《三体》系列中的武器、能力与概念，全部融入本作。</p>
-
-    <h3>武器（10 把）</h3>
-    <ul>
-      <li><b style="color:#e0f2fe">水滴</b>（8000 万）：强互作用力探测器</li>
-      <li><b style="color:#c4b5fd">智子干扰枪</b>（5 亿）· <b style="color:#f0abfc">思想钢印枪</b>（15 亿）</li>
-      <li><b style="color:#38bdf8">面壁者之剑</b>（30 亿）· <b style="color:#a78bfa">引力波天线</b>（20 亿）</li>
-      <li><b style="color:#fef3c7">曲率驱动飞船</b>（60 亿）· <b style="color:#1e1b4b">黑域发生器</b>（100 亿）</li>
-      <li><b style="color:#c4b5fd">歌者二向箔</b>（150 亿）· <b style="color:#22d3ee">三体舰队主炮</b>（800 亿）</li>
-      <li><b style="color:#ffffff">归零者之钟</b>（2000 亿）</li>
-    </ul>
-
-    <h3>三体技能（7 个 · 最高 Lv.10）</h3>
-    <ul>
-      <li><b>🧱 面壁计划</b>（Z）· <b>🔱 思想钢印</b>（X）· <b>🌌 黑暗森林威慑</b>（C）</li>
-      <li><b>⌬ 智子干扰</b>（V）· <b>💫 曲率光速</b>（B）· <b>✴ 宇宙常数修改</b>（N）</li>
-      <li><b>☢ 湮灭立场</b>（H · 新增）</li>
-    </ul>
-
+    <h3>三体武器（10 把）</h3>
+    <p>水滴 / 智子干扰枪 / 思想钢印枪 / 面壁者之剑 / 引力波天线 / 曲率驱动飞船 / 黑域发生器 / 歌者二向箔 / 三体舰队主炮 / 归零者之钟</p>
+    <h3>三体技能（7 个）</h3>
+    <p>面壁计划（Z）· 思想钢印（X）· 黑暗森林威慑（C）· 智子干扰（V）· 曲率光速（B）· 宇宙常数修改（N）· 湮灭立场（H）</p>
     <h3>彩蛋兑换码</h3>
     <ul>
-      <li><code>3BODY</code> — +5,000 亿 · <code>ZERO</code> — +5 万亿</li>
-      <li><code>FINAL</code> — +50 万亿 · <code>V8SKILL</code> — +100 万亿</li>
+      <li><code>3BODY</code> · <code>ZERO</code> · <code>FINAL</code> · <code>V8SKILL</code> · <code>MYTH</code> · <code>V9GOD</code></li>
     </ul>
   `,
   console: `
@@ -4205,8 +4636,7 @@ const HELP_HTML = {
     <p>菜单内点击「⚙ 控制台」按钮打开。可自由启用或禁用游戏内的技能按钮。</p>
     <h3>快捷预设</h3>
     <ul>
-      <li><b>全部开启</b>：恢复所有技能按钮</li>
-      <li><b>全部关闭</b>：隐藏所有技能按钮</li>
+      <li><b>全部开启</b> / <b>全部关闭</b></li>
       <li><b>基础预设</b>：只保留 Q/E/R/F 四个常用技能</li>
       <li><b>三体预设</b>：保留全部技能</li>
       <li><b>极简预设</b>：只保留 Q 护盾</li>
@@ -4220,81 +4650,67 @@ const HELP_HTML = {
       <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> — 移动（<b>自动瞄准</b>）</li>
       <li><b>鼠标左键</b> 或 <kbd>空格</kbd> — 射击</li>
       <li><kbd>1</kbd>~<kbd>9</kbd> 或 <b>滚轮</b> — 切换武器</li>
-      <li><kbd>Q</kbd> 护盾 <kbd>E</kbd> 时缓 <kbd>R</kbd> 冲刺 <kbd>F</kbd> 治疗 <kbd>G</kbd> 超载 <kbd>T</kbd> 时停 <kbd>H</kbd> 湮灭</li>
-      <li><b>三体技能</b>：<kbd>Z</kbd><kbd>X</kbd><kbd>C</kbd><kbd>V</kbd><kbd>B</kbd><kbd>N</kbd></li>
+      <li><kbd>Q</kbd><kbd>E</kbd><kbd>R</kbd><kbd>F</kbd><kbd>G</kbd><kbd>T</kbd> — 常规技能</li>
+      <li><kbd>Z</kbd><kbd>X</kbd><kbd>C</kbd><kbd>V</kbd><kbd>B</kbd><kbd>N</kbd> — 三体技能</li>
+      <li><kbd>H</kbd> 湮灭 · <kbd>O</kbd> 神圣护盾 · <kbd>P</kbd> 时间扭曲</li>
       <li><kbd>Esc</kbd> 暂停 · <kbd>\`</kbd> ASCII</li>
     </ul>
     <h3>📱 手机 / 平板</h3>
     <ul>
       <li><b>左下角摇杆</b> — 拖动移动</li>
       <li><b>右下角红色开火按钮</b> — 按住持续射击</li>
-      <li><b>其他圆形按钮</b> — 释放技能（可在控制台隐藏）</li>
-      <li><b>屏幕底部技能芯片</b> — 显示技能冷却与持续时间</li>
+      <li><b>其他圆形按钮</b> — 释放技能</li>
+      <li><b>屏幕左下技能芯片</b> — 显示技能冷却与持续时间</li>
     </ul>
   `,
   mode: `
-    <h3>基础模式（8）</h3>
-    <p>计时赛 / 闯关赛 / AI 对战 / 双人对战 / 无尽 / 尸潮 / 首领 / 团队战</p>
-    <h3>进阶模式（10）</h3>
-    <p>精英猎杀 / 弹幕地狱 / 死亡竞赛 / 双首领 / 黑暗行动 / 狂怒 / 超级闯关 / 噩梦 / 速通 / 生存</p>
-    <h3>传说模式（6 · 积分倍率最高 ×15）</h3>
+    <h3>模式分类</h3>
     <ul>
-      <li><b>⛰ 巅峰对决</b>（×5）· <b>⚡ 屠神之路</b>（×6）· <b>∞ 无限战争</b>（×4）</li>
-      <li><b>☄ 末日审判</b>（×5）· <b>◎ 奇点</b>（×10）· <b>☯ 飞升</b>（×15）</li>
+      <li><b>基础（8）</b>：计时 / 闯关 / AI / PvP / 无尽 / 尸潮 / 首领 / 团队</li>
+      <li><b>进阶（11）</b>：精英猎杀 / 弹幕地狱 / 死亡竞赛 / 双首领 / 黑暗行动 / 狂怒 / 超级闯关 / 噩梦 / 速通 / 生存 / 生化危机</li>
+      <li><b>传说（6）</b>：巅峰对决 / 屠神之路 / 无限战争 / 末日审判 / 奇点 / 飞升</li>
+      <li><b class="mythHl">神话（8）</b>：神域 / 时空涡旋 / 现实裂隙 / 永恒战争 / 灵魂收割 / 混沌风暴 / 宇宙终焉 / 创世之战</li>
     </ul>
-    <h3>AI 难度（14 档）</h3>
-    <p>简单 / 普通 / 困难 / 地狱 / 骨灰 / 噩梦 / 炼狱 / 深渊 / 混沌 / 虚空 / 神级 / 超神 / 三体 / 归零</p>
+    <h3>AI 难度（24 档）</h3>
+    <p>简单 → 归零（14 档）· 泰坦 → 神格（10 档）</p>
   `,
   faq: `
+    <h3>Q：神话模式怎么进入？</h3>
+    <p>A：菜单内「选择模式」分组的「神话」区，共 8 个模式。</p>
+    <h3>Q：生化模式怎么玩？</h3>
+    <p>A：击杀感染者有概率掉落「血清」（绿色 S 图标），收集血清提升战力。</p>
+    <h3>Q：高积分怎么获取？</h3>
+    <p>A：挑战神话模式（×20～×100）搭配高 AI 难度（神格每只 6000 万基础分）。</p>
     <h3>Q：技能上限是多少？</h3>
-    <p>A：<b>10 级</b>。价格曲线每级 ×1.7，10 级时约为基础价格的 118 倍。</p>
-
-    <h3>Q：技能状态显示条在哪？</h3>
-    <p>A：屏幕底部中央，用彩色芯片显示每个已解锁技能的实时状态。</p>
-
-    <h3>Q：技能芯片的颜色含义？</h3>
-    <p>A：<b style="color:#4ade80">绿色</b>=就绪 · <b style="color:#fda4af">灰红</b>=冷却中 ·
-    <b style="color:#fbbf24">金色脉冲</b>=正在生效。</p>
-
-    <h3>Q：菜单在哪看已解锁技能？</h3>
-    <p>A：菜单「⚔ 我的技能」区域，显示所有已解锁技能、等级、当前和下一级效果。</p>
-
-    <h3>Q：新增了哪 6 个技能？</h3>
-    <p>A：弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场。</p>
-
-    <h3>Q：UI 还会遮挡吗？</h3>
-    <p>A：v8 已大幅缩小面板并提升透明度，击杀流移到底部，几乎不遮挡视野。</p>
-
-    <h3>Q：怎么快速赚积分？</h3>
-    <p>A：推荐传说模式：奇点（×10）、飞升（×15）。搭配归零难度，单局可达百万级。</p>
-
+    <p>A：<b>10 级</b>。价格曲线每级 ×1.7。</p>
+    <h3>Q：v9.2 修复了什么？</h3>
+    <p>A：移除了神话卡片上与标题内容重叠的“✦ 神话”黄色徽章。</p>
     <h3>Q：怎么分辨自己的角色？</h3>
-    <p>A：你的角色有<b style="color:#38bdf8">白色虚线旋转光环</b>、<b style="color:#38bdf8">内部青色实心环</b>，
-    以及<b style="color:#38bdf8">底部蓝色三角标记</b>。</p>
+    <p>A：白色虚线旋转光环 + 内部青色实心环 + 底部蓝色三角标记。</p>
   `
 };
 
 function openHelp() {
-  document.getElementById('help').classList.remove('hidden');
-  document.getElementById('menu').classList.add('hidden');
+  DOM.help.classList.remove('hidden');
+  DOM.menu.classList.add('hidden');
   renderHelp();
 }
 function closeHelp() {
-  document.getElementById('help').classList.add('hidden');
+  DOM.help.classList.add('hidden');
   if (G.running) {
-    document.getElementById('pause').classList.remove('hidden');
+    DOM.pause.classList.remove('hidden');
   } else {
-    document.getElementById('menu').classList.remove('hidden');
+    DOM.menu.classList.remove('hidden');
     refreshMenu();
   }
 }
 function openHelpFromPause() {
-  document.getElementById('pause').classList.add('hidden');
-  document.getElementById('help').classList.remove('hidden');
+  DOM.pause.classList.add('hidden');
+  DOM.help.classList.remove('hidden');
   renderHelp();
 }
 function renderHelp() {
-  const tb = document.getElementById('helpTabs');
+  const tb = DOM.helpTabs;
   tb.innerHTML = '';
   for (const [k, n] of HELP_TABS) {
     const d = document.createElement('div');
@@ -4303,23 +4719,22 @@ function renderHelp() {
     d.onclick = () => { helpTab = k; renderHelp(); };
     tb.appendChild(d);
   }
-  const hc = document.getElementById('helpContent');
-  hc.innerHTML = HELP_HTML[helpTab] || '';
-  hc.parentElement.scrollTop = 0;
+  DOM.helpContent.innerHTML = HELP_HTML[helpTab] || '';
+  DOM.helpContent.parentElement.scrollTop = 0;
 }
 
 /* =========================================================
    游戏内控制按钮
    ========================================================= */
-document.getElementById('gcPause').addEventListener('click', e => {
+DOM.gcPause.addEventListener('click', e => {
   e.stopPropagation();
   togglePause();
 });
-document.getElementById('gcFull').addEventListener('click', e => {
+DOM.gcFull.addEventListener('click', e => {
   e.stopPropagation();
   toggleFullscreen();
 });
-document.getElementById('gcExit').addEventListener('click', e => {
+DOM.gcExit.addEventListener('click', e => {
   e.stopPropagation();
   if (confirm('确定要退出到主菜单吗？当前进度会保存。')) {
     quitGame();
@@ -4340,12 +4755,9 @@ window.addEventListener('error', e => {
   console.error('Game error:', e.message);
 });
 
-console.log('%c星际射手 · Astro Shooter v8 最终版', 'color:#22d3ee;font-size:18px;font-weight:bold');
-console.log('%c⚔ 技能上限 5 → 10，全面重新平衡', 'color:#fbbf24;font-size:13px');
-console.log('%c✦ 新增 6 个技能：弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场', 'color:#4ade80;font-size:13px');
-console.log('%c✦ 新增「技能状态显示条」：实时显示冷却与持续时间', 'color:#4ade80;font-size:13px');
-console.log('%c✦ 新增菜单「我的技能」展示区', 'color:#4ade80;font-size:13px');
-console.log('%c✦ 修复 UI 遮挡画布问题', 'color:#4ade80;font-size:13px');
+console.log('%c星际射手 · Astro Shooter v9.2 · 神话', 'color:#fde68a;font-size:18px;font-weight:bold');
+console.log('%c✦ 修复：移除神话卡片上重叠的“✦ 神话”黄色徽章', 'color:#fbbf24;font-size:13px');
+console.log('%c✦ 所有原有内容完整保留', 'color:#22d3ee;font-size:13px');
 </script>
 </body>
 </html>
