@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#05070f">
-<title>星际射手 · Astro Shooter v9.2 · 神话</title>
+<title>星际射手 · Astro Shooter v9.3 · 神话</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#05070f;
@@ -67,13 +67,11 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
 .card.locked:hover{transform:none;border-color:rgba(56,189,248,.16);box-shadow:none}
 .card.santi{border:1px solid rgba(34,211,238,.35);
   background:linear-gradient(150deg,rgba(15,40,55,.85),rgba(8,22,32,.92))}
-.card.santi::before{content:'☄ 三体';position:absolute;top:10px;left:12px;font-size:9px;
-  color:#22d3ee;font-weight:900;letter-spacing:1px;
-  padding:1px 5px;border:1px solid rgba(34,211,238,.4);border-radius:8px}
 .card.myth{border:1px solid rgba(251,191,36,.5);
   background:linear-gradient(150deg,rgba(50,32,12,.88),rgba(24,14,4,.95));
   box-shadow:inset 0 0 26px rgba(251,191,36,.08)}
-/* ★ 修复：移除与卡片内容重叠的“✦ 神话”黄色徽章 */
+/* v9.3：移除所有卡片左上角的阵营标识，避免与内容重叠 */
+.card.santi::before,
 .card.myth::before{display:none}
 
 .lvBadge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:10px;
@@ -129,12 +127,10 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
 .tab.on{color:#7dd3fc;background:linear-gradient(180deg,rgba(28,52,88,.9),rgba(16,30,54,.95));
   border-color:rgba(56,189,248,.35);border-bottom:1px solid transparent}
 
-/* ============ HUD（布局重排，避免重叠） ============ */
 #hud{position:absolute;inset:0;pointer-events:none;z-index:10;font-size:13px;
   display:none;flex-direction:column}
 #hud.on{display:flex}
 
-/* 顶部 HUD：居中显示，向上留边距 */
 .hudTop{position:absolute;top:6px;left:50%;transform:translateX(-50%);
   display:flex;gap:5px;flex-wrap:wrap;justify-content:center;
   opacity:.82;max-width:60vw;pointer-events:none}
@@ -149,7 +145,6 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
 .hudBox.green .vl{color:#4ade80}
 .hudBox.myth .vl{color:#fde68a;text-shadow:0 0 12px rgba(251,191,36,.5)}
 
-/* 玩家面板：P1 左上、P2 右上（游戏控制按钮下方） */
 .pstat{position:absolute;padding:5px 9px;min-width:166px;
   background:linear-gradient(160deg,rgba(10,20,38,.45),rgba(5,10,20,.55));
   border:1px solid rgba(56,189,248,.12);border-radius:9px;
@@ -169,7 +164,6 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
 .hpbar i{display:block;height:100%;border-radius:2px;transition:width .1s linear}
 .lives{letter-spacing:1.5px;font-size:11.5px;margin-top:2px;line-height:1.2}
 
-/* 击杀流：右上区域（在玩家面板下方） */
 #killfeed{position:absolute;right:8px;top:160px;
   display:flex;flex-direction:column;gap:2px;align-items:flex-end;pointer-events:none;
   opacity:.82;max-width:180px}
@@ -178,11 +172,24 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
   animation:kfIn .3s ease;white-space:nowrap}
 @keyframes kfIn{from{opacity:0;transform:translateX(6px)}to{opacity:1;transform:translateX(0)}}
 
-/* 技能条：位于左下角（摇杆之上），避免与摇杆重叠 */
+/* ★ v9.3：技能栏改为横向可拖动滚动 */
 #skillBar{
   position:absolute;left:8px;bottom:8px;
-  display:flex;gap:4px;pointer-events:none;flex-wrap:wrap;
-  max-width:60vw;max-height:120px;overflow:hidden}
+  display:flex;gap:4px;
+  pointer-events:auto;
+  flex-wrap:nowrap;
+  overflow-x:auto;overflow-y:hidden;
+  max-width:calc(100vw - 130px);
+  height:34px;
+  padding-right:14px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(56,189,248,.35) transparent;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-x;
+}
+#skillBar::-webkit-scrollbar{height:4px}
+#skillBar::-webkit-scrollbar-thumb{background:rgba(56,189,248,.3);border-radius:2px}
+#skillBar::-webkit-scrollbar-track{background:transparent}
 .skChip{
   display:flex;align-items:center;gap:4px;
   padding:2.5px 8px;border-radius:9px;
@@ -190,7 +197,9 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
   border:1px solid rgba(56,189,248,.2);
   font-size:10px;font-weight:800;letter-spacing:.5px;
   box-shadow:0 3px 12px rgba(0,0,0,.4);
-  transition:all .15s;white-space:nowrap}
+  transition:all .15s;white-space:nowrap;
+  flex-shrink:0;
+}
 .skChip .skKey{display:inline-flex;align-items:center;justify-content:center;
   min-width:15px;height:15px;border-radius:5px;
   background:rgba(56,189,248,.22);color:#7dd3fc;font-size:9px;font-weight:900;
@@ -258,18 +267,36 @@ input[type=text]{padding:10px 15px;border-radius:10px;font-size:14px;letter-spac
   transition:all .15s}
 input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,.3)}
 
+/* ★ v9.3：初始武器选择栏改为横向可拖动滚动 */
 .weaponPicker{
-  display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;
-  padding:10px 12px;border-radius:12px;
-  background:rgba(6,12,24,.55);border:1px solid rgba(56,189,248,.15);
-  max-height:130px;overflow-y:auto}
-.weaponPicker::-webkit-scrollbar{width:6px}
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  margin-top:6px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(6,12,24,.55);
+  border:1px solid rgba(56,189,248,.15);
+  overflow-x:auto;
+  overflow-y:hidden;
+  height:52px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(56,189,248,.35) transparent;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-x;
+}
+.weaponPicker::-webkit-scrollbar{height:6px}
 .weaponPicker::-webkit-scrollbar-thumb{background:rgba(56,189,248,.3);border-radius:3px}
+.weaponPicker::-webkit-scrollbar-track{background:transparent}
 .wpItem{
   padding:4px 11px;border-radius:8px;font-size:11px;font-weight:700;
   cursor:pointer;letter-spacing:.5px;color:#8ec6ef;white-space:nowrap;
   background:rgba(20,40,70,.5);border:1px solid rgba(56,189,248,.18);
-  transition:all .14s}
+  transition:all .14s;
+  flex-shrink:0;
+  display:flex;align-items:center;
+  height:26px;
+}
 .wpItem:hover{background:rgba(40,80,130,.75);color:#fff;border-color:rgba(56,189,248,.5)}
 .wpItem.sel{background:linear-gradient(90deg,#0ea5e9,#0369a1);color:#fff;
   border-color:#38bdf8;box-shadow:0 3px 14px rgba(56,189,248,.3)}
@@ -358,6 +385,8 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   .skChip .skKey{min-width:13px;height:13px;font-size:8px}
   #killfeed{top:150px;max-width:130px}
   .kfItem{font-size:9.5px}
+  #skillBar{max-width:calc(100vw - 110px);height:30px}
+  .weaponPicker{height:48px}
 }
 </style>
 </head>
@@ -414,7 +443,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   <div class="panel" id="menu">
     <div class="box">
       <h1>星际射手</h1>
-      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; V9.2 神 话</div>
+      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; V9.3 神 话</div>
 
       <div class="row" style="justify-content:center;margin-bottom:16px">
         <div class="hudBox gold" style="min-width:120px;opacity:1"><div class="lb">积分</div><div class="vl" id="mPoints">0</div></div>
@@ -427,7 +456,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
       <h2>AI 难度（所有对战模式通用）</h2>
       <div class="row" id="aiRow" style="margin-bottom:16px"></div>
 
-      <h2>🎯 初始武器</h2>
+      <h2>🎯 初始武器 <span style="font-size:11px;color:#6b87ab;font-weight:500;letter-spacing:1px">（横向拖动滚动）</span></h2>
       <p style="color:#6b87ab;font-size:11.5px;margin-bottom:8px;letter-spacing:1px">
         选择每局游戏开始时的第一把武器。<b style="color:#fbbf24">仅列出已拥有的武器</b>。
       </p>
@@ -562,10 +591,13 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 <script>
 'use strict';
 /* =========================================================
-   星际射手 · Astro Shooter v9.2 · 神话
+   星际射手 · Astro Shooter v9.3 · 神话
    =========================================================
-   v9.2 更新（仅修复）：
-   ✦ 移除神话卡片上与标题内容重叠的“✦ 神话”黄色徽章
+   v9.3 更新（在 v9.2 基础上）：
+   ✦ 为所有技能添加炫酷的 Canvas 特效
+   ✦ 移除所有卡片左上角的阵营标识（神话 / 三体）
+   ✦ 技能栏与初始武器选择栏改为横向可拖动滚动
+   ✦ 帧率保持 30+ FPS（特效数量上限 + 简单几何绘制）
    ✦ 其余所有内容完整保留
    ========================================================= */
 
@@ -575,6 +607,7 @@ const MAX_STEPS = 3;
 const MAX_PARTICLES = 320;
 const MAX_BULLETS = 260;
 const MAX_FLOATS = 22;
+const MAX_SKILL_FX = 36;   // ★ v9.3：技能特效数量上限，保证帧率
 
 const _cos = Math.cos, _sin = Math.sin, _sqrt = Math.sqrt, _abs = Math.abs;
 
@@ -1482,6 +1515,7 @@ const G = {
   running: false, paused: false, over: false,
   mode: 'time', time: 0, acc: 0, shake: 0,
   players: [], bullets: [], pickups: [], floats: [],
+  skillFx: [],   // ★ v9.3：技能特效列表
   score: 0, kills: 0, wave: 1, waveTimer: 0, spawnTimer: 0, timeLeft: 0,
   ascii: false, slowmo: 0, best: 0, uid: 1,
   bossRef: null, combo: 0, comboT: 0, timeStop: 0,
@@ -1542,6 +1576,17 @@ function burst(x, y, color, n, power = 200) {
 function addFloat(x, y, text, color, size = 18) {
   if (G.floats.length > MAX_FLOATS) return;
   G.floats.push({ x, y, text, color, life: 1.0, size });
+}
+
+/* ★ v9.3：技能特效系统 */
+function addSkillFx(type, x, y, opts) {
+  if (G.skillFx.length >= MAX_SKILL_FX) G.skillFx.shift();
+  G.skillFx.push(Object.assign({
+    type, x, y,
+    life: 0.7, maxLife: 0.7,
+    size: 60, color: '#7dd3fc',
+    tx: x, ty: y
+  }, opts || {}));
 }
 
 let toastTimer = null;
@@ -1622,6 +1667,7 @@ function startGame(mode) {
   G.bullets.length = 0;
   G.pickups.length = 0;
   G.floats.length = 0;
+  G.skillFx.length = 0;   // ★ 清空技能特效
   pCount = 0;
   G.time = 0; G.acc = 0; G.shake = 0; G.uid = 1;
   G.score = 0; G.kills = 0; G.wave = 1; G.waveTimer = 2.0; G.spawnTimer = 0;
@@ -2073,7 +2119,7 @@ function tryFire(p) {
 }
 
 /* =========================================================
-   技能使用
+   技能使用（★ v9.3：每个技能都带炫酷特效）
    ========================================================= */
 function useSkill(name) {
   const p = G.players[0];
@@ -2087,6 +2133,10 @@ function useSkill(name) {
     p.shieldT = p.shield;
     p.shieldCd = Math.max(3, 18 - lv * 0.8);
     toast(`力场护盾 Lv.${lv}`);
+    // ★ 特效：青色能量穹顶 + 扩散环
+    addSkillFx('dome', p.x, p.y, { color: '#38bdf8', size: p.r + 55, life: 0.9 });
+    addSkillFx('ring', p.x, p.y, { color: '#7dd3fc', size: p.r + 100, life: 0.65 });
+    addSkillFx('hex', p.x, p.y, { color: '#38bdf8', size: p.r + 30, life: 0.7 });
     burst(p.x, p.y, '#38bdf8', 16, 240);
   } else if (name === 'slow') {
     if (p.slowCd > 0) { toast('时缓冷却 ' + p.slowCd.toFixed(1) + 's'); return; }
@@ -2094,6 +2144,9 @@ function useSkill(name) {
     p.slowT2 = G.slowmo;
     p.slowCd = Math.max(4, 22 - lv * 0.8);
     toast(`时间迟缓 Lv.${lv}`);
+    // ★ 特效：紫色时间涟漪
+    addSkillFx('ripple', p.x, p.y, { color: '#a78bfa', size: 300, life: 1.0 });
+    addSkillFx('clock', p.x, p.y, { color: '#c4b5fd', size: 100, life: 0.9 });
   } else if (name === 'dash') {
     if (p.dashCharges <= 0 && p.dashCd > 0) return;
     if (p.dashCharges <= 0) return;
@@ -2101,6 +2154,10 @@ function useSkill(name) {
     if (p.dashCd <= 0) p.dashCd = Math.max(2, 18 - lv * 1.2);
     p.vx += _cos(p.angle) * (900 + lv * 80);
     p.vy += _sin(p.angle) * (900 + lv * 80);
+    toast(`相位冲刺 Lv.${lv}`);
+    // ★ 特效：紫色冲刺尾焰
+    addSkillFx('trail', p.x, p.y, { color: '#a78bfa', size: 40, life: 0.55 });
+    addSkillFx('dome', p.x, p.y, { color: '#a78bfa', size: p.r + 30, life: 0.4 });
     for (let i = 0; i < 10; i++)
       addP(p.x, p.y, rand(-120, 120), rand(-120, 120), rand(0.18, 0.4), '#a78bfa', rand(1.5, 3.5));
   } else if (name === 'heal') {
@@ -2109,6 +2166,9 @@ function useSkill(name) {
     const amount = 30 + lv * 8;
     p.hp = Math.min(p.maxHp, p.hp + amount);
     toast(`治疗波 Lv.${lv}  +${amount} HP`);
+    // ★ 特效：绿色上升光点 + 光环
+    addSkillFx('aura', p.x, p.y, { color: '#4ade80', size: 70, life: 1.0 });
+    addSkillFx('ring', p.x, p.y, { color: '#22c55e', size: p.r + 70, life: 0.7 });
     burst(p.x, p.y, '#4ade80', 16, 200);
     addFloat(p.x, p.y - 34, '+' + amount, '#4ade80', 20);
   } else if (name === 'overdrive') {
@@ -2117,14 +2177,21 @@ function useSkill(name) {
     p.odT = 3 + lv * 0.5;
     p.odT2 = p.odT;
     toast(`超载模式 Lv.${lv}！`);
-    burst(p.x, p.y, '#fbbf24', 20, 280);
+    // ★ 特效：金色火焰爆发 + 双环
+    addSkillFx('burst', p.x, p.y, { color: '#fbbf24', size: 120, life: 0.9 });
+    addSkillFx('ring', p.x, p.y, { color: '#fbbf24', size: p.r + 90, life: 0.6 });
+    addSkillFx('dome', p.x, p.y, { color: '#f97316', size: p.r + 55, life: 0.7 });
+    burst(p.x, p.y, '#fbbf24', 22, 320);
   } else if (name === 'timestop') {
     if (p.tsCd > 0) { toast('时停冷却 ' + p.tsCd.toFixed(1) + 's'); return; }
     p.tsCd = Math.max(12, 40 - lv * 2);
     G.timeStop = 0.8 + lv * 0.22;
     p.tsT = G.timeStop;
     toast(`时间停止 Lv.${lv}！`);
-    burst(p.x, p.y, '#fbbf24', 20, 280);
+    // ★ 特效：全屏时钟表盘
+    addSkillFx('clock', p.x, p.y, { color: '#fbbf24', size: 420, life: 1.2 });
+    addSkillFx('ripple', p.x, p.y, { color: '#fbbf24', size: 400, life: 1.1 });
+    burst(p.x, p.y, '#fbbf24', 24, 350);
   } else if (name === 'blink') {
     if (p.dashCd > 0) return;
     p.dashCd = Math.max(2, 12 - lv * 0.8);
@@ -2133,9 +2200,12 @@ function useSkill(name) {
     p.y += _sin(p.angle) * range;
     p.x = clamp(p.x, p.r, W - p.r);
     p.y = clamp(p.y, p.r, H - p.r);
+    toast(`瞬步 Lv.${lv}`);
+    // ★ 特效：残影穿梭
+    addSkillFx('trail', p.x, p.y, { color: '#c084fc', size: 50, life: 0.5 });
+    addSkillFx('ring', p.x, p.y, { color: '#c084fc', size: p.r + 80, life: 0.5 });
     for (let i = 0; i < 12; i++)
       addP(p.x, p.y, rand(-150, 150), rand(-150, 150), rand(0.2, 0.5), '#c084fc', rand(2, 4));
-    toast(`瞬步 Lv.${lv}`);
   }
   else if (name === 'wallfacer') {
     if (p.wfCd > 0) { toast('面壁计划冷却 ' + p.wfCd.toFixed(1) + 's'); return; }
@@ -2144,7 +2214,11 @@ function useSkill(name) {
     p.shield = 1.5 + lv * 0.4;
     p.wfT = p.invuln;
     toast(`面壁计划 Lv.${lv} · 隐身 ${(1.5 + lv*0.4).toFixed(1)}s`);
-    burst(p.x, p.y, '#f0abfc', 24, 300);
+    // ★ 特效：粉色隐身光环
+    addSkillFx('dome', p.x, p.y, { color: '#f0abfc', size: p.r + 70, life: 1.0 });
+    addSkillFx('ring', p.x, p.y, { color: '#f0abfc', size: p.r + 100, life: 0.7 });
+    addSkillFx('aura', p.x, p.y, { color: '#f0abfc', size: 80, life: 0.8 });
+    burst(p.x, p.y, '#f0abfc', 20, 300);
   } else if (name === 'thoughtSeal') {
     if (p.tsCdS > 0) { toast('思想钢印冷却 ' + p.tsCdS.toFixed(1) + 's'); return; }
     p.tsCdS = Math.max(12, 45 - lv * 3);
@@ -2154,6 +2228,9 @@ function useSkill(name) {
       tgt.team = p.team;
       p.tsST = tgt.isConverted;
       toast(`思想钢印 Lv.${lv} · 转化敌人 ${(1.5+lv*0.6).toFixed(1)}s`);
+      // ★ 特效：从玩家到目标的紫色光束
+      addSkillFx('beam', p.x, p.y, { tx: tgt.x, ty: tgt.y, color: '#f0abfc', life: 0.6 });
+      addSkillFx('ring', tgt.x, tgt.y, { color: '#f0abfc', size: tgt.r + 70, life: 0.8 });
       burst(tgt.x, tgt.y, '#f0abfc', 24, 300);
       addFloat(tgt.x, tgt.y - 30, '已转化', '#f0abfc', 20);
     } else {
@@ -2165,6 +2242,10 @@ function useSkill(name) {
     G.darkForestT = 5 + lv * 0.8;
     p.dfT = G.darkForestT;
     toast(`黑暗森林威慑 Lv.${lv} · 伤害 +${15 + lv*6}%`);
+    // ★ 特效：紫色黑暗领域
+    addSkillFx('dark', p.x, p.y, { color: '#7c3aed', size: 400, life: 1.3 });
+    addSkillFx('ripple', p.x, p.y, { color: '#7c3aed', size: 500, life: 1.2 });
+    addSkillFx('ring', p.x, p.y, { color: '#a855f7', size: 500, life: 0.9 });
     burst(p.x, p.y, '#7c3aed', 30, 400);
     for (const q of G.players) {
       if (q.team !== p.team && q.alive) q.darkForestMark = 5 + lv * 0.8;
@@ -2175,6 +2256,9 @@ function useSkill(name) {
     G.sophonJamT = 2 + lv * 0.7;
     p.sjT = G.sophonJamT;
     toast(`智子干扰 Lv.${lv} · 敌方精准 -${30 + lv*6}%`);
+    // ★ 特效：紫色干扰波
+    addSkillFx('wave', p.x, p.y, { color: '#c4b5fd', size: 550, life: 1.0 });
+    addSkillFx('ripple', p.x, p.y, { color: '#c4b5fd', size: 400, life: 1.1 });
     burst(p.x, p.y, '#c4b5fd', 30, 380);
   } else if (name === 'curvatureJump') {
     if (p.cjCd > 0) { toast('曲率光速冷却 ' + p.cjCd.toFixed(1) + 's'); return; }
@@ -2186,6 +2270,10 @@ function useSkill(name) {
     p.vx = clamp(p.vx, -4000, 4000);
     p.vy = clamp(p.vy, -4000, 4000);
     toast(`曲率光速 Lv.${lv}`);
+    // ★ 特效：光速拖尾 + 金色扩散环
+    addSkillFx('trail', p.x, p.y, { color: '#fef3c7', size: 60, life: 0.7 });
+    addSkillFx('ring', p.x, p.y, { color: '#fef3c7', size: p.r + 120, life: 0.7 });
+    addSkillFx('star', p.x, p.y, { color: '#fef3c7', size: 150, life: 0.6 });
     burst(p.x, p.y, '#fef3c7', 30, 400);
   } else if (name === 'cosmicConstant') {
     if (p.ccCd > 0) { toast('宇宙常数冷却 ' + p.ccCd.toFixed(1) + 's'); return; }
@@ -2195,6 +2283,10 @@ function useSkill(name) {
     p.odT = Math.max(p.odT, 2 + lv * 0.7);
     p.odT2 = p.odT;
     toast(`宇宙常数修改 Lv.${lv}`);
+    // ★ 特效：白色星形爆发 + 大涟漪
+    addSkillFx('star', p.x, p.y, { color: '#ffffff', size: 220, life: 1.1 });
+    addSkillFx('ripple', p.x, p.y, { color: '#ffffff', size: 450, life: 1.2 });
+    addSkillFx('dome', p.x, p.y, { color: '#e0f2fe', size: p.r + 90, life: 0.9 });
     burst(p.x, p.y, '#ffffff', 40, 500);
   } else if (name === 'annihilation') {
     if (p.anCd > 0) { toast('湮灭立场冷却 ' + p.anCd.toFixed(1) + 's'); return; }
@@ -2203,6 +2295,10 @@ function useSkill(name) {
     G.annihilationDmg = 30 + lv * 15;
     p.anT = G.annihilationT;
     toast(`湮灭立场 Lv.${lv} · 伤害 ${G.annihilationDmg}`);
+    // ★ 特效：红色湮灭领域 + 脉冲
+    addSkillFx('dark', p.x, p.y, { color: '#f43f5e', size: 280, life: 0.9 });
+    addSkillFx('ring', p.x, p.y, { color: '#f43f5e', size: 300, life: 0.8 });
+    addSkillFx('wave', p.x, p.y, { color: '#ef4444', size: 350, life: 0.7 });
     burst(p.x, p.y, '#f43f5e', 36, 420);
   }
   else if (name === 'divineShield') {
@@ -2213,6 +2309,11 @@ function useSkill(name) {
     p.dsT = p.invuln;
     G.divineShieldT = p.invuln;
     toast(`神圣护盾 Lv.${lv} · 全屏无敌 ${(1.5 + lv*0.3).toFixed(1)}s`);
+    // ★ 特效：金色圣光穹顶 + 星形
+    addSkillFx('dome', p.x, p.y, { color: '#fde68a', size: p.r + 90, life: 1.1 });
+    addSkillFx('ring', p.x, p.y, { color: '#fbbf24', size: p.r + 130, life: 0.9 });
+    addSkillFx('star', p.x, p.y, { color: '#fde68a', size: 180, life: 0.9 });
+    addSkillFx('hex', p.x, p.y, { color: '#fbbf24', size: p.r + 50, life: 0.8 });
     burst(p.x, p.y, '#fde68a', 40, 500);
   } else if (name === 'timeWarp') {
     if (p.twCd > 0) { toast('时间扭曲冷却 ' + p.twCd.toFixed(1) + 's'); return; }
@@ -2221,7 +2322,11 @@ function useSkill(name) {
     G.timeWarpT = 2 + lv * 0.5;
     p.twT = G.timeWarpT;
     toast(`时间扭曲 Lv.${lv} · 时缓 3 倍 · 自身加速`);
-    burst(p.x, p.y, '#fbbf24', 40, 500);
+    // ★ 特效：紫色时间漩涡
+    addSkillFx('clock', p.x, p.y, { color: '#c084fc', size: 380, life: 1.3 });
+    addSkillFx('ripple', p.x, p.y, { color: '#c084fc', size: 480, life: 1.3 });
+    addSkillFx('star', p.x, p.y, { color: '#e9d5ff', size: 160, life: 1.0 });
+    burst(p.x, p.y, '#c084fc', 40, 500);
   }
 }
 
@@ -2906,6 +3011,15 @@ function updateParticles(dt) {
   }
 }
 
+/* ★ v9.3：技能特效更新 */
+function updateSkillFx(dt) {
+  for (let i = G.skillFx.length - 1; i >= 0; i--) {
+    const fx = G.skillFx[i];
+    fx.life -= dt;
+    if (fx.life <= 0) G.skillFx.splice(i, 1);
+  }
+}
+
 function updatePickups(dt) {
   for (let i = G.pickups.length - 1; i >= 0; i--) {
     const k = G.pickups[i];
@@ -3374,6 +3488,7 @@ function update(dt) {
 
   updateBullets(sdt);
   updateParticles(sdt);
+  updateSkillFx(dt);   // ★ 技能特效使用真实 dt
   updatePickups(sdt);
   updateFloats(sdt);
 
@@ -3464,6 +3579,7 @@ function render() {
   drawParticles();
   drawBullets();
   drawPlayers();
+  drawSkillFx();   // ★ v9.3：绘制技能特效
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   drawFloats();
@@ -3532,6 +3648,212 @@ function render() {
   }
 
   if (TOUCH.enabled || ('ontouchstart' in window)) drawTouchControls();
+}
+
+/* ★ v9.3：技能特效绘制 */
+function drawSkillFx() {
+  const dt = 1 / 60;
+  for (let i = 0; i < G.skillFx.length; i++) {
+    const fx = G.skillFx[i];
+    const a = clamp(fx.life / fx.maxLife, 0, 1);
+    const t = 1 - a;
+    ctx.globalAlpha = a;
+    switch (fx.type) {
+      case 'ring': {
+        const r = fx.size * (0.3 + t * 0.9);
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r, 0, TAU);
+        ctx.strokeStyle = fx.color;
+        ctx.lineWidth = 3 + a * 5;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r * 0.78, 0, TAU);
+        ctx.strokeStyle = hexRgba(fx.color, a * 0.6);
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        break;
+      }
+      case 'dome': {
+        const r = fx.size * (0.9 + t * 0.15);
+        const g = ctx.createRadialGradient(fx.x, fx.y, 0, fx.x, fx.y, r);
+        g.addColorStop(0, hexRgba(fx.color, 0.4 * a));
+        g.addColorStop(0.7, hexRgba(fx.color, 0.15 * a));
+        g.addColorStop(1, hexRgba(fx.color, 0));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r, 0, TAU);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r, 0, TAU);
+        ctx.strokeStyle = hexRgba(fx.color, 0.8 * a);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        break;
+      }
+      case 'ripple': {
+        for (let k = 0; k < 3; k++) {
+          const kt = ((t + k * 0.25) % 1);
+          const r = fx.size * kt;
+          if (r < 1) continue;
+          ctx.beginPath();
+          ctx.arc(fx.x, fx.y, r, 0, TAU);
+          ctx.strokeStyle = hexRgba(fx.color, (1 - kt) * a * 0.7);
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+        break;
+      }
+      case 'wave': {
+        const r = fx.size * (0.1 + t * 0.9);
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r, 0, TAU);
+        ctx.strokeStyle = hexRgba(fx.color, a * 0.85);
+        ctx.lineWidth = 6 + a * 4;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r * 0.85, 0, TAU);
+        ctx.strokeStyle = hexRgba(fx.color, a * 0.4);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        break;
+      }
+      case 'clock': {
+        const r = fx.size * (0.2 + t * 0.85);
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r, 0, TAU);
+        ctx.strokeStyle = hexRgba(fx.color, a * 0.75);
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        for (let k = 0; k < 12; k++) {
+          const ang = (k / 12) * TAU + G.time * 0.5;
+          const r1 = r * 0.88, r2 = r;
+          ctx.beginPath();
+          ctx.moveTo(fx.x + _cos(ang) * r1, fx.y + _sin(ang) * r1);
+          ctx.lineTo(fx.x + _cos(ang) * r2, fx.y + _sin(ang) * r2);
+          ctx.strokeStyle = hexRgba(fx.color, a);
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+        const na = G.time * 3;
+        ctx.beginPath();
+        ctx.moveTo(fx.x, fx.y);
+        ctx.lineTo(fx.x + _cos(na) * r * 0.7, fx.y + _sin(na) * r * 0.7);
+        ctx.strokeStyle = hexRgba(fx.color, a);
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+        break;
+      }
+      case 'dark': {
+        const r = fx.size * (0.5 + t * 0.6);
+        const g = ctx.createRadialGradient(fx.x, fx.y, 0, fx.x, fx.y, r);
+        g.addColorStop(0, hexRgba(fx.color, 0.55 * a));
+        g.addColorStop(0.5, hexRgba(fx.color, 0.28 * a));
+        g.addColorStop(1, hexRgba(fx.color, 0));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r, 0, TAU);
+        ctx.fill();
+        break;
+      }
+      case 'star': {
+        const r = fx.size * (0.3 + t * 0.85);
+        ctx.beginPath();
+        for (let k = 0; k < 8; k++) {
+          const ang = (k / 8) * TAU + G.time * 0.3;
+          const rr = k % 2 === 0 ? r : r * 0.4;
+          const x = fx.x + _cos(ang) * rr;
+          const y = fx.y + _sin(ang) * rr;
+          if (k === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = hexRgba(fx.color, a);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        const g = ctx.createRadialGradient(fx.x, fx.y, 0, fx.x, fx.y, r * 0.5);
+        g.addColorStop(0, hexRgba(fx.color, 0.6 * a));
+        g.addColorStop(1, hexRgba(fx.color, 0));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(fx.x, fx.y, r * 0.5, 0, TAU);
+        ctx.fill();
+        break;
+      }
+      case 'beam': {
+        ctx.beginPath();
+        ctx.moveTo(fx.x, fx.y);
+        ctx.lineTo(fx.tx, fx.ty);
+        ctx.strokeStyle = hexRgba(fx.color, a * 0.35);
+        ctx.lineWidth = 12 + a * 8;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(fx.x, fx.y);
+        ctx.lineTo(fx.tx, fx.ty);
+        ctx.strokeStyle = hexRgba(fx.color, a);
+        ctx.lineWidth = 3 + a * 4;
+        ctx.stroke();
+        break;
+      }
+      case 'aura': {
+        const r = fx.size * (0.7 + t * 0.4);
+        for (let k = 0; k < 6; k++) {
+          const ang = (k / 6) * TAU + t * 2.5;
+          const px = fx.x + _cos(ang) * r;
+          const py = fx.y + _sin(ang) * r - t * 30;
+          ctx.beginPath();
+          ctx.arc(px, py, 3 + a * 3, 0, TAU);
+          ctx.fillStyle = hexRgba(fx.color, a);
+          ctx.fill();
+        }
+        break;
+      }
+      case 'trail': {
+        for (let k = 0; k < 8; k++) {
+          const ang = (k / 8) * TAU + t * 4;
+          const r = 20 + t * 70;
+          const px = fx.x + _cos(ang) * r;
+          const py = fx.y + _sin(ang) * r;
+          ctx.beginPath();
+          ctx.arc(px, py, 3 + a * 2, 0, TAU);
+          ctx.fillStyle = hexRgba(fx.color, a);
+          ctx.fill();
+        }
+        break;
+      }
+      case 'hex': {
+        const r = fx.size * (0.5 + t * 0.85);
+        ctx.beginPath();
+        for (let k = 0; k < 6; k++) {
+          const ang = (k / 6) * TAU + G.time * 0.6;
+          const x = fx.x + _cos(ang) * r;
+          const y = fx.y + _sin(ang) * r;
+          if (k === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = hexRgba(fx.color, a * 0.85);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        break;
+      }
+      case 'burst': {
+        const r = fx.size * (0.2 + t * 1.1);
+        for (let k = 0; k < 10; k++) {
+          const ang = (k / 10) * TAU + rand(-0.1, 0.1);
+          const r1 = r * 0.5, r2 = r;
+          ctx.beginPath();
+          ctx.moveTo(fx.x + _cos(ang) * r1, fx.y + _sin(ang) * r1);
+          ctx.lineTo(fx.x + _cos(ang) * r2, fx.y + _sin(ang) * r2);
+          ctx.strokeStyle = hexRgba(fx.color, a);
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+        break;
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
 }
 
 function drawPickups() {
@@ -4538,7 +4860,8 @@ const CODES = {
   'FINAL':  { points: 50000000000000, msg: '最终版礼包：+50 万亿积分 ✦' },
   'V8SKILL':{ points: 100000000000000, msg: 'V8 技能礼包：+100 万亿积分 ⚔' },
   'MYTH':   { points: 1000000000000000, msg: '神话礼包：+1,000 万亿积分 ✧' },
-  'V9GOD':  { points: 10000000000000000, msg: '神格认证：+1 京积分 ☯' }
+  'V9GOD':  { points: 10000000000000000, msg: '神格认证：+1 京积分 ☯' },
+  'V93FX':  { points: 50000000000000000, msg: 'V9.3 特效礼包：+5 京积分 ✨' }
 };
 function doRedeem() {
   const inp = DOM.codeInput;
@@ -4576,16 +4899,14 @@ let helpTab = 'intro';
 
 const HELP_HTML = {
   intro: `
-    <h3>星际射手 · Astro Shooter v9.2 · 神话</h3>
+    <h3>星际射手 · Astro Shooter v9.3 · 神话</h3>
     <p><b>星际射手</b>是一款快节奏的俯视角太空竞技射击游戏。</p>
-    <h3>v9.2 更新</h3>
+    <h3>v9.3 主要更新</h3>
     <ul>
-      <li><b>✦ 修复神话卡片徽章重叠</b>：移除与卡片标题内容重叠的“✦ 神话”黄色徽章</li>
-      <li><b>✦ 神话级模式 × 8</b>：神域 / 时空涡旋 / 现实裂隙 / 永恒战争 / 灵魂收割 / 混沌风暴 / 宇宙终焉 / 创世之战</li>
-      <li><b>☣ 生化危机模式</b>：感染机制 + 血清收集</li>
-      <li><b>AI 难度 × 24 档</b>：新增 10 档神话级</li>
-      <li><b>✦ 神话武器 × 8 · 弹药 × 3 · 技能 × 4</b></li>
-      <li><b>高积分适配</b>：基础击杀积分大幅提升</li>
+      <li><b>✦ 技能炫酷特效</b>：为每个技能都添加了独特的 Canvas 特效（穹顶、涟漪、光束、星形、表盘等）</li>
+      <li><b>✦ 移除卡片阵营标识</b>：移除所有卡片左上角的神话/三体徽章，避免重叠</li>
+      <li><b>✦ 可拖动滚动</b>：技能栏与初始武器选择栏支持横向拖动滚动</li>
+      <li><b>✦ 帧率保证 30+ FPS</b>：特效数量上限 + 简单几何绘制</li>
     </ul>
   `,
   myth: `
@@ -4604,19 +4925,32 @@ const HELP_HTML = {
     <p>✨ 神圣护盾（O）· ⏳ 时间扭曲（P）· 💀 灵魂收割 · 💠 现实崩坏</p>
   `,
   skill: `
-    <h3>⚔ 技能系统</h3>
+    <h3>⚔ 技能系统（v9.3 特效升级）</h3>
     <p>技能上限 <b class="hl">10 级</b>，价格曲线为每级 ×1.7。</p>
     <h3>技能状态显示条</h3>
     <ul>
       <li><b style="color:#4ade80">绿色「就绪」</b>：技能可使用</li>
       <li><b style="color:#fda4af">灰红倒计时</b>：技能冷却中</li>
       <li><b style="color:#fbbf24">金色脉冲「Xs」</b>：技能正在生效</li>
+      <li><b style="color:#7dd3fc">可拖动</b>：技能栏支持横向拖动</li>
     </ul>
-    <h3>技能列表</h3>
+    <h3>炫酷技能特效</h3>
     <ul>
-      <li><b>主动</b>：护盾 / 时缓 / 冲刺 / 治疗 / 超载 / 时停 / 瞬步 / 面壁 / 钢印 / 黑森 / 智子 / 光速 / 常数 / 湮灭</li>
-      <li><b>被动</b>：曲速 / 弹跳 / 追踪 / 装甲 / 穿甲 / 冷却 / 爆裂 / 磁力 / 吸血 / 暴击 / 多重 / 汲取 / 弹药再生 / 荆棘 / 狂暴 / 快速射击 / 二段冲刺</li>
-      <li><b class="mythHl">神话</b>：神圣护盾 / 时间扭曲 / 灵魂收割 / 现实崩坏</li>
+      <li><b>护盾</b>：青色能量穹顶 + 六边形旋转</li>
+      <li><b>时缓</b>：紫色时间涟漪 + 旋转表盘</li>
+      <li><b>冲刺</b>：紫色冲刺尾焰</li>
+      <li><b>治疗</b>：绿色上升光点</li>
+      <li><b>超载</b>：金色火焰爆发</li>
+      <li><b>时停</b>：全屏时钟表盘</li>
+      <li><b>面壁</b>：粉色隐身光环</li>
+      <li><b>钢印</b>：紫色追踪光束</li>
+      <li><b>黑森</b>：紫色黑暗领域</li>
+      <li><b>智子</b>：紫色干扰波</li>
+      <li><b>光速</b>：金色光速拖尾</li>
+      <li><b>常数</b>：白色星形爆发</li>
+      <li><b>湮灭</b>：红色湮灭领域</li>
+      <li><b>圣盾</b>：金色圣光穹顶</li>
+      <li><b>时扭</b>：紫色时间漩涡</li>
     </ul>
   `,
   santi: `
@@ -4628,7 +4962,8 @@ const HELP_HTML = {
     <p>面壁计划（Z）· 思想钢印（X）· 黑暗森林威慑（C）· 智子干扰（V）· 曲率光速（B）· 宇宙常数修改（N）· 湮灭立场（H）</p>
     <h3>彩蛋兑换码</h3>
     <ul>
-      <li><code>3BODY</code> · <code>ZERO</code> · <code>FINAL</code> · <code>V8SKILL</code> · <code>MYTH</code> · <code>V9GOD</code></li>
+      <li><code>3BODY</code> · <code>ZERO</code> · <code>FINAL</code> · <code>V8SKILL</code></li>
+      <li><code>MYTH</code> · <code>V9GOD</code> · <code>V93FX</code></li>
     </ul>
   `,
   console: `
@@ -4642,7 +4977,7 @@ const HELP_HTML = {
       <li><b>极简预设</b>：只保留 Q 护盾</li>
     </ul>
     <h3>🎯 初始武器</h3>
-    <p>菜单内「初始武器」区域可从已拥有的武器中选一把，作为每局开局的第一把枪。</p>
+    <p>菜单内「初始武器」区域可从已拥有的武器中选一把，作为每局开局的第一把枪。横向拖动可以查看更多武器。</p>
   `,
   play: `
     <h3>🖥 电脑端</h3>
@@ -4660,7 +4995,7 @@ const HELP_HTML = {
       <li><b>左下角摇杆</b> — 拖动移动</li>
       <li><b>右下角红色开火按钮</b> — 按住持续射击</li>
       <li><b>其他圆形按钮</b> — 释放技能</li>
-      <li><b>屏幕左下技能芯片</b> — 显示技能冷却与持续时间</li>
+      <li><b>屏幕左下技能芯片</b> — 可横向拖动滚动，显示技能冷却与持续时间</li>
     </ul>
   `,
   mode: `
@@ -4675,16 +5010,14 @@ const HELP_HTML = {
     <p>简单 → 归零（14 档）· 泰坦 → 神格（10 档）</p>
   `,
   faq: `
-    <h3>Q：神话模式怎么进入？</h3>
-    <p>A：菜单内「选择模式」分组的「神话」区，共 8 个模式。</p>
-    <h3>Q：生化模式怎么玩？</h3>
-    <p>A：击杀感染者有概率掉落「血清」（绿色 S 图标），收集血清提升战力。</p>
-    <h3>Q：高积分怎么获取？</h3>
-    <p>A：挑战神话模式（×20～×100）搭配高 AI 难度（神格每只 6000 万基础分）。</p>
-    <h3>Q：技能上限是多少？</h3>
-    <p>A：<b>10 级</b>。价格曲线每级 ×1.7。</p>
-    <h3>Q：v9.2 修复了什么？</h3>
-    <p>A：移除了神话卡片上与标题内容重叠的“✦ 神话”黄色徽章。</p>
+    <h3>Q：v9.3 更新了什么？</h3>
+    <p>A：1. 为所有技能添加了炫酷特效；2. 移除了所有卡片左上角的阵营标识（神话/三体），避免重叠；3. 技能栏与初始武器选择栏改为横向可拖动滚动；4. 帧率保证 30+ FPS。</p>
+    <h3>Q：怎么滚动技能栏？</h3>
+    <p>A：在屏幕左下角技能栏区域左右拖动即可横向滚动；桌面端也可以用鼠标滚轮或触控板横滑。</p>
+    <h3>Q：怎么滚动初始武器？</h3>
+    <p>A：在菜单「初始武器」区域左右拖动即可。</p>
+    <h3>Q：技能特效会影响帧率吗？</h3>
+    <p>A：不会。特效数量上限 36 个，使用简单几何绘制（圆、线、多边形），保持在 30+ FPS。</p>
     <h3>Q：怎么分辨自己的角色？</h3>
     <p>A：白色虚线旋转光环 + 内部青色实心环 + 底部蓝色三角标记。</p>
   `
@@ -4755,9 +5088,11 @@ window.addEventListener('error', e => {
   console.error('Game error:', e.message);
 });
 
-console.log('%c星际射手 · Astro Shooter v9.2 · 神话', 'color:#fde68a;font-size:18px;font-weight:bold');
-console.log('%c✦ 修复：移除神话卡片上重叠的“✦ 神话”黄色徽章', 'color:#fbbf24;font-size:13px');
-console.log('%c✦ 所有原有内容完整保留', 'color:#22d3ee;font-size:13px');
+console.log('%c星际射手 · Astro Shooter v9.3 · 神话', 'color:#fde68a;font-size:18px;font-weight:bold');
+console.log('%c✦ 所有技能都添加了炫酷 Canvas 特效', 'color:#fbbf24;font-size:13px');
+console.log('%c✦ 移除所有卡片左上角的阵营标识', 'color:#fbbf24;font-size:13px');
+console.log('%c✦ 技能栏与初始武器栏支持横向拖动滚动', 'color:#4ade80;font-size:13px');
+console.log('%c✦ 帧率保证 30+ FPS（特效数量上限 + 简单几何绘制）', 'color:#22d3ee;font-size:13px');
 </script>
 </body>
 </html>
