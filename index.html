@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#05070f">
-<title>星际射手 · Astro Shooter v9.3 · 神话</title>
+<title>星际射手 · Astro Shooter v9.4 · 神话</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#05070f;
@@ -70,7 +70,6 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
 .card.myth{border:1px solid rgba(251,191,36,.5);
   background:linear-gradient(150deg,rgba(50,32,12,.88),rgba(24,14,4,.95));
   box-shadow:inset 0 0 26px rgba(251,191,36,.08)}
-/* v9.3：移除所有卡片左上角的阵营标识，避免与内容重叠 */
 .card.santi::before,
 .card.myth::before{display:none}
 
@@ -113,6 +112,10 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
   border-color:rgba(168,85,247,.45);color:#d8b4fe}
 .btn.console:hover{background:linear-gradient(150deg,rgba(110,60,160,.95),rgba(60,30,90,.98));
   border-color:#a855f7;box-shadow:0 6px 22px rgba(168,85,247,.25)}
+.btn.ach{background:linear-gradient(150deg,rgba(140,80,20,.85),rgba(90,45,8,.95));
+  border-color:rgba(251,191,36,.55);color:#fde68a}
+.btn.ach:hover{background:linear-gradient(150deg,rgba(180,110,30,.95),rgba(120,60,12,.98));
+  border-color:#fbbf24;box-shadow:0 6px 22px rgba(251,191,36,.3)}
 
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .spacer{flex:1}
@@ -144,6 +147,7 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
 .hudBox.red .vl{color:#f43f5e}
 .hudBox.green .vl{color:#4ade80}
 .hudBox.myth .vl{color:#fde68a;text-shadow:0 0 12px rgba(251,191,36,.5)}
+.hudBox.lv .vl{color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,.5)}
 
 .pstat{position:absolute;padding:5px 9px;min-width:166px;
   background:linear-gradient(160deg,rgba(10,20,38,.45),rgba(5,10,20,.55));
@@ -172,7 +176,6 @@ h2::before{content:'';width:3px;height:14px;border-radius:2px;
   animation:kfIn .3s ease;white-space:nowrap}
 @keyframes kfIn{from{opacity:0;transform:translateX(6px)}to{opacity:1;transform:translateX(0)}}
 
-/* ★ v9.3：技能栏改为横向可拖动滚动 */
 #skillBar{
   position:absolute;left:8px;bottom:8px;
   display:flex;gap:4px;
@@ -267,7 +270,6 @@ input[type=text]{padding:10px 15px;border-radius:10px;font-size:14px;letter-spac
   transition:all .15s}
 input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,.3)}
 
-/* ★ v9.3：初始武器选择栏改为横向可拖动滚动 */
 .weaponPicker{
   display:flex;
   flex-wrap:nowrap;
@@ -342,6 +344,90 @@ input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,
 .skillCard .sc-lvBar i.on.santi{background:linear-gradient(90deg,#22d3ee,#0891b2)}
 .skillCard .sc-lvBar i.on.myth{background:linear-gradient(90deg,#fbbf24,#fef3c7)}
 
+/* ★ v9.4 新增：等级显示与成就 */
+#levelCard{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 14px;border-radius:12px;
+  background:linear-gradient(150deg,rgba(60,40,100,.75),rgba(30,20,60,.85));
+  border:1px solid rgba(167,139,250,.45);
+  box-shadow:0 4px 20px rgba(167,139,250,.15),inset 0 0 20px rgba(167,139,250,.06);
+  min-width:280px}
+#levelCard .lvBadgeBig{
+  display:flex;align-items:center;justify-content:center;
+  min-width:52px;height:52px;border-radius:12px;
+  background:linear-gradient(135deg,#a78bfa,#7c3aed);
+  font-weight:900;font-size:20px;color:#fff;
+  box-shadow:0 0 20px rgba(167,139,250,.6),inset 0 0 12px rgba(255,255,255,.15);
+  flex-direction:column;line-height:1.05}
+#levelCard .lvBadgeBig small{font-size:8.5px;font-weight:700;opacity:.85;letter-spacing:1px}
+#levelCard .lvInfo{flex:1;min-width:0}
+#levelCard .lvTitle{font-size:11px;color:#c4b5fd;letter-spacing:2px;font-weight:800;margin-bottom:3px;
+  display:flex;justify-content:space-between;align-items:center}
+#levelCard .lvTitle .lvXpNum{font-size:10px;color:#a78bfa;font-weight:700;letter-spacing:.5px}
+#levelCard .lvXpBar{
+  height:8px;border-radius:4px;background:rgba(255,255,255,.08);
+  overflow:hidden;margin-bottom:3px}
+#levelCard .lvXpBar i{
+  display:block;height:100%;border-radius:4px;
+  background:linear-gradient(90deg,#a78bfa,#c4b5fd,#e9d5ff);
+  box-shadow:0 0 12px rgba(167,139,250,.8);
+  transition:width .25s ease}
+#levelCard .lvBonus{font-size:10px;color:#8b7bb8;letter-spacing:.5px}
+#levelCard .lvBonus b{color:#c4b5fd;font-weight:800}
+
+#achGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:11px}
+.achCat{
+  padding:11px 13px;border-radius:11px;
+  background:linear-gradient(150deg,rgba(20,30,52,.85),rgba(10,17,32,.92));
+  border:1px solid rgba(56,189,248,.18);
+  position:relative;overflow:hidden}
+.achCat.completed{border-color:rgba(251,191,36,.55);
+  background:linear-gradient(150deg,rgba(45,32,10,.85),rgba(22,15,4,.92));
+  box-shadow:inset 0 0 26px rgba(251,191,36,.08)}
+.achCat .acHead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.achCat .acIcon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  background:linear-gradient(150deg,rgba(56,189,248,.25),rgba(167,139,250,.2));
+  border:1px solid rgba(56,189,248,.3);flex-shrink:0}
+.achCat.completed .acIcon{background:linear-gradient(150deg,rgba(251,191,36,.4),rgba(180,120,20,.35));
+  border-color:rgba(251,191,36,.55);box-shadow:0 0 14px rgba(251,191,36,.4)}
+.achCat .acName{font-size:13.5px;font-weight:800;color:#dbeafe;letter-spacing:.5px}
+.achCat .acDesc{font-size:10.5px;color:#6b87ab;margin-top:1px}
+.achCat .acProgress{
+  display:flex;justify-content:space-between;font-size:10.5px;
+  color:#7dd3fc;font-weight:800;margin-bottom:6px;letter-spacing:.5px}
+.achTiers{display:flex;flex-direction:column;gap:3px}
+.achTier{
+  display:flex;align-items:center;gap:7px;
+  padding:4px 8px;border-radius:7px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  font-size:11px;transition:all .15s}
+.achTier.done{
+  background:linear-gradient(90deg,rgba(251,191,36,.18),rgba(251,191,36,.05));
+  border-color:rgba(251,191,36,.4);color:#fde68a}
+.achTier.current{
+  background:rgba(56,189,248,.1);
+  border-color:rgba(56,189,248,.4);color:#bbf7d0}
+.achTier .atMark{
+  width:16px;height:16px;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900;flex-shrink:0;
+  background:rgba(255,255,255,.08);color:#7a8ba0;
+  border:1px solid rgba(255,255,255,.15)}
+.achTier.done .atMark{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1a0e00;
+  border-color:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,.5)}
+.achTier.current .atMark{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;
+  border-color:#38bdf8}
+.achTier .atName{flex:1;font-weight:700;letter-spacing:.3px}
+.achTier .atGoal{font-size:10px;opacity:.85;font-variant-numeric:tabular-nums}
+.achTier .atReward{
+  font-size:9.5px;padding:1px 6px;border-radius:6px;
+  background:rgba(251,191,36,.18);color:#fde68a;font-weight:700;letter-spacing:.3px;
+  white-space:nowrap}
+.achTier.done .atReward{background:rgba(74,222,128,.2);color:#bbf7d0}
+
 .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;
   border:1px solid currentColor;margin-left:6px;letter-spacing:1px;font-weight:700}
 
@@ -364,6 +450,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 .hl{color:#fbbf24;font-weight:800}
 .santiHl{color:#22d3ee;font-weight:800}
 .mythHl{color:#fde68a;font-weight:800;text-shadow:0 0 10px rgba(251,191,36,.5)}
+.lvHl{color:#a78bfa;font-weight:800;text-shadow:0 0 10px rgba(167,139,250,.5)}
 
 #overStats{font-size:14px;line-height:2.2;letter-spacing:1px;color:#9bb4d0}
 #overStats .big{font-size:30px;font-weight:900;color:#fbbf24;
@@ -387,6 +474,9 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   .kfItem{font-size:9.5px}
   #skillBar{max-width:calc(100vw - 110px);height:30px}
   .weaponPicker{height:48px}
+  #levelCard{min-width:220px;padding:6px 10px}
+  #levelCard .lvBadgeBig{min-width:42px;height:42px;font-size:16px;border-radius:10px}
+  #achGrid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -443,11 +533,28 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   <div class="panel" id="menu">
     <div class="box">
       <h1>星际射手</h1>
-      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; V9.3 神 话</div>
+      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; V9.4 神 话</div>
 
-      <div class="row" style="justify-content:center;margin-bottom:16px">
+      <div class="row" style="justify-content:center;margin-bottom:14px">
         <div class="hudBox gold" style="min-width:120px;opacity:1"><div class="lb">积分</div><div class="vl" id="mPoints">0</div></div>
         <div class="hudBox green" style="min-width:120px;opacity:1"><div class="lb">总击杀</div><div class="vl" id="mKills">0</div></div>
+      </div>
+
+      <div class="row" style="justify-content:center;margin-bottom:16px">
+        <div id="levelCard">
+          <div class="lvBadgeBig">
+            <small>LV</small>
+            <span id="mLevel">1</span>
+          </div>
+          <div class="lvInfo">
+            <div class="lvTitle">
+              <span>指挥官等级</span>
+              <span class="lvXpNum" id="mXpText">0 / 100</span>
+            </div>
+            <div class="lvXpBar"><i id="mXpBar" style="width:0%"></i></div>
+            <div class="lvBonus" id="mBonus">加成：伤害 +0% · 移速 +0% · 商店折扣 0%</div>
+          </div>
+        </div>
       </div>
 
       <h2>选择模式</h2>
@@ -473,6 +580,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
         <button class="btn santi" onclick="openShop(); shopTab='santi'; renderShop();">☄ 三体军火库</button>
         <button class="btn myth" onclick="openShop(); shopTab='myth'; renderShop();">✦ 神话军火库</button>
         <button class="btn gold" onclick="openCodes()">🎁 兑换码</button>
+        <button class="btn ach" onclick="openAchievements()">🏆 成就系统</button>
         <button class="btn console" onclick="openConsole()">⚙ 控制台</button>
         <button class="btn" onclick="openHelp()">📖 简介 & 玩法</button>
       </div>
@@ -492,6 +600,18 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
         · 三体技能 <kbd>Z</kbd><kbd>X</kbd><kbd>C</kbd><kbd>V</kbd><kbd>B</kbd><kbd>N</kbd>
         · 神话 <kbd>O</kbd><kbd>P</kbd>
       </div>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="achPanel">
+    <div class="box">
+      <div class="row" style="margin-bottom:12px">
+        <h2 style="margin:0">🏆 成就系统</h2>
+        <div class="spacer"></div>
+        <div class="hudBox lv" style="opacity:1"><div class="lb">已解锁</div><div class="vl" id="achCount">0 / 0</div></div>
+        <button class="btn sm" onclick="closeAchievements()">返回</button>
+      </div>
+      <div id="achGrid"></div>
     </div>
   </div>
 
@@ -534,6 +654,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
       <div class="row" style="margin-bottom:12px">
         <h2 style="margin:0">🛒 军火商店</h2>
         <div class="spacer"></div>
+        <div class="hudBox lv" style="opacity:1"><div class="lb">等级折扣</div><div class="vl" id="sDiscount">-0%</div></div>
         <div class="hudBox gold" style="opacity:1"><div class="lb">可用积分</div><div class="vl" id="sPoints">0</div></div>
         <button class="btn sm" onclick="closeShop()">返回</button>
       </div>
@@ -591,13 +712,13 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 <script>
 'use strict';
 /* =========================================================
-   星际射手 · Astro Shooter v9.3 · 神话
+   星际射手 · Astro Shooter v9.4 · 神话
    =========================================================
-   v9.3 更新（在 v9.2 基础上）：
-   ✦ 为所有技能添加炫酷的 Canvas 特效
-   ✦ 移除所有卡片左上角的阵营标识（神话 / 三体）
-   ✦ 技能栏与初始武器选择栏改为横向可拖动滚动
-   ✦ 帧率保持 30+ FPS（特效数量上限 + 简单几何绘制）
+   v9.4 更新（在 v9.3 基础上）：
+   ✦ 成就系统：13 个大类，50+ 档位
+   ✦ 等级系统：经验值升级、加成、商店折扣
+   ✦ 击杀与购买获得经验值
+   ✦ 成就/等级提供加成
    ✦ 其余所有内容完整保留
    ========================================================= */
 
@@ -607,7 +728,7 @@ const MAX_STEPS = 3;
 const MAX_PARTICLES = 320;
 const MAX_BULLETS = 260;
 const MAX_FLOATS = 22;
-const MAX_SKILL_FX = 36;   // ★ v9.3：技能特效数量上限，保证帧率
+const MAX_SKILL_FX = 36;
 
 const _cos = Math.cos, _sin = Math.sin, _sqrt = Math.sqrt, _abs = Math.abs;
 
@@ -655,7 +776,21 @@ const DEFAULT_SAVE = {
   perks: {},
   high: {},
   kills: 0,
-  codes: {}
+  codes: {},
+  // ★ v9.4 新增
+  xp: 0,
+  level: 1,
+  achievements: {},
+  stats: {
+    totalKills: 0,
+    totalScore: 0,
+    gamesPlayed: 0,
+    maxCombo: 0,
+    maxTime: 0,
+    maxWave: 0,
+    critKills: 0,
+    spentPoints: 0
+  }
 };
 let SAVE = (() => {
   try {
@@ -672,6 +807,11 @@ let SAVE = (() => {
       }
       o.high = Object.assign({}, s.high || {});
       o.codes = Object.assign({}, s.codes || {});
+      // ★ v9.4 兼容性
+      o.xp = (typeof s.xp === 'number' && s.xp >= 0) ? s.xp : 0;
+      o.level = (typeof s.level === 'number' && s.level >= 1) ? s.level : 1;
+      o.achievements = Object.assign({}, s.achievements || {});
+      o.stats = Object.assign({}, DEFAULT_SAVE.stats, s.stats || {});
       if (!Array.isArray(o.weapons) || !o.weapons.length) o.weapons = ['pistol'];
       if (!o.startWeapon || !o.weapons.includes(o.startWeapon)) o.startWeapon = o.weapons[0];
       return o;
@@ -685,6 +825,255 @@ function flushSave() {
   if (!saveDirty) return;
   saveDirty = false;
   try { localStorage.setItem(SKEY, JSON.stringify(SAVE)); } catch (e) {}
+}
+
+/* =========================================================
+   ★ v9.4 成就定义（13 大类 · 50+ 档位）
+   ========================================================= */
+const ACHIEVEMENTS = [
+  {
+    id: 'kills', name: '击杀大师', icon: '💀', desc: '累计击杀敌人',
+    tiers: [
+      { goal: 100,   name: '初露锋芒',  reward: { xp: 100,  points: 500 } },
+      { goal: 500,   name: '小试牛刀',  reward: { xp: 300,  points: 2000 } },
+      { goal: 1000,  name: '百战之躯',  reward: { xp: 800,  points: 8000 } },
+      { goal: 5000,  name: '千人斩',    reward: { xp: 3000, points: 50000 } },
+      { goal: 10000, name: '万人敌',    reward: { xp: 10000,points: 500000 } },
+      { goal: 50000, name: '战场死神',  reward: { xp: 50000,points: 10000000 } }
+    ]
+  },
+  {
+    id: 'score', name: '积分大亨', icon: '💰', desc: '累计获得积分',
+    tiers: [
+      { goal: 10000,         name: '万元户',    reward: { xp: 200,   points: 5000 } },
+      { goal: 1000000,       name: '百万富翁',  reward: { xp: 800,   points: 50000 } },
+      { goal: 100000000,     name: '亿万富豪',  reward: { xp: 3000,  points: 500000 } },
+      { goal: 100000000000,  name: '千亿巨头',  reward: { xp: 15000, points: 10000000 } },
+      { goal: 1000000000000, name: '万亿富豪',  reward: { xp: 50000, points: 100000000 } }
+    ]
+  },
+  {
+    id: 'games', name: '身经百战', icon: '🎮', desc: '进行游戏场次',
+    tiers: [
+      { goal: 5,   name: '新手上路',     reward: { xp: 100,  points: 1000 } },
+      { goal: 20,  name: '老练战士',     reward: { xp: 300,  points: 5000 } },
+      { goal: 50,  name: '资深老兵',     reward: { xp: 800,  points: 30000 } },
+      { goal: 100, name: '百战精英',     reward: { xp: 2000, points: 200000 } },
+      { goal: 500, name: '传奇指挥官',   reward: { xp: 10000,points: 5000000 } }
+    ]
+  },
+  {
+    id: 'arsenal', name: '军火收藏', icon: '🔫', desc: '拥有武器数量',
+    tiers: [
+      { goal: 5,  name: '轻型武装',   reward: { xp: 200,  points: 3000 } },
+      { goal: 10, name: '火力提升',   reward: { xp: 500,  points: 15000 } },
+      { goal: 20, name: '移动军火库', reward: { xp: 1500, points: 100000 } },
+      { goal: 40, name: '军火大亨',   reward: { xp: 5000, points: 5000000 } },
+      { goal: 60, name: '全武器大师', reward: { xp: 20000,points: 500000000 } }
+    ]
+  },
+  {
+    id: 'skills', name: '技能研习', icon: '⚔', desc: '解锁技能数量',
+    tiers: [
+      { goal: 5,  name: '初入门径',   reward: { xp: 300,  points: 5000 } },
+      { goal: 10, name: '技艺精通',   reward: { xp: 800,  points: 30000 } },
+      { goal: 15, name: '技能大师',   reward: { xp: 2000, points: 200000 } },
+      { goal: 20, name: '全能战士',   reward: { xp: 5000, points: 2000000 } },
+      { goal: 25, name: '技能宗师',   reward: { xp: 15000,points: 50000000 } }
+    ]
+  },
+  {
+    id: 'level', name: '成长之路', icon: '⭐', desc: '达到指挥官等级',
+    tiers: [
+      { goal: 5,   name: '初出茅庐',   reward: { points: 5000, xp: 500 } },
+      { goal: 10,  name: '崭露头角',   reward: { points: 30000, xp: 2000 } },
+      { goal: 20,  name: '名扬四海',   reward: { points: 200000, xp: 5000 } },
+      { goal: 50,  name: '登峰造极',   reward: { points: 5000000, xp: 20000 } },
+      { goal: 100, name: '神之领域',   reward: { points: 200000000, xp: 100000 } }
+    ]
+  },
+  {
+    id: 'survival', name: '生存专家', icon: '⏱', desc: '单局最长存活时间',
+    tiers: [
+      { goal: 60,   name: '一分钟',   reward: { xp: 200, points: 3000 } },
+      { goal: 180,  name: '三分钟',   reward: { xp: 500, points: 15000 } },
+      { goal: 300,  name: '五分钟',   reward: { xp: 1200,points: 80000 } },
+      { goal: 600,  name: '十分钟',   reward: { xp: 3000,points: 800000 } },
+      { goal: 1200, name: '二十分钟', reward: { xp: 8000,points: 8000000 } }
+    ]
+  },
+  {
+    id: 'waves', name: '波次征服', icon: '🌊', desc: '单局达到波次',
+    tiers: [
+      { goal: 5,  name: '初探波次',    reward: { xp: 150,  points: 2000 } },
+      { goal: 10, name: '波次老手',    reward: { xp: 400,  points: 12000 } },
+      { goal: 20, name: '波次大师',    reward: { xp: 1200, points: 100000 } },
+      { goal: 30, name: '波次霸主',    reward: { xp: 3000, points: 1000000 } },
+      { goal: 50, name: '无尽征服者',  reward: { xp: 10000,points: 20000000 } }
+    ]
+  },
+  {
+    id: 'crits', name: '暴击大师', icon: '💢', desc: '累计暴击命中',
+    tiers: [
+      { goal: 50,    name: '精准一击',   reward: { xp: 300,  points: 5000 } },
+      { goal: 200,   name: '致命打击',   reward: { xp: 800,  points: 30000 } },
+      { goal: 1000,  name: '暴击专家',   reward: { xp: 2500, points: 200000 } },
+      { goal: 5000,  name: '暴击宗师',   reward: { xp: 8000, points: 2000000 } },
+      { goal: 20000, name: '一击必杀',   reward: { xp: 25000,points: 100000000 } }
+    ]
+  },
+  {
+    id: 'combo', name: '连杀之王', icon: '🔥', desc: '达成最高连杀',
+    tiers: [
+      { goal: 5,  name: '小连杀',   reward: { xp: 200,  points: 3000 } },
+      { goal: 10, name: '连杀达人', reward: { xp: 500,  points: 15000 } },
+      { goal: 20, name: '连杀大师', reward: { xp: 1500, points: 100000 } },
+      { goal: 30, name: '连杀宗师', reward: { xp: 4000, points: 1000000 } },
+      { goal: 50, name: '无双连杀', reward: { xp: 12000,points: 15000000 } }
+    ]
+  },
+  {
+    id: 'spend', name: '消费贵族', icon: '💸', desc: '累计消费积分',
+    tiers: [
+      { goal: 10000,        name: '小有消费',  reward: { xp: 200,  points: 1000 } },
+      { goal: 1000000,      name: '消费达人',  reward: { xp: 800,  points: 5000 } },
+      { goal: 100000000,    name: '消费大师',  reward: { xp: 3000, points: 50000 } },
+      { goal: 10000000000,  name: '消费宗师',  reward: { xp: 12000,points: 500000 } },
+      { goal: 1000000000000,name: '消费之神',  reward: { xp: 50000,points: 5000000 } }
+    ]
+  },
+  {
+    id: 'myth', name: '神话收集', icon: '✦', desc: '拥有神话武器',
+    tiers: [
+      { goal: 1, name: '神话初现',   reward: { xp: 1000, points: 100000 } },
+      { goal: 3, name: '神话猎手',   reward: { xp: 3000, points: 1000000 } },
+      { goal: 5, name: '神话大师',   reward: { xp: 8000, points: 10000000 } },
+      { goal: 8, name: '神话主宰',   reward: { xp: 25000,points: 500000000 } }
+    ]
+  },
+  {
+    id: 'santi', name: '三体收集', icon: '☄', desc: '拥有三体武器',
+    tiers: [
+      { goal: 1,  name: '接触三体',   reward: { xp: 500,  points: 50000 } },
+      { goal: 3,  name: '三体学者',   reward: { xp: 1500, points: 300000 } },
+      { goal: 5,  name: '三体大师',   reward: { xp: 4000, points: 2000000 } },
+      { goal: 10, name: '三体全知',   reward: { xp: 15000,points: 50000000 } }
+    ]
+  },
+  {
+    id: 'ammo', name: '弹药囤积', icon: '📦', desc: '拥有总弹药数',
+    tiers: [
+      { goal: 5000,     name: '小小库存',   reward: { xp: 150,  points: 2000 } },
+      { goal: 50000,    name: '弹药储备',   reward: { xp: 500,  points: 15000 } },
+      { goal: 500000,   name: '军火库',     reward: { xp: 2000, points: 150000 } },
+      { goal: 5000000,  name: '弹药帝国',   reward: { xp: 8000, points: 3000000 } }
+    ]
+  }
+];
+
+/* =========================================================
+   ★ v9.4 等级系统
+   ========================================================= */
+function xpNeeded(level) {
+  // 1级100，10级3162，20级10000，50级46294
+  return Math.floor(100 * Math.pow(level, 1.6));
+}
+
+function getLevelBonus() {
+  const lv = SAVE.level || 1;
+  return {
+    dmg: 1 + (lv - 1) * 0.01,       // 每级 +1% 伤害
+    speed: 1 + (lv - 1) * 0.005,     // 每级 +0.5% 移速
+    discount: Math.min(0.5, (lv - 1) * 0.005)  // 每级 0.5% 折扣，上限 50%
+  };
+}
+
+function applyDiscount(basePrice) {
+  const b = getLevelBonus();
+  return Math.max(1, Math.floor(basePrice * (1 - b.discount)));
+}
+
+function grantXP(amount) {
+  if (!amount || amount <= 0) return;
+  SAVE.xp = (SAVE.xp || 0) + Math.floor(amount);
+  let leveled = false;
+  while (SAVE.xp >= xpNeeded(SAVE.level)) {
+    SAVE.xp -= xpNeeded(SAVE.level);
+    SAVE.level++;
+    leveled = true;
+    toast('🎉 升级至 Lv.' + SAVE.level);
+    addKillfeed('指挥官升级 Lv.' + SAVE.level, '#a78bfa');
+  }
+  if (leveled) {
+    saveGame();
+    // 尝试检查等级成就
+    try { checkAchievements(); } catch(e) {}
+  } else {
+    saveGame();
+  }
+}
+
+/* =========================================================
+   ★ v9.4 成就进度与检查
+   ========================================================= */
+function getAchProgress(catId) {
+  const s = SAVE.stats || {};
+  switch (catId) {
+    case 'kills':    return s.totalKills || 0;
+    case 'score':    return s.totalScore || 0;
+    case 'games':    return s.gamesPlayed || 0;
+    case 'arsenal':  return SAVE.weapons.length;
+    case 'skills':   return Object.keys(SAVE.perks).length;
+    case 'level':    return SAVE.level || 1;
+    case 'survival': return s.maxTime || 0;
+    case 'waves':    return s.maxWave || 0;
+    case 'crits':    return s.critKills || 0;
+    case 'combo':    return s.maxCombo || 0;
+    case 'spend':    return s.spentPoints || 0;
+    case 'myth':     return SAVE.weapons.filter(w => MYTH_WEAPONS.has(w)).length;
+    case 'santi':    return SAVE.weapons.filter(w => SANTI_WEAPONS.has(w)).length;
+    case 'ammo': {
+      let total = 0;
+      for (const k in SAVE.ammo) total += (SAVE.ammo[k] || 0);
+      return total;
+    }
+  }
+  return 0;
+}
+
+function checkAchievements() {
+  let changed = true;
+  let loopGuard = 0;
+  let totalUnlocked = 0;
+  while (changed && loopGuard < 12) {
+    changed = false;
+    loopGuard++;
+    for (const cat of ACHIEVEMENTS) {
+      const cur = getAchProgress(cat.id);
+      cat.tiers.forEach((tier, idx) => {
+        const achId = cat.id + '_' + idx;
+        if (!SAVE.achievements[achId] && cur >= tier.goal) {
+          SAVE.achievements[achId] = Date.now();
+          if (tier.reward.points) SAVE.points += tier.reward.points;
+          if (tier.reward.xp) SAVE.xp += tier.reward.xp;
+          totalUnlocked++;
+          toast('🏆 ' + cat.name + ' · ' + tier.name);
+          addKillfeed('🏆 ' + cat.icon + ' ' + cat.name + ' · ' + tier.name, '#fbbf24');
+          changed = true;
+        }
+      });
+    }
+    // 升级处理
+    while (SAVE.xp >= xpNeeded(SAVE.level)) {
+      SAVE.xp -= xpNeeded(SAVE.level);
+      SAVE.level++;
+      toast('🎉 升级至 Lv.' + SAVE.level);
+      changed = true;
+    }
+  }
+  if (totalUnlocked > 0 || loopGuard > 1) {
+    saveGame();
+  }
 }
 
 /* =========================================================
@@ -1031,7 +1420,7 @@ const ACTIVE_SKILLS = [
 ];
 
 /* =========================================================
-   AI 难度（24 档）
+   AI 难度
    ========================================================= */
 const DIFFICULTY = {
   easy:      { name:'简单', aimErr:0.45, react:1.20, speed:0.42, dmgMul:0.30, hp:70,  dodge:0.00, aggro:0.40, fireGap:1.6,  color:'#4ade80' },
@@ -1126,6 +1515,7 @@ const DOM = {
   pause: document.getElementById('pause'),
   help: document.getElementById('help'),
   consolePanel: document.getElementById('consolePanel'),
+  achPanel: document.getElementById('achPanel'),
   hud: document.getElementById('hud'),
   gameCtrls: document.getElementById('gameCtrls'),
   respawnOverlay: document.getElementById('respawnOverlay'),
@@ -1155,7 +1545,14 @@ const DOM = {
   mySkillsGrid: document.getElementById('mySkillsGrid'),
   mPoints: document.getElementById('mPoints'),
   mKills: document.getElementById('mKills'),
+  mLevel: document.getElementById('mLevel'),
+  mXpText: document.getElementById('mXpText'),
+  mXpBar: document.getElementById('mXpBar'),
+  mBonus: document.getElementById('mBonus'),
+  achCount: document.getElementById('achCount'),
+  achGrid: document.getElementById('achGrid'),
   sPoints: document.getElementById('sPoints'),
+  sDiscount: document.getElementById('sDiscount'),
   shopTabs: document.getElementById('shopTabs'),
   shopContent: document.getElementById('shopContent'),
   consoleGrid: document.getElementById('consoleGrid'),
@@ -1471,6 +1868,7 @@ window.addEventListener('keydown', e => {
     if (!DOM.shop.classList.contains('hidden')) { closeShop(); return; }
     if (!DOM.codePanel.classList.contains('hidden')) { closeCodes(); return; }
     if (!DOM.consolePanel.classList.contains('hidden')) { closeConsole(); return; }
+    if (!DOM.achPanel.classList.contains('hidden')) { closeAchievements(); return; }
     if (G.running) togglePause();
     return;
   }
@@ -1515,7 +1913,7 @@ const G = {
   running: false, paused: false, over: false,
   mode: 'time', time: 0, acc: 0, shake: 0,
   players: [], bullets: [], pickups: [], floats: [],
-  skillFx: [],   // ★ v9.3：技能特效列表
+  skillFx: [],
   score: 0, kills: 0, wave: 1, waveTimer: 0, spawnTimer: 0, timeLeft: 0,
   ascii: false, slowmo: 0, best: 0, uid: 1,
   bossRef: null, combo: 0, comboT: 0, timeStop: 0,
@@ -1542,7 +1940,9 @@ const G = {
   riftRadius: Math.max(W, H),
   chaosEvent: 0, chaosEventT: 0,
   _lastInputT: 0,
-  _annTick: 0
+  _annTick: 0,
+  // ★ v9.4 本局统计
+  gameXP: 0
 };
 
 function refreshCache() {
@@ -1578,7 +1978,6 @@ function addFloat(x, y, text, color, size = 18) {
   G.floats.push({ x, y, text, color, life: 1.0, size });
 }
 
-/* ★ v9.3：技能特效系统 */
 function addSkillFx(type, x, y, opts) {
   if (G.skillFx.length >= MAX_SKILL_FX) G.skillFx.shift();
   G.skillFx.push(Object.assign({
@@ -1667,7 +2066,7 @@ function startGame(mode) {
   G.bullets.length = 0;
   G.pickups.length = 0;
   G.floats.length = 0;
-  G.skillFx.length = 0;   // ★ 清空技能特效
+  G.skillFx.length = 0;
   pCount = 0;
   G.time = 0; G.acc = 0; G.shake = 0; G.uid = 1;
   G.score = 0; G.kills = 0; G.wave = 1; G.waveTimer = 2.0; G.spawnTimer = 0;
@@ -1697,7 +2096,13 @@ function startGame(mode) {
   G.chaosEventT = 0;
   G._lastInputT = 0;
   G._annTick = 0;
+  G.gameXP = 0;
   DOM.killfeed.innerHTML = '';
+
+  // ★ v9.4 场次统计
+  if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
+  SAVE.stats.gamesPlayed = (SAVE.stats.gamesPlayed || 0) + 1;
+  saveGame();
 
   if (mode === 'time') G.timeLeft = 60;
   else if (mode === 'darkOps') G.timeLeft = 60;
@@ -1919,7 +2324,17 @@ function endGame(reason) {
   const best = SAVE.high[G.mode] || 0;
   const isNew = base > best;
   if (isNew) SAVE.high[G.mode] = base;
+
+  // ★ v9.4 更新统计
+  if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
+  SAVE.stats.totalScore = (SAVE.stats.totalScore || 0) + base;
+  SAVE.stats.maxTime = Math.max(SAVE.stats.maxTime || 0, G.time);
+  SAVE.stats.maxWave = Math.max(SAVE.stats.maxWave || 0, G.wave);
+
   saveGame(); flushSave();
+
+  // 结算显示
+  const xpText = G.gameXP > 0 ? `<br>本局获得经验：<b style="color:#a78bfa">+${fmt(G.gameXP)} XP</b>` : '';
 
   const title = DOM.overTitle;
   if (reason === 'win') { title.textContent = '🏆 胜  利'; title.style.filter = 'drop-shadow(0 0 30px rgba(74,222,128,.6))'; }
@@ -1933,7 +2348,12 @@ function endGame(reason) {
      <div style="margin-top:10px;font-size:13px">
        ${MODES[G.mode].name} 最高分：<b style="color:${isNew ? '#4ade80' : '#7dd3fc'}">${fmt(Math.max(best, base))}</b>
        ${isNew ? '<span class="tag" style="color:#4ade80">新纪录</span>' : ''}
-     </div>`;
+     </div>
+     ${xpText}
+     <div style="margin-top:8px;font-size:12.5px;color:#8b7bb8">指挥官 Lv.<b style="color:#a78bfa">${SAVE.level}</b> · 经验 <b style="color:#a78bfa">${SAVE.xp} / ${xpNeeded(SAVE.level)}</b></div>`;
+
+  // 检查成就
+  try { checkAchievements(); } catch(e) {}
 
   DOM.over.classList.remove('hidden');
 }
@@ -1943,6 +2363,10 @@ function backToMenu() {
   if (G.score > 0) {
     const best = SAVE.high[G.mode] || 0;
     if (G.score > best) SAVE.high[G.mode] = G.score;
+    if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
+    SAVE.stats.totalScore = (SAVE.stats.totalScore || 0) + G.score;
+    SAVE.stats.maxTime = Math.max(SAVE.stats.maxTime || 0, G.time);
+    SAVE.stats.maxWave = Math.max(SAVE.stats.maxWave || 0, G.wave);
     saveGame();
   }
   flushSave();
@@ -1951,12 +2375,17 @@ function backToMenu() {
   showGameUI(false);
   hideAllPanels();
   DOM.menu.classList.remove('hidden');
+  try { checkAchievements(); } catch(e) {}
   refreshMenu();
 }
 function quitGame() {
   if (G.score > 0) {
     const best = SAVE.high[G.mode] || 0;
     if (G.score > best) SAVE.high[G.mode] = G.score;
+    if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
+    SAVE.stats.totalScore = (SAVE.stats.totalScore || 0) + G.score;
+    SAVE.stats.maxTime = Math.max(SAVE.stats.maxTime || 0, G.time);
+    SAVE.stats.maxWave = Math.max(SAVE.stats.maxWave || 0, G.wave);
     saveGame();
   }
   flushSave();
@@ -1965,6 +2394,7 @@ function quitGame() {
   showGameUI(false);
   DOM.pause.classList.add('hidden');
   DOM.menu.classList.remove('hidden');
+  try { checkAchievements(); } catch(e) {}
   refreshMenu();
   toast('已退出到主菜单（记录已保存）');
 }
@@ -1975,7 +2405,7 @@ function togglePause() {
   syncUI();
 }
 function hideAllPanels() {
-  [DOM.menu, DOM.shop, DOM.codePanel, DOM.over, DOM.pause, DOM.help, DOM.consolePanel].forEach(el =>
+  [DOM.menu, DOM.shop, DOM.codePanel, DOM.over, DOM.pause, DOM.help, DOM.consolePanel, DOM.achPanel].forEach(el =>
     el.classList.add('hidden'));
 }
 
@@ -2045,6 +2475,9 @@ function tryFire(p) {
   const critLv = perkLv(p, 'crit');
   const berserkLv = perkLv(p, 'berserk');
   const realityLv = perkLv(p, 'realityBreak');
+  // ★ v9.4 等级伤害加成
+  const levelBonus = getLevelBonus();
+  const levelDmgMul = p.isAI ? 1 : levelBonus.dmg;
 
   let berserkMul = 1;
   if (berserkLv > 0 && p.hp < p.maxHp * 0.4) {
@@ -2058,7 +2491,7 @@ function tryFire(p) {
     const dmgMul = p.isAI ? (DIFFICULTY[p.aiLevel] ? DIFFICULTY[p.aiLevel].dmgMul : 0.6) : 1;
     const odMul = p.odT > 0 ? (1 + (30 + odLv * 6) / 100) : 1;
 
-    let dmgFinal = w.dmg * dmgMul * odMul * berserkMul;
+    let dmgFinal = w.dmg * dmgMul * odMul * berserkMul * levelDmgMul;
 
     if (p.weapon === 'wallfacerSword' && !p.isAI) {
       dmgFinal *= (1 + Math.min(G._activeEnemyCount, 10) * 0.15);
@@ -2119,7 +2552,7 @@ function tryFire(p) {
 }
 
 /* =========================================================
-   技能使用（★ v9.3：每个技能都带炫酷特效）
+   技能使用
    ========================================================= */
 function useSkill(name) {
   const p = G.players[0];
@@ -2133,7 +2566,6 @@ function useSkill(name) {
     p.shieldT = p.shield;
     p.shieldCd = Math.max(3, 18 - lv * 0.8);
     toast(`力场护盾 Lv.${lv}`);
-    // ★ 特效：青色能量穹顶 + 扩散环
     addSkillFx('dome', p.x, p.y, { color: '#38bdf8', size: p.r + 55, life: 0.9 });
     addSkillFx('ring', p.x, p.y, { color: '#7dd3fc', size: p.r + 100, life: 0.65 });
     addSkillFx('hex', p.x, p.y, { color: '#38bdf8', size: p.r + 30, life: 0.7 });
@@ -2144,7 +2576,6 @@ function useSkill(name) {
     p.slowT2 = G.slowmo;
     p.slowCd = Math.max(4, 22 - lv * 0.8);
     toast(`时间迟缓 Lv.${lv}`);
-    // ★ 特效：紫色时间涟漪
     addSkillFx('ripple', p.x, p.y, { color: '#a78bfa', size: 300, life: 1.0 });
     addSkillFx('clock', p.x, p.y, { color: '#c4b5fd', size: 100, life: 0.9 });
   } else if (name === 'dash') {
@@ -2155,7 +2586,6 @@ function useSkill(name) {
     p.vx += _cos(p.angle) * (900 + lv * 80);
     p.vy += _sin(p.angle) * (900 + lv * 80);
     toast(`相位冲刺 Lv.${lv}`);
-    // ★ 特效：紫色冲刺尾焰
     addSkillFx('trail', p.x, p.y, { color: '#a78bfa', size: 40, life: 0.55 });
     addSkillFx('dome', p.x, p.y, { color: '#a78bfa', size: p.r + 30, life: 0.4 });
     for (let i = 0; i < 10; i++)
@@ -2166,7 +2596,6 @@ function useSkill(name) {
     const amount = 30 + lv * 8;
     p.hp = Math.min(p.maxHp, p.hp + amount);
     toast(`治疗波 Lv.${lv}  +${amount} HP`);
-    // ★ 特效：绿色上升光点 + 光环
     addSkillFx('aura', p.x, p.y, { color: '#4ade80', size: 70, life: 1.0 });
     addSkillFx('ring', p.x, p.y, { color: '#22c55e', size: p.r + 70, life: 0.7 });
     burst(p.x, p.y, '#4ade80', 16, 200);
@@ -2177,7 +2606,6 @@ function useSkill(name) {
     p.odT = 3 + lv * 0.5;
     p.odT2 = p.odT;
     toast(`超载模式 Lv.${lv}！`);
-    // ★ 特效：金色火焰爆发 + 双环
     addSkillFx('burst', p.x, p.y, { color: '#fbbf24', size: 120, life: 0.9 });
     addSkillFx('ring', p.x, p.y, { color: '#fbbf24', size: p.r + 90, life: 0.6 });
     addSkillFx('dome', p.x, p.y, { color: '#f97316', size: p.r + 55, life: 0.7 });
@@ -2188,7 +2616,6 @@ function useSkill(name) {
     G.timeStop = 0.8 + lv * 0.22;
     p.tsT = G.timeStop;
     toast(`时间停止 Lv.${lv}！`);
-    // ★ 特效：全屏时钟表盘
     addSkillFx('clock', p.x, p.y, { color: '#fbbf24', size: 420, life: 1.2 });
     addSkillFx('ripple', p.x, p.y, { color: '#fbbf24', size: 400, life: 1.1 });
     burst(p.x, p.y, '#fbbf24', 24, 350);
@@ -2201,7 +2628,6 @@ function useSkill(name) {
     p.x = clamp(p.x, p.r, W - p.r);
     p.y = clamp(p.y, p.r, H - p.r);
     toast(`瞬步 Lv.${lv}`);
-    // ★ 特效：残影穿梭
     addSkillFx('trail', p.x, p.y, { color: '#c084fc', size: 50, life: 0.5 });
     addSkillFx('ring', p.x, p.y, { color: '#c084fc', size: p.r + 80, life: 0.5 });
     for (let i = 0; i < 12; i++)
@@ -2214,7 +2640,6 @@ function useSkill(name) {
     p.shield = 1.5 + lv * 0.4;
     p.wfT = p.invuln;
     toast(`面壁计划 Lv.${lv} · 隐身 ${(1.5 + lv*0.4).toFixed(1)}s`);
-    // ★ 特效：粉色隐身光环
     addSkillFx('dome', p.x, p.y, { color: '#f0abfc', size: p.r + 70, life: 1.0 });
     addSkillFx('ring', p.x, p.y, { color: '#f0abfc', size: p.r + 100, life: 0.7 });
     addSkillFx('aura', p.x, p.y, { color: '#f0abfc', size: 80, life: 0.8 });
@@ -2228,7 +2653,6 @@ function useSkill(name) {
       tgt.team = p.team;
       p.tsST = tgt.isConverted;
       toast(`思想钢印 Lv.${lv} · 转化敌人 ${(1.5+lv*0.6).toFixed(1)}s`);
-      // ★ 特效：从玩家到目标的紫色光束
       addSkillFx('beam', p.x, p.y, { tx: tgt.x, ty: tgt.y, color: '#f0abfc', life: 0.6 });
       addSkillFx('ring', tgt.x, tgt.y, { color: '#f0abfc', size: tgt.r + 70, life: 0.8 });
       burst(tgt.x, tgt.y, '#f0abfc', 24, 300);
@@ -2242,7 +2666,6 @@ function useSkill(name) {
     G.darkForestT = 5 + lv * 0.8;
     p.dfT = G.darkForestT;
     toast(`黑暗森林威慑 Lv.${lv} · 伤害 +${15 + lv*6}%`);
-    // ★ 特效：紫色黑暗领域
     addSkillFx('dark', p.x, p.y, { color: '#7c3aed', size: 400, life: 1.3 });
     addSkillFx('ripple', p.x, p.y, { color: '#7c3aed', size: 500, life: 1.2 });
     addSkillFx('ring', p.x, p.y, { color: '#a855f7', size: 500, life: 0.9 });
@@ -2256,7 +2679,6 @@ function useSkill(name) {
     G.sophonJamT = 2 + lv * 0.7;
     p.sjT = G.sophonJamT;
     toast(`智子干扰 Lv.${lv} · 敌方精准 -${30 + lv*6}%`);
-    // ★ 特效：紫色干扰波
     addSkillFx('wave', p.x, p.y, { color: '#c4b5fd', size: 550, life: 1.0 });
     addSkillFx('ripple', p.x, p.y, { color: '#c4b5fd', size: 400, life: 1.1 });
     burst(p.x, p.y, '#c4b5fd', 30, 380);
@@ -2270,7 +2692,6 @@ function useSkill(name) {
     p.vx = clamp(p.vx, -4000, 4000);
     p.vy = clamp(p.vy, -4000, 4000);
     toast(`曲率光速 Lv.${lv}`);
-    // ★ 特效：光速拖尾 + 金色扩散环
     addSkillFx('trail', p.x, p.y, { color: '#fef3c7', size: 60, life: 0.7 });
     addSkillFx('ring', p.x, p.y, { color: '#fef3c7', size: p.r + 120, life: 0.7 });
     addSkillFx('star', p.x, p.y, { color: '#fef3c7', size: 150, life: 0.6 });
@@ -2283,7 +2704,6 @@ function useSkill(name) {
     p.odT = Math.max(p.odT, 2 + lv * 0.7);
     p.odT2 = p.odT;
     toast(`宇宙常数修改 Lv.${lv}`);
-    // ★ 特效：白色星形爆发 + 大涟漪
     addSkillFx('star', p.x, p.y, { color: '#ffffff', size: 220, life: 1.1 });
     addSkillFx('ripple', p.x, p.y, { color: '#ffffff', size: 450, life: 1.2 });
     addSkillFx('dome', p.x, p.y, { color: '#e0f2fe', size: p.r + 90, life: 0.9 });
@@ -2295,7 +2715,6 @@ function useSkill(name) {
     G.annihilationDmg = 30 + lv * 15;
     p.anT = G.annihilationT;
     toast(`湮灭立场 Lv.${lv} · 伤害 ${G.annihilationDmg}`);
-    // ★ 特效：红色湮灭领域 + 脉冲
     addSkillFx('dark', p.x, p.y, { color: '#f43f5e', size: 280, life: 0.9 });
     addSkillFx('ring', p.x, p.y, { color: '#f43f5e', size: 300, life: 0.8 });
     addSkillFx('wave', p.x, p.y, { color: '#ef4444', size: 350, life: 0.7 });
@@ -2309,7 +2728,6 @@ function useSkill(name) {
     p.dsT = p.invuln;
     G.divineShieldT = p.invuln;
     toast(`神圣护盾 Lv.${lv} · 全屏无敌 ${(1.5 + lv*0.3).toFixed(1)}s`);
-    // ★ 特效：金色圣光穹顶 + 星形
     addSkillFx('dome', p.x, p.y, { color: '#fde68a', size: p.r + 90, life: 1.1 });
     addSkillFx('ring', p.x, p.y, { color: '#fbbf24', size: p.r + 130, life: 0.9 });
     addSkillFx('star', p.x, p.y, { color: '#fde68a', size: 180, life: 0.9 });
@@ -2322,7 +2740,6 @@ function useSkill(name) {
     G.timeWarpT = 2 + lv * 0.5;
     p.twT = G.timeWarpT;
     toast(`时间扭曲 Lv.${lv} · 时缓 3 倍 · 自身加速`);
-    // ★ 特效：紫色时间漩涡
     addSkillFx('clock', p.x, p.y, { color: '#c084fc', size: 380, life: 1.3 });
     addSkillFx('ripple', p.x, p.y, { color: '#c084fc', size: 480, life: 1.3 });
     addSkillFx('star', p.x, p.y, { color: '#e9d5ff', size: 160, life: 1.0 });
@@ -2436,9 +2853,14 @@ function killPlayer(p, sourceId) {
     if (src === G.players[0]) {
       G.combo++;
       G.comboT = 3.0;
+      // ★ v9.4 更新最大连杀
+      if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
+      if (G.combo > (SAVE.stats.maxCombo || 0)) SAVE.stats.maxCombo = G.combo;
     }
 
+    // 积分基础值
     let gain = 120;
+    let baseXP = 5;
     if (p.isAI) {
       const baseGain = {
         easy: 120, normal: 200, hard: 350, hell: 550, ashen: 900,
@@ -2449,12 +2871,23 @@ function killPlayer(p, sourceId) {
         primordial: 1200000, genesis: 2500000, apocalypse: 5000000,
         omniscient: 10000000, omnipotent: 25000000, godhead: 60000000
       };
+      const baseXPGain = {
+        easy: 5, normal: 10, hard: 20, hell: 35, ashen: 60,
+        nightmare: 100, inferno: 150, abyss: 220, chaos: 320,
+        voidLv: 450, godlike: 700, transcend: 1000,
+        trisolaris: 1800, zeroHomer: 3000,
+        titan: 5000, myth: 8000, eternal: 13000, cosmic: 20000,
+        primordial: 32000, genesis: 50000, apocalypse: 80000,
+        omniscient: 130000, omnipotent: 200000, godhead: 350000
+      };
       gain = baseGain[p.aiLevel] || 200;
-      if (p.isZombie) gain = 150;
-      if (p.isElite) gain *= 2;
-      if (p.isInfected) gain = Math.round(gain * 1.5);
+      baseXP = baseXPGain[p.aiLevel] || 10;
+      if (p.isZombie) { gain = 150; baseXP = 6; }
+      if (p.isElite) { gain *= 2; baseXP *= 2; }
+      if (p.isInfected) { gain = Math.round(gain * 1.5); baseXP = Math.round(baseXP * 1.5); }
     } else {
       gain = 2000;
+      baseXP = 200;
     }
 
     const soulLv = perkLv(src, 'soulHarvest');
@@ -2475,8 +2908,15 @@ function killPlayer(p, sourceId) {
         G.score += gain;
         SAVE.points += gain;
         SAVE.kills++;
+        if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
+        SAVE.stats.totalKills = (SAVE.stats.totalKills || 0) + 1;
+        // ★ v9.4 经验值
+        const xpGain = Math.round(baseXP * (1 + G.wave * 0.05) * (1 + G.modeScoreMul * 0.05));
+        G.gameXP += xpGain;
+        grantXP(xpGain);
         saveGame();
         addFloat(p.x, p.y - 26, '+' + fmt(gain), '#fbbf24', 20);
+        addFloat(p.x, p.y - 48, '+' + fmt(xpGain) + ' XP', '#a78bfa', 14);
       }
 
       const vampLv = perkLv(src, 'vampire');
@@ -2502,6 +2942,9 @@ function killPlayer(p, sourceId) {
   } else if (Math.random() < 0.35 && p.team === 1) {
     G.pickups.push({ x: p.x, y: p.y, life: 14, r: 13, phase: rand(0, TAU) });
   }
+
+  // 检查成就
+  try { checkAchievements(); } catch(e) {}
 }
 
 function respawnPlayer(p) {
@@ -2657,7 +3100,8 @@ function updatePlayer(p, dt) {
   if (ml > 0.01) { dx = p.mx / ml; dy = p.my / ml; }
 
   const speedLv = perkLv(p, 'speed');
-  let spd = 176 * (1 + speedLv * 0.04);
+  const levelBonus = getLevelBonus();
+  let spd = 176 * (1 + speedLv * 0.04) * (p.isAI ? 1 : levelBonus.speed);
   if (p.odT > 0) spd *= 1.25;
   if (p.slowT > 0) spd *= 0.45;
   if (G.slowmo > 0 && !p.isAI) spd *= 1.5;
@@ -2910,6 +3354,11 @@ function updateBullets(dt) {
           dead = true;
           break;
         }
+        // ★ v9.4 暴击统计（命中即计）
+        if (b.isCrit && b.ownerId === G.players[0].id) {
+          if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
+          SAVE.stats.critKills = (SAVE.stats.critKills || 0) + 1;
+        }
         damage(p, b.dmg, b.ownerId);
         if (b.slow) p.slowT = Math.max(p.slowT, b.slow);
         if (b.poison) p.poison = Math.max(p.poison, b.poison);
@@ -3011,7 +3460,6 @@ function updateParticles(dt) {
   }
 }
 
-/* ★ v9.3：技能特效更新 */
 function updateSkillFx(dt) {
   for (let i = G.skillFx.length - 1; i >= 0; i--) {
     const fx = G.skillFx[i];
@@ -3488,7 +3936,7 @@ function update(dt) {
 
   updateBullets(sdt);
   updateParticles(sdt);
-  updateSkillFx(dt);   // ★ 技能特效使用真实 dt
+  updateSkillFx(dt);
   updatePickups(sdt);
   updateFloats(sdt);
 
@@ -3579,7 +4027,7 @@ function render() {
   drawParticles();
   drawBullets();
   drawPlayers();
-  drawSkillFx();   // ★ v9.3：绘制技能特效
+  drawSkillFx();
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   drawFloats();
@@ -3650,9 +4098,7 @@ function render() {
   if (TOUCH.enabled || ('ontouchstart' in window)) drawTouchControls();
 }
 
-/* ★ v9.3：技能特效绘制 */
 function drawSkillFx() {
-  const dt = 1 / 60;
   for (let i = 0; i < G.skillFx.length; i++) {
     const fx = G.skillFx[i];
     const a = clamp(fx.life / fx.maxLife, 0, 1);
@@ -4446,6 +4892,19 @@ function refreshMenu() {
   DOM.mPoints.textContent = fmt(SAVE.points);
   DOM.mKills.textContent = fmt(SAVE.kills);
 
+  // ★ v9.4 等级显示
+  const lv = SAVE.level || 1;
+  const xpNeed = xpNeeded(lv);
+  const xpCur = SAVE.xp || 0;
+  DOM.mLevel.textContent = lv;
+  DOM.mXpText.textContent = fmt(xpCur) + ' / ' + fmt(xpNeed);
+  DOM.mXpBar.style.width = clamp(xpCur / xpNeed * 100, 0, 100).toFixed(1) + '%';
+  const lb = getLevelBonus();
+  DOM.mBonus.innerHTML =
+    '加成：伤害 <b>+' + ((lb.dmg - 1) * 100).toFixed(1) + '%</b> · ' +
+    '移速 <b>+' + ((lb.speed - 1) * 100).toFixed(1) + '%</b> · ' +
+    '商店折扣 <b>' + (lb.discount * 100).toFixed(1) + '%</b>';
+
   const mg = DOM.modeGrid;
   mg.innerHTML = '';
 
@@ -4593,6 +5052,90 @@ function setStartWeapon(id) {
 }
 
 /* =========================================================
+   ★ v9.4 成就面板
+   ========================================================= */
+function openAchievements() {
+  DOM.achPanel.classList.remove('hidden');
+  DOM.menu.classList.add('hidden');
+  renderAchievements();
+}
+function closeAchievements() {
+  DOM.achPanel.classList.add('hidden');
+  DOM.menu.classList.remove('hidden');
+  refreshMenu();
+}
+
+function renderAchievements() {
+  const el = DOM.achGrid;
+  el.innerHTML = '';
+  let totalUnlocked = 0, total = 0;
+
+  for (const cat of ACHIEVEMENTS) {
+    const cur = getAchProgress(cat.id);
+    // 找出最高已解锁的档位索引
+    let maxDone = -1;
+    cat.tiers.forEach((tier, idx) => {
+      total++;
+      const achId = cat.id + '_' + idx;
+      if (SAVE.achievements[achId]) { totalUnlocked++; maxDone = idx; }
+    });
+    const allDone = (maxDone === cat.tiers.length - 1);
+
+    const d = document.createElement('div');
+    d.className = 'achCat' + (allDone ? ' completed' : '');
+
+    // 大标题
+    const head = document.createElement('div');
+    head.className = 'acHead';
+    head.innerHTML =
+      `<div class="acIcon">${cat.icon}</div>
+       <div style="flex:1">
+         <div class="acName">${cat.name}</div>
+         <div class="acDesc">${cat.desc}</div>
+       </div>`;
+    d.appendChild(head);
+
+    // 当前进度
+    const prog = document.createElement('div');
+    prog.className = 'acProgress';
+    const nextTier = cat.tiers.find((t, i) => !SAVE.achievements[cat.id + '_' + i]);
+    prog.innerHTML =
+      `<span>进度：${fmt(cur)}${nextTier ? ' / ' + fmt(nextTier.goal) : ''}</span>
+       <span>${cat.tiers.filter((t, i) => SAVE.achievements[cat.id + '_' + i]).length} / ${cat.tiers.length}</span>`;
+    d.appendChild(prog);
+
+    // 档位列表
+    const tiers = document.createElement('div');
+    tiers.className = 'achTiers';
+    cat.tiers.forEach((tier, idx) => {
+      const achId = cat.id + '_' + idx;
+      const done = !!SAVE.achievements[achId];
+      const isCurrent = (!done && cur >= tier.goal) ||
+                        (!done && nextTier === tier);
+      const t = document.createElement('div');
+      t.className = 'achTier' + (done ? ' done' : (isCurrent ? ' current' : ''));
+
+      // 奖励文字
+      let rw = '';
+      if (tier.reward.points) rw += '+' + fmt(tier.reward.points) + '分 ';
+      if (tier.reward.xp) rw += '+' + fmt(tier.reward.xp) + 'XP';
+
+      t.innerHTML =
+        `<div class="atMark">${done ? '✓' : (isCurrent ? '▶' : '·')}</div>
+         <div class="atName">${tier.name}</div>
+         <div class="atGoal">${fmt(tier.goal)}</div>
+         <div class="atReward">${rw}</div>`;
+      tiers.appendChild(t);
+    });
+    d.appendChild(tiers);
+
+    el.appendChild(d);
+  }
+
+  DOM.achCount.textContent = totalUnlocked + ' / ' + total;
+}
+
+/* =========================================================
    控制台
    ========================================================= */
 const CONSOLE_ITEMS = [
@@ -4663,16 +5206,17 @@ function toggleASCII() {
 }
 
 function resetSave() {
-  if (!confirm('确定要重置所有存档吗？积分、武器、技能等级都会清空。')) return;
+  if (!confirm('确定要重置所有存档吗？积分、武器、技能等级、成就、等级都会清空。')) return;
   SAVE = JSON.parse(JSON.stringify(DEFAULT_SAVE));
   SAVE.skillButtons = Object.assign({}, DEFAULT_SKILL_BUTTONS);
+  SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
   saveGame(); flushSave();
   refreshMenu();
   toast('存档已重置');
 }
 
 /* =========================================================
-   商店
+   商店（★ v9.4 应用折扣与经验值）
    ========================================================= */
 let shopTab = 'weapon';
 let shopWeaponPage = 0;
@@ -4692,12 +5236,24 @@ function closeShop() {
 
 function perkUpgradePrice(key, currentLv) {
   const base = PERKS[key].basePrice;
-  if (currentLv === 0) return base;
-  return Math.round(base * Math.pow(1.7, currentLv));
+  if (currentLv === 0) return applyDiscount(base);
+  return applyDiscount(Math.round(base * Math.pow(1.7, currentLv)));
+}
+
+function spendPoints(amount) {
+  // 扣除积分 + 记录消费统计 + 获得经验值（1%）
+  if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
+  SAVE.points -= amount;
+  SAVE.stats.spentPoints = (SAVE.stats.spentPoints || 0) + amount;
+  const xpGain = Math.max(1, Math.floor(amount * 0.01));
+  grantXP(xpGain);
+  try { checkAchievements(); } catch(e) {}
 }
 
 function renderShop() {
   DOM.sPoints.textContent = fmt(SAVE.points);
+  const lb = getLevelBonus();
+  if (DOM.sDiscount) DOM.sDiscount.textContent = '-' + (lb.discount * 100).toFixed(1) + '%';
 
   const tabs = [
     ['weapon', '🔫 武器库'],
@@ -4736,27 +5292,30 @@ function renderShop() {
       const w = WEAPONS[id];
       if (!w) continue;
       const owned = SAVE.weapons.includes(id);
-      const can = SAVE.points >= w.price;
+      const price = applyDiscount(w.price);
+      const can = SAVE.points >= price;
       const d = document.createElement('div');
       d.className = 'card' + (w.santi ? ' santi' : '') + (w.myth ? ' myth' : '') + (owned ? ' owned' : (can ? '' : ' locked'));
       const ammoName = w.ammo ? AMMO[w.ammo].name : '无限';
+      const discountedTag = !owned && w.price !== price ? `<br><span style="color:#a78bfa;font-size:10px">原价 ${fmt(w.price)} · 折扣后</span>` : '';
       d.innerHTML = `<div class="t" style="color:${w.color}">${w.name}</div>
-        <div class="p">${owned ? '' : fmt(w.price)}</div>
+        <div class="p">${owned ? '' : fmt(price)}</div>
         <div class="d">
           伤害 <b style="color:#e2f2ff">${w.dmg}</b> · CD ${w.cd}s<br>
-          弹药：${ammoName}${(w.pellets || 1) > 1 ? ' ×' + w.pellets : ''}<br>
+          弹药：${ammoName}${(w.pellets || 1) > 1 ? ' ×' + w.pellets : ''}${discountedTag}<br>
           <span style="color:#4a6a94">${w.desc || ''}</span>
         </div>`;
       if (!owned && can) {
         d.onclick = () => {
-          SAVE.points -= w.price;
+          spendPoints(price);
           SAVE.weapons.push(id);
           saveGame(); flushSave();
           toast('已购买 ' + w.name);
+          try { checkAchievements(); } catch(e) {}
           renderShop();
         };
       } else if (!owned) {
-        d.onclick = () => toast('积分不足，还需 ' + fmt(w.price - SAVE.points));
+        d.onclick = () => toast('积分不足，还需 ' + fmt(price - SAVE.points));
       }
       c.appendChild(d);
     }
@@ -4777,23 +5336,25 @@ function renderShop() {
   else if (shopTab === 'ammo') {
     for (const k in AMMO) {
       const a = AMMO[k];
-      const can = SAVE.points >= a.price;
+      const price = applyDiscount(a.price);
+      const can = SAVE.points >= price;
       const isSanti = ['strongForce','quantum','graviton','dimFragment','zeroParticle'].includes(k);
       const isMyth = ['mythEssence','chaos','cosmic'].includes(k);
       const d = document.createElement('div');
       d.className = 'card' + (isSanti ? ' santi' : '') + (isMyth ? ' myth' : '') + (can ? '' : ' locked');
       d.innerHTML = `<div class="t" style="color:${a.color}">${a.icon} ${a.name}</div>
-        <div class="p">${fmt(a.price)}</div>
+        <div class="p">${fmt(price)}</div>
         <div class="d">
           一次购买 <b style="color:#7dd3fc">${a.qty}</b> 发<br>
           当前库存：<b style="color:#fbbf24">${SAVE.ammo[k] || 0}</b>
         </div>`;
       d.onclick = () => {
-        if (SAVE.points < a.price) { toast('积分不足'); return; }
-        SAVE.points -= a.price;
+        if (SAVE.points < price) { toast('积分不足'); return; }
+        spendPoints(price);
         SAVE.ammo[k] = (SAVE.ammo[k] || 0) + a.qty;
         saveGame(); flushSave();
         toast('+' + a.qty + ' ' + a.name);
+        try { checkAchievements(); } catch(e) {}
         renderShop();
       };
       c.appendChild(d);
@@ -4823,10 +5384,11 @@ function renderShop() {
 
       if (maxed) {} else if (can) {
         d.onclick = () => {
-          SAVE.points -= price;
+          spendPoints(price);
           SAVE.perks[k] = lv + 1;
           saveGame(); flushSave();
           toast(`${pk.name} 升至 Lv.${lv + 1}`);
+          try { checkAchievements(); } catch(e) {}
           renderShop();
         };
       } else {
@@ -4861,7 +5423,8 @@ const CODES = {
   'V8SKILL':{ points: 100000000000000, msg: 'V8 技能礼包：+100 万亿积分 ⚔' },
   'MYTH':   { points: 1000000000000000, msg: '神话礼包：+1,000 万亿积分 ✧' },
   'V9GOD':  { points: 10000000000000000, msg: '神格认证：+1 京积分 ☯' },
-  'V93FX':  { points: 50000000000000000, msg: 'V9.3 特效礼包：+5 京积分 ✨' }
+  'V93FX':  { points: 50000000000000000, msg: 'V9.3 特效礼包：+5 京积分 ✨' },
+  'V94ACH': { points: 100000000000000000, msg: 'V9.4 成就礼包：+10 京积分 🏆' }
 };
 function doRedeem() {
   const inp = DOM.codeInput;
@@ -4877,6 +5440,7 @@ function doRedeem() {
   msg.textContent = '✓ ' + c.msg + '（当前积分：' + fmt(SAVE.points) + '）';
   inp.value = '';
   toast('兑换成功');
+  try { checkAchievements(); } catch(e) {}
 }
 DOM.codeInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') doRedeem();
@@ -4887,27 +5451,65 @@ DOM.codeInput.addEventListener('keydown', e => {
    ========================================================= */
 const HELP_TABS = [
   ['intro', '📌 简介'],
+  ['lv', '⭐ 等级系统'],
+  ['ach', '🏆 成就系统'],
   ['myth', '✦ 神话'],
-  ['skill', '⚔ 技能系统'],
-  ['santi', '☄ 三体'],
-  ['console', '⚙ 控制台'],
+  ['skill', '⚔ 技能特效'],
   ['play', '🎮 操作'],
-  ['mode', '🗺 模式'],
   ['faq', '❓ 问题']
 ];
 let helpTab = 'intro';
 
 const HELP_HTML = {
   intro: `
-    <h3>星际射手 · Astro Shooter v9.3 · 神话</h3>
+    <h3>星际射手 · Astro Shooter v9.4 · 神话</h3>
     <p><b>星际射手</b>是一款快节奏的俯视角太空竞技射击游戏。</p>
-    <h3>v9.3 主要更新</h3>
+    <h3>v9.4 主要更新</h3>
     <ul>
-      <li><b>✦ 技能炫酷特效</b>：为每个技能都添加了独特的 Canvas 特效（穹顶、涟漪、光束、星形、表盘等）</li>
-      <li><b>✦ 移除卡片阵营标识</b>：移除所有卡片左上角的神话/三体徽章，避免重叠</li>
-      <li><b>✦ 可拖动滚动</b>：技能栏与初始武器选择栏支持横向拖动滚动</li>
-      <li><b>✦ 帧率保证 30+ FPS</b>：特效数量上限 + 简单几何绘制</li>
+      <li><b>🏆 成就系统</b>：13 个大类，50+ 档位，提供积分与经验值奖励</li>
+      <li><b>⭐ 等级系统</b>：通过击杀敌人、购买商品获取经验值，提升等级</li>
+      <li><b>等级加成</b>：每级 +1% 伤害、+0.5% 移速、+0.5% 商店折扣（上限 50%）</li>
     </ul>
+  `,
+  lv: `
+    <h3>⭐ 等级系统</h3>
+    <p>通过以下方式获取经验值（XP）：</p>
+    <ul>
+      <li><b>击杀敌人</b>：难度越高获得经验越多（简单 5 → 神格 350000 XP）</li>
+      <li><b>购买商品</b>：消费积分的 1% 转化为经验值</li>
+      <li><b>达成成就</b>：每个档位都提供经验奖励</li>
+    </ul>
+    <h3>等级需求</h3>
+    <p>升级所需经验公式：<code>100 × 等级^1.6</code>。等级越高，所需经验越多。</p>
+    <h3>等级加成</h3>
+    <ul>
+      <li><b>伤害加成</b>：每级 +1%（100 级时 +99%）</li>
+      <li><b>移动速度</b>：每级 +0.5%（100 级时 +49.5%）</li>
+      <li><b>商店折扣</b>：每级 +0.5%（上限 50%）</li>
+    </ul>
+  `,
+  ach: `
+    <h3>🏆 成就系统</h3>
+    <p>共 <b class="hl">13 个大类</b>，每类有多个档位。达成条件后自动解锁，获得积分与经验值奖励。</p>
+    <h3>成就类别</h3>
+    <ul>
+      <li><b>💀 击杀大师</b>：累计击杀数</li>
+      <li><b>💰 积分大亨</b>：累计获得积分</li>
+      <li><b>🎮 身经百战</b>：进行游戏场次</li>
+      <li><b>🔫 军火收藏</b>：拥有武器数量</li>
+      <li><b>⚔ 技能研习</b>：解锁技能数量</li>
+      <li><b>⭐ 成长之路</b>：达到指挥官等级</li>
+      <li><b>⏱ 生存专家</b>：单局最长存活时间</li>
+      <li><b>🌊 波次征服</b>：单局达到波次</li>
+      <li><b>💢 暴击大师</b>：累计暴击命中</li>
+      <li><b>🔥 连杀之王</b>：达成最高连杀</li>
+      <li><b>💸 消费贵族</b>：累计消费积分</li>
+      <li><b>✦ 神话收集</b>：拥有神话武器</li>
+      <li><b>☄ 三体收集</b>：拥有三体武器</li>
+      <li><b>📦 弹药囤积</b>：拥有总弹药数</li>
+    </ul>
+    <h3>查看成就</h3>
+    <p>主菜单点击「🏆 成就系统」按钮打开，可查看每个类别的所有档位与完成情况。</p>
   `,
   myth: `
     <h3>✦ 神话级模式（8 个）</h3>
@@ -4921,20 +5523,10 @@ const HELP_HTML = {
     <p>神话裁决 / 神盾破坏者 / 混沌使者 / 永恒之焰 / 宇宙审判 / 虚空君主 / 原初之光 / 创世核心</p>
     <h3>✦ 神话弹药（3 种）</h3>
     <p>神话精华 / 混沌原质 / 宇宙本源</p>
-    <h3>✦ 神话技能（4 个）</h3>
-    <p>✨ 神圣护盾（O）· ⏳ 时间扭曲（P）· 💀 灵魂收割 · 💠 现实崩坏</p>
   `,
   skill: `
-    <h3>⚔ 技能系统（v9.3 特效升级）</h3>
-    <p>技能上限 <b class="hl">10 级</b>，价格曲线为每级 ×1.7。</p>
-    <h3>技能状态显示条</h3>
-    <ul>
-      <li><b style="color:#4ade80">绿色「就绪」</b>：技能可使用</li>
-      <li><b style="color:#fda4af">灰红倒计时</b>：技能冷却中</li>
-      <li><b style="color:#fbbf24">金色脉冲「Xs」</b>：技能正在生效</li>
-      <li><b style="color:#7dd3fc">可拖动</b>：技能栏支持横向拖动</li>
-    </ul>
-    <h3>炫酷技能特效</h3>
+    <h3>⚔ 技能特效（v9.3+）</h3>
+    <p>每个技能都带独特的 Canvas 特效：</p>
     <ul>
       <li><b>护盾</b>：青色能量穹顶 + 六边形旋转</li>
       <li><b>时缓</b>：紫色时间涟漪 + 旋转表盘</li>
@@ -4953,71 +5545,34 @@ const HELP_HTML = {
       <li><b>时扭</b>：紫色时间漩涡</li>
     </ul>
   `,
-  santi: `
-    <h3>☄ 三体扩展 · 世界观</h3>
-    <p>刘慈欣《三体》系列中的武器、能力与概念，全部融入本作。</p>
-    <h3>三体武器（10 把）</h3>
-    <p>水滴 / 智子干扰枪 / 思想钢印枪 / 面壁者之剑 / 引力波天线 / 曲率驱动飞船 / 黑域发生器 / 歌者二向箔 / 三体舰队主炮 / 归零者之钟</p>
-    <h3>三体技能（7 个）</h3>
-    <p>面壁计划（Z）· 思想钢印（X）· 黑暗森林威慑（C）· 智子干扰（V）· 曲率光速（B）· 宇宙常数修改（N）· 湮灭立场（H）</p>
-    <h3>彩蛋兑换码</h3>
-    <ul>
-      <li><code>3BODY</code> · <code>ZERO</code> · <code>FINAL</code> · <code>V8SKILL</code></li>
-      <li><code>MYTH</code> · <code>V9GOD</code> · <code>V93FX</code></li>
-    </ul>
-  `,
-  console: `
-    <h3>⚙ 控制台</h3>
-    <p>菜单内点击「⚙ 控制台」按钮打开。可自由启用或禁用游戏内的技能按钮。</p>
-    <h3>快捷预设</h3>
-    <ul>
-      <li><b>全部开启</b> / <b>全部关闭</b></li>
-      <li><b>基础预设</b>：只保留 Q/E/R/F 四个常用技能</li>
-      <li><b>三体预设</b>：保留全部技能</li>
-      <li><b>极简预设</b>：只保留 Q 护盾</li>
-    </ul>
-    <h3>🎯 初始武器</h3>
-    <p>菜单内「初始武器」区域可从已拥有的武器中选一把，作为每局开局的第一把枪。横向拖动可以查看更多武器。</p>
-  `,
   play: `
     <h3>🖥 电脑端</h3>
     <ul>
       <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> — 移动（<b>自动瞄准</b>）</li>
       <li><b>鼠标左键</b> 或 <kbd>空格</kbd> — 射击</li>
       <li><kbd>1</kbd>~<kbd>9</kbd> 或 <b>滚轮</b> — 切换武器</li>
-      <li><kbd>Q</kbd><kbd>E</kbd><kbd>R</kbd><kbd>F</kbd><kbd>G</kbd><kbd>T</kbd> — 常规技能</li>
-      <li><kbd>Z</kbd><kbd>X</kbd><kbd>C</kbd><kbd>V</kbd><kbd>B</kbd><kbd>N</kbd> — 三体技能</li>
-      <li><kbd>H</kbd> 湮灭 · <kbd>O</kbd> 神圣护盾 · <kbd>P</kbd> 时间扭曲</li>
+      <li><kbd>Q</kbd> 护盾 <kbd>E</kbd> 时缓 <kbd>R</kbd> 冲刺 <kbd>F</kbd> 治疗 <kbd>G</kbd> 超载 <kbd>T</kbd> 时停 <kbd>H</kbd> 湮灭</li>
+      <li>三体技能 <kbd>Z</kbd><kbd>X</kbd><kbd>C</kbd><kbd>V</kbd><kbd>B</kbd><kbd>N</kbd> · 神话 <kbd>O</kbd><kbd>P</kbd></li>
       <li><kbd>Esc</kbd> 暂停 · <kbd>\`</kbd> ASCII</li>
     </ul>
     <h3>📱 手机 / 平板</h3>
     <ul>
       <li><b>左下角摇杆</b> — 拖动移动</li>
       <li><b>右下角红色开火按钮</b> — 按住持续射击</li>
-      <li><b>其他圆形按钮</b> — 释放技能</li>
-      <li><b>屏幕左下技能芯片</b> — 可横向拖动滚动，显示技能冷却与持续时间</li>
+      <li><b>技能栏</b> — 屏幕左下可横向拖动</li>
     </ul>
-  `,
-  mode: `
-    <h3>模式分类</h3>
-    <ul>
-      <li><b>基础（8）</b>：计时 / 闯关 / AI / PvP / 无尽 / 尸潮 / 首领 / 团队</li>
-      <li><b>进阶（11）</b>：精英猎杀 / 弹幕地狱 / 死亡竞赛 / 双首领 / 黑暗行动 / 狂怒 / 超级闯关 / 噩梦 / 速通 / 生存 / 生化危机</li>
-      <li><b>传说（6）</b>：巅峰对决 / 屠神之路 / 无限战争 / 末日审判 / 奇点 / 飞升</li>
-      <li><b class="mythHl">神话（8）</b>：神域 / 时空涡旋 / 现实裂隙 / 永恒战争 / 灵魂收割 / 混沌风暴 / 宇宙终焉 / 创世之战</li>
-    </ul>
-    <h3>AI 难度（24 档）</h3>
-    <p>简单 → 归零（14 档）· 泰坦 → 神格（10 档）</p>
   `,
   faq: `
-    <h3>Q：v9.3 更新了什么？</h3>
-    <p>A：1. 为所有技能添加了炫酷特效；2. 移除了所有卡片左上角的阵营标识（神话/三体），避免重叠；3. 技能栏与初始武器选择栏改为横向可拖动滚动；4. 帧率保证 30+ FPS。</p>
-    <h3>Q：怎么滚动技能栏？</h3>
-    <p>A：在屏幕左下角技能栏区域左右拖动即可横向滚动；桌面端也可以用鼠标滚轮或触控板横滑。</p>
-    <h3>Q：怎么滚动初始武器？</h3>
-    <p>A：在菜单「初始武器」区域左右拖动即可。</p>
-    <h3>Q：技能特效会影响帧率吗？</h3>
-    <p>A：不会。特效数量上限 36 个，使用简单几何绘制（圆、线、多边形），保持在 30+ FPS。</p>
+    <h3>Q：v9.4 更新了什么？</h3>
+    <p>A：新增成就系统（13 大类，50+ 档位）与等级系统（经验值升级、加成、商店折扣）。所有原有内容完整保留。</p>
+    <h3>Q：怎么快速升级？</h3>
+    <p>A：击杀高难度敌人（如神格每只 350000 XP），或大量购买商品（消费积分 1% 转经验值）。</p>
+    <h3>Q：成就怎么解锁？</h3>
+    <p>A：达成条件后自动解锁，不需要手动领取。奖励会自动加到积分和经验值。</p>
+    <h3>Q：商店折扣最高多少？</h3>
+    <p>A：50%（100 级时达到）。等级越高，购买商品越便宜。</p>
+    <h3>Q：成就进度是永久的吗？</h3>
+    <p>A：是的。所有进度保存在浏览器本地，重置存档时会清空。</p>
     <h3>Q：怎么分辨自己的角色？</h3>
     <p>A：白色虚线旋转光环 + 内部青色实心环 + 底部蓝色三角标记。</p>
   `
@@ -5088,11 +5643,13 @@ window.addEventListener('error', e => {
   console.error('Game error:', e.message);
 });
 
-console.log('%c星际射手 · Astro Shooter v9.3 · 神话', 'color:#fde68a;font-size:18px;font-weight:bold');
-console.log('%c✦ 所有技能都添加了炫酷 Canvas 特效', 'color:#fbbf24;font-size:13px');
-console.log('%c✦ 移除所有卡片左上角的阵营标识', 'color:#fbbf24;font-size:13px');
-console.log('%c✦ 技能栏与初始武器栏支持横向拖动滚动', 'color:#4ade80;font-size:13px');
-console.log('%c✦ 帧率保证 30+ FPS（特效数量上限 + 简单几何绘制）', 'color:#22d3ee;font-size:13px');
+// 首次加载时检查一次成就（兼容旧存档）
+setTimeout(() => { try { checkAchievements(); } catch(e) {} }, 500);
+
+console.log('%c星际射手 · Astro Shooter v9.4 · 神话', 'color:#fde68a;font-size:18px;font-weight:bold');
+console.log('%c🏆 成就系统：13 大类，50+ 档位', 'color:#fbbf24;font-size:13px');
+console.log('%c⭐ 等级系统：击杀/购买获得经验值，提供加成与折扣', 'color:#a78bfa;font-size:13px');
+console.log('%c✦ 所有原有内容完整保留', 'color:#22d3ee;font-size:13px');
 </script>
 </body>
 </html>
