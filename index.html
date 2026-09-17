@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#05070f">
-<title>星际射手 · Astro Shooter 最终版</title>
+<title>星际射手 · Astro Shooter 最终版 v8</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#05070f;
@@ -119,76 +119,116 @@ h2::before{content:'';width:3px;height:16px;border-radius:2px;
 .tab.on{color:#7dd3fc;background:linear-gradient(180deg,rgba(28,52,88,.9),rgba(16,30,54,.95));
   border-color:rgba(56,189,248,.35);border-bottom:1px solid transparent}
 
+/* ============ HUD（减少遮挡） ============ */
 #hud{position:absolute;inset:0;pointer-events:none;z-index:10;font-size:13px;
   display:none;flex-direction:column}
 #hud.on{display:flex}
 
-.hudTop{display:flex;justify-content:center;gap:8px;padding-top:8px;flex-wrap:wrap}
-.hudBox{background:linear-gradient(160deg,rgba(10,20,38,.62),rgba(5,10,20,.72));
-  border:1px solid rgba(56,189,248,.18);border-radius:10px;padding:4px 12px;
-  min-width:80px;text-align:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  box-shadow:0 3px 12px rgba(0,0,0,.35)}
-.hudBox .lb{font-size:9px;color:#4e6d94;letter-spacing:2px;font-weight:700;margin-bottom:0}
-.hudBox .vl{font-size:15px;color:#7dd3fc;font-weight:800;letter-spacing:1px;font-variant-numeric:tabular-nums}
+.hudTop{display:flex;justify-content:center;gap:6px;padding-top:6px;flex-wrap:wrap;
+  opacity:.82}
+.hudBox{background:linear-gradient(160deg,rgba(10,20,38,.5),rgba(5,10,20,.6));
+  border:1px solid rgba(56,189,248,.14);border-radius:8px;padding:2px 9px;
+  min-width:62px;text-align:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.hudBox .lb{font-size:8px;color:#4e6d94;letter-spacing:1.5px;font-weight:700;margin-bottom:0}
+.hudBox .vl{font-size:12.5px;color:#7dd3fc;font-weight:800;letter-spacing:.5px;font-variant-numeric:tabular-nums}
 .hudBox.gold .vl{color:#fbbf24}
 .hudBox.red .vl{color:#f43f5e}
 .hudBox.green .vl{color:#4ade80}
 
-.pstat{position:absolute;padding:8px 12px;min-width:206px;
-  background:linear-gradient(160deg,rgba(10,20,38,.62),rgba(5,10,20,.72));
-  border:1px solid rgba(56,189,248,.18);border-radius:12px;
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  box-shadow:0 4px 16px rgba(0,0,0,.35);pointer-events:none;
-  transition:opacity .2s;opacity:.88}
-#p1stat{left:12px;top:12px;border-left:3px solid #38bdf8}
-#p2stat{right:12px;top:62px;text-align:right;border-right:3px solid #f43f5e;display:none}
-.pstat .pname{font-size:10.5px;letter-spacing:2px;font-weight:800;color:#7dd3fc;margin-bottom:3px}
+/* 玩家状态面板（更小 · 更透明 · 自动淡化） */
+.pstat{position:absolute;padding:5px 9px;min-width:172px;
+  background:linear-gradient(160deg,rgba(10,20,38,.45),rgba(5,10,20,.55));
+  border:1px solid rgba(56,189,248,.12);border-radius:9px;
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+  box-shadow:0 3px 12px rgba(0,0,0,.28);pointer-events:none;
+  transition:opacity .35s;opacity:.62}
+#p1stat{left:8px;top:8px;border-left:2px solid #38bdf8}
+#p2stat{right:8px;top:52px;text-align:right;border-right:2px solid #f43f5e;display:none}
+.pstat.faded{opacity:.28}
+.pstat .pname{font-size:9.5px;letter-spacing:1.5px;font-weight:800;color:#7dd3fc;margin-bottom:2px}
 #p2stat .pname{color:#fda4af}
-.pstat .wpRow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:3px}
-.pstat .wname{font-size:11.5px;color:#fbbf24;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
-.pstat .ammoBig{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums;
-  letter-spacing:1px;color:#7dd3fc}
+.pstat .wpRow{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:2px}
+.pstat .wname{font-size:10.5px;color:#fbbf24;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100px}
+.pstat .ammoBig{font-size:13.5px;font-weight:900;font-variant-numeric:tabular-nums;
+  letter-spacing:.5px;color:#7dd3fc}
 #p2stat .ammoBig{color:#fda4af}
-.hpbar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:3px}
-.hpbar i{display:block;height:100%;border-radius:3px;transition:width .1s linear}
-.lives{letter-spacing:2px;font-size:14px;margin-top:4px;line-height:1.2}
+.hpbar{height:4.5px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;margin-top:2px}
+.hpbar i{display:block;height:100%;border-radius:2px;transition:width .1s linear}
+.lives{letter-spacing:1.5px;font-size:11.5px;margin-top:2px;line-height:1.2}
 
-#killfeed{position:absolute;top:62px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;gap:3px;align-items:center;pointer-events:none}
-.kfItem{background:rgba(6,14,28,.72);border:1px solid rgba(56,189,248,.18);
-  border-radius:6px;padding:2px 10px;font-size:11.5px;color:#9bb4d0;
+/* 击杀流（改到底部，不再遮挡视野） */
+#killfeed{position:absolute;bottom:104px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column-reverse;gap:2px;align-items:center;pointer-events:none;
+  opacity:.82}
+.kfItem{background:rgba(6,14,28,.6);border:1px solid rgba(56,189,248,.15);
+  border-radius:5px;padding:1.5px 8px;font-size:10.5px;color:#9bb4d0;
   animation:kfIn .3s ease}
-@keyframes kfIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes kfIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============ 技能状态显示条（新增） ============ */
+#skillBar{
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  display:flex;gap:5px;pointer-events:none;flex-wrap:wrap;justify-content:center;
+  max-width:72vw;padding:0 6px}
+.skChip{
+  display:flex;align-items:center;gap:5px;
+  padding:3px 9px;border-radius:9px;
+  background:linear-gradient(150deg,rgba(10,20,38,.78),rgba(5,10,20,.86));
+  border:1px solid rgba(56,189,248,.2);
+  font-size:10.5px;font-weight:800;letter-spacing:.5px;
+  box-shadow:0 3px 12px rgba(0,0,0,.4);
+  transition:all .15s;white-space:nowrap}
+.skChip .skKey{display:inline-flex;align-items:center;justify-content:center;
+  min-width:16px;height:16px;border-radius:5px;
+  background:rgba(56,189,248,.22);color:#7dd3fc;font-size:9.5px;font-weight:900;
+  padding:0 3px}
+.skChip .skIcon{font-size:11px}
+.skChip .skVal{font-variant-numeric:tabular-nums;font-size:10.5px}
+.skChip.ready{border-color:rgba(74,222,128,.5);color:#bbf7d0}
+.skChip.ready .skKey{background:rgba(74,222,128,.25);color:#4ade80}
+.skChip.ready .skVal{color:#4ade80}
+.skChip.cool{border-color:rgba(148,163,184,.28);color:#94a3b8}
+.skChip.cool .skKey{background:rgba(148,163,184,.18);color:#94a3b8}
+.skChip.cool .skVal{color:#fda4af}
+.skChip.active{border-color:rgba(251,191,36,.6);color:#fde68a;
+  box-shadow:0 0 14px rgba(251,191,36,.35),0 3px 12px rgba(0,0,0,.4);
+  animation:skPulse 1.4s ease-in-out infinite}
+.skChip.active .skKey{background:rgba(251,191,36,.28);color:#fbbf24}
+.skChip.active .skVal{color:#fbbf24}
+@keyframes skPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+.skChip.santi .skKey{background:rgba(34,211,238,.22);color:#22d3ee}
+.skChip.santi.ready .skKey{background:rgba(74,222,128,.25);color:#4ade80}
+.skChip.santi.cool .skKey{background:rgba(34,211,238,.15);color:#0e7490}
 
 #gameCtrls{
-  position:absolute;top:10px;right:10px;display:none;gap:6px;
+  position:absolute;top:8px;right:8px;display:none;gap:5px;
   pointer-events:auto;z-index:25;flex-direction:row;
 }
 #gameCtrls.on{display:flex}
 .gcBtn{
-  width:42px;height:42px;border-radius:11px;
-  background:linear-gradient(160deg,rgba(12,22,42,.88),rgba(6,12,22,.94));
-  border:1px solid rgba(56,189,248,.32);color:#7dd3fc;
-  font-size:17px;cursor:pointer;font-family:inherit;
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(160deg,rgba(12,22,42,.72),rgba(6,12,22,.82));
+  border:1px solid rgba(56,189,248,.25);color:#7dd3fc;
+  font-size:15px;cursor:pointer;font-family:inherit;
   display:flex;align-items:center;justify-content:center;
-  transition:all .14s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  box-shadow:0 4px 16px rgba(0,0,0,.45);
-}
-.gcBtn:hover{background:rgba(40,100,170,.85);color:#fff;border-color:#38bdf8}
+  transition:all .14s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  box-shadow:0 3px 12px rgba(0,0,0,.4);opacity:.78}
+.gcBtn:hover{background:rgba(40,100,170,.85);color:#fff;border-color:#38bdf8;opacity:1}
 .gcBtn:active{transform:scale(.92)}
-.gcBtn.exit{border-color:rgba(244,63,94,.4);color:#fda4af}
+.gcBtn.exit{border-color:rgba(244,63,94,.32);color:#fda4af}
 .gcBtn.exit:hover{background:rgba(140,30,60,.85);border-color:#f43f5e}
 
-#toast{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%) scale(.9);
+#toast{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%) scale(.9);
   font-size:clamp(16px,2.4vw,26px);letter-spacing:6px;color:#7dd3fc;font-weight:900;
   text-shadow:0 0 30px #38bdf8,0 0 60px rgba(56,189,248,.5);
   opacity:0;transition:all .25s cubic-bezier(.34,1.56,.64,1);pointer-events:none;
   text-align:center;white-space:nowrap}
 #toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
-#fps{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
-  font-size:10px;color:#2e4a6b;font-family:Consolas,monospace;
-  letter-spacing:1px;font-weight:700;pointer-events:none;opacity:.6}
+#fps{position:absolute;top:6px;left:8px;
+  font-size:9.5px;color:#2e4a6b;font-family:Consolas,monospace;
+  letter-spacing:1px;font-weight:700;pointer-events:none;opacity:.5}
 
 #respawnOverlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
   flex-direction:column;gap:12px;pointer-events:none;z-index:15}
@@ -238,6 +278,26 @@ input[type=text]:focus{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,
 .consoleItem.on .ci-state{color:#4ade80}
 .consoleItem.off .ci-state{color:#f43f5e}
 
+/* 菜单已有技能清单 */
+#mySkillsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.skillCard{position:relative;padding:10px 12px;border-radius:10px;
+  background:linear-gradient(150deg,rgba(16,26,46,.7),rgba(8,14,26,.8));
+  border:1px solid rgba(56,189,248,.15)}
+.skillCard.santi{border-color:rgba(34,211,238,.3);
+  background:linear-gradient(150deg,rgba(12,32,46,.8),rgba(6,18,26,.85))}
+.skillCard.locked{opacity:.4}
+.skillCard .sc-head{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:3px;font-size:13px;font-weight:800;color:#dbeafe}
+.skillCard .sc-name{display:flex;align-items:center;gap:5px}
+.skillCard .sc-lv{font-size:11.5px;font-weight:900;color:#fbbf24;
+  font-variant-numeric:tabular-nums}
+.skillCard .sc-detail{font-size:10.5px;color:#6b87ab;line-height:1.5}
+.skillCard .sc-lvBar{display:flex;gap:1.5px;margin-top:5px}
+.skillCard .sc-lvBar i{display:block;flex:1;height:3px;border-radius:1.5px;
+  background:rgba(255,255,255,.1)}
+.skillCard .sc-lvBar i.on{background:linear-gradient(90deg,#fbbf24,#f97316)}
+.skillCard .sc-lvBar i.on.santi{background:linear-gradient(90deg,#22d3ee,#0891b2)}
+
 .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;
   border:1px solid currentColor;margin-left:6px;letter-spacing:1px;font-weight:700}
 
@@ -271,11 +331,13 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   .card .t{font-size:13px}
   .card .d{font-size:10.5px}
   .btn{padding:9px 15px;font-size:12px;letter-spacing:1px}
-  .hudBox{min-width:64px;padding:3px 8px}
-  .hudBox .vl{font-size:12px}
-  .pstat{min-width:160px;padding:6px 9px;opacity:.78}
-  .pstat .wname{max-width:80px;font-size:11px}
-  .gcBtn{width:38px;height:38px;font-size:15px}
+  .hudBox{min-width:52px;padding:2px 6px}
+  .hudBox .vl{font-size:11px}
+  .pstat{min-width:142px;padding:4px 7px;opacity:.55}
+  .pstat .wname{max-width:72px;font-size:10px}
+  .gcBtn{width:34px;height:34px;font-size:13px}
+  .skChip{font-size:9.5px;padding:2px 7px}
+  .skChip .skKey{min-width:14px;height:14px;font-size:8.5px}
 }
 </style>
 </head>
@@ -311,6 +373,9 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
       </div>
     </div>
 
+    <!-- 技能状态显示条（新增） -->
+    <div id="skillBar"></div>
+
     <div id="killfeed"></div>
     <div id="toast"></div>
     <div id="fps">-- FPS</div>
@@ -331,11 +396,11 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   <div class="panel" id="menu">
     <div class="box">
       <h1>星际射手</h1>
-      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; 最 终 版</div>
+      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; 最 终 版 v8</div>
 
       <div class="row" style="justify-content:center;margin-bottom:20px">
-        <div class="hudBox gold" style="min-width:130px"><div class="lb">积分</div><div class="vl" id="mPoints">0</div></div>
-        <div class="hudBox green" style="min-width:130px"><div class="lb">总击杀</div><div class="vl" id="mKills">0</div></div>
+        <div class="hudBox gold" style="min-width:130px;opacity:1"><div class="lb">积分</div><div class="vl" id="mPoints">0</div></div>
+        <div class="hudBox green" style="min-width:130px;opacity:1"><div class="lb">总击杀</div><div class="vl" id="mKills">0</div></div>
       </div>
 
       <h2>选择模式</h2>
@@ -349,6 +414,13 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
         选择每局游戏开始时的第一把武器。<b style="color:#fbbf24">仅列出已拥有的武器</b>。
       </p>
       <div class="weaponPicker" id="weaponPicker"></div>
+
+      <!-- 已有技能展示（新增） -->
+      <h2 style="margin-top:18px">⚔ 我的技能</h2>
+      <p style="color:#6b87ab;font-size:12px;margin-bottom:8px;letter-spacing:1px">
+        已解锁技能的当前等级与效果。升级请前往军火商店。
+      </p>
+      <div id="mySkillsGrid"></div>
 
       <div class="row" style="margin-top:20px">
         <button class="btn primary" onclick="openShop()">🛒 军火商店</button>
@@ -414,7 +486,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
       <div class="row" style="margin-bottom:14px">
         <h2 style="margin:0">🛒 军火商店</h2>
         <div class="spacer"></div>
-        <div class="hudBox gold"><div class="lb">可用积分</div><div class="vl" id="sPoints">0</div></div>
+        <div class="hudBox gold" style="opacity:1"><div class="lb">可用积分</div><div class="vl" id="sPoints">0</div></div>
         <button class="btn sm" onclick="closeShop()">返回</button>
       </div>
       <div class="tabs" id="shopTabs"></div>
@@ -471,16 +543,14 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 <script>
 'use strict';
 /* =========================================================
-   星际射手 · Astro Shooter · 最终版 v7.1
+   星际射手 · Astro Shooter 最终版 v8
    =========================================================
-   本次修复：
-   ✦ 修复黑暗行动 / 狂怒 / 噩梦 模式立即结束 bug
-   ✦ 修复玩家阵亡后无法退出游戏 bug
-   ✦ 返回主菜单时自动保存记录
-   本次新增：
-   ✦ 传说级模式分类（5 种超难模式 · 高倍积分）
-   ✦ 击杀积分基础值全面提升（约 3 倍）
-   ✦ 模式积分倍率系统（最高 ×10）
+   本次更新：
+   ✦ 技能等级上限 5 → 10，全面重新平衡
+   ✦ 新增 6 个技能（弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场）
+   ✦ 游戏内新增「技能状态显示条」——显示每个技能的持续时间与冷却时间
+   ✦ 菜单内新增「我的技能」展示区——展示已解锁技能与等级
+   ✦ 修复 UI 遮挡画布问题（面板缩小、更透明、自动淡化、击杀流移到底部）
    ========================================================= */
 
 const W = 1600, H = 900, TAU = Math.PI * 2;
@@ -512,10 +582,12 @@ function hexRgba(hex, a) {
    存档
    ========================================================= */
 const SKEY = 'astro_shooter_v7_final';
+const PERK_MAX_LV = 10;   // ★ 新上限
 const DEFAULT_SKILL_BUTTONS = {
   fire: true, swap: true,
   q: true, e: true, r: true, f: true, g: true, t: true,
-  z: true, x: true, v: true
+  z: true, x: true, v: true, b: true, n: true, c: true,
+  d: true, h: true, j: true, k: true
 };
 const DEFAULT_SAVE = {
   points: 0,
@@ -543,7 +615,8 @@ let SAVE = (() => {
       o.perks = {};
       for (const k in (s.perks || {})) {
         const v = s.perks[k];
-        o.perks[k] = (typeof v === 'number' && v > 0) ? Math.min(5, Math.round(v)) : 1;
+        // ★ 兼容旧存档 5 级 → 新上限 10 级
+        o.perks[k] = (typeof v === 'number' && v > 0) ? Math.min(PERK_MAX_LV, Math.round(v)) : 1;
       }
       o.high = Object.assign({}, s.high || {});
       o.codes = Object.assign({}, s.codes || {});
@@ -747,47 +820,108 @@ const SANTI_WEAPONS = new Set([
 ]);
 
 /* =========================================================
-   技能
+   技能（★ 上限 10 · 新增 6 个 · 重新平衡）
    ========================================================= */
 const PERKS = {
-  speed:     { name:'曲速引擎', icon:'⚡', maxLv:5, basePrice: 8000,    detail: lv => `移动速度 +${lv * 8}%` },
-  dash:      { name:'相位冲刺', icon:'💨', maxLv:5, basePrice: 10000,   detail: lv => `冲刺 · CD ${(16 - lv * 2).toFixed(0)}s` },
-  heal:      { name:'治疗波',   icon:'💚', maxLv:5, basePrice: 14000,   detail: lv => `回复 ${40 + lv * 15} HP · CD ${(30 - lv * 2).toFixed(0)}s` },
-  shield:    { name:'力场护盾', icon:'🛡', maxLv:5, basePrice: 18000,   detail: lv => `无敌 ${(2 + lv * 0.5).toFixed(1)}s · CD ${(15 - lv).toFixed(0)}s` },
-  bounce:    { name:'弹跳涂层', icon:'🔃', maxLv:5, basePrice: 22000,   detail: lv => `子弹可反弹 ${lv} 次` },
-  homing:    { name:'追踪弹头', icon:'🎯', maxLv:5, basePrice: 30000,   detail: lv => `追踪强度 +${(lv * 0.6).toFixed(1)}` },
-  armor:     { name:'复合装甲', icon:'🛡', maxLv:5, basePrice: 38000,   detail: lv => `最大生命 +${40 + lv * 20}` },
-  slow:      { name:'时间迟缓', icon:'🐌', maxLv:5, basePrice: 45000,   detail: lv => `时缓 ${(2 + lv * 0.6).toFixed(1)}s · CD ${(20 - lv).toFixed(0)}s` },
-  overdrive: { name:'超载模式', icon:'🔥', maxLv:5, basePrice: 55000,   detail: lv => `伤害+${50 + lv * 10}% 射速+${40 + lv * 5}% · ${5 + lv}s` },
-  pierce:    { name:'穿甲弹芯', icon:'🗡', maxLv:5, basePrice: 70000,   detail: lv => `额外穿透 ${lv} 个敌人` },
-  timestop:  { name:'时间停止', icon:'⏱', maxLv:5, basePrice: 100000,  detail: lv => `冻结敌人 ${(1 + lv * 0.4).toFixed(1)}s · CD ${(35 - lv * 2).toFixed(0)}s` },
-  fastreload:{ name:'超频冷却', icon:'⚙', maxLv:5, basePrice: 120000,  detail: lv => `全武器冷却 -${lv * 5}%` },
-  explosive: { name:'爆裂弹头', icon:'💥', maxLv:5, basePrice: 160000,  detail: lv => `子弹爆炸 · 半径 ${30 + lv * 15}` },
-  magnet:    { name:'磁力吸引', icon:'🧲', maxLv:5, basePrice: 180000,  detail: lv => `拾取范围 +${lv * 60}` },
-  vampire:   { name:'吸血纳米', icon:'🧛', maxLv:5, basePrice: 250000,  detail: lv => `击杀回复 ${5 + lv * 3} HP` },
-  crit:      { name:'致命打击', icon:'💢', maxLv:5, basePrice: 350000,  detail: lv => `暴击率 +${lv * 5}% · 暴击伤害 ×2` },
-  multishot: { name:'多重射击', icon:'🎆', maxLv:5, basePrice: 500000,  detail: lv => `子弹数量 +${lv} 发` },
-  lifesteal: { name:'生命汲取', icon:'🩸', maxLv:5, basePrice: 800000,  detail: lv => `伤害 ${lv * 2}% 转化为生命` },
-  blink:     { name:'瞬步',     icon:'👻', maxLv:5, basePrice: 1500000, detail: lv => `R 键瞬移 · 距离 ${200 + lv * 80}` },
+  // ===== 常规主动技能 =====
+  speed:     { name:'曲速引擎', icon:'⚡', maxLv:10, basePrice: 8000,
+    detail: lv => `移动速度 +${lv * 4}%` },
+  dash:      { name:'相位冲刺', icon:'💨', maxLv:10, basePrice: 10000,
+    detail: lv => `R 冲刺 · CD ${(18 - lv * 1.2).toFixed(1)}s` },
+  heal:      { name:'治疗波',   icon:'💚', maxLv:10, basePrice: 14000,
+    detail: lv => `回复 ${30 + lv * 8} HP · CD ${(35 - lv * 2).toFixed(0)}s` },
+  shield:    { name:'力场护盾', icon:'🛡', maxLv:10, basePrice: 18000,
+    detail: lv => `无敌 ${(2 + lv * 0.3).toFixed(1)}s · CD ${(18 - lv * 0.8).toFixed(1)}s` },
+  slow:      { name:'时间迟缓', icon:'🐌', maxLv:10, basePrice: 45000,
+    detail: lv => `时缓 ${(1.5 + lv * 0.35).toFixed(1)}s · CD ${(22 - lv * 0.8).toFixed(1)}s` },
+  overdrive: { name:'超载模式', icon:'🔥', maxLv:10, basePrice: 55000,
+    detail: lv => `伤害+${30 + lv * 6}% 射速+${25 + lv * 4}% · ${(3 + lv * 0.5).toFixed(1)}s` },
+  timestop:  { name:'时间停止', icon:'⏱', maxLv:10, basePrice: 100000,
+    detail: lv => `冻结敌人 ${(0.8 + lv * 0.22).toFixed(1)}s · CD ${(40 - lv * 2).toFixed(0)}s` },
+  blink:     { name:'瞬步',     icon:'👻', maxLv:10, basePrice: 1500000,
+    detail: lv => `R 瞬移 · 距离 ${180 + lv * 55} · CD ${(12 - lv * 0.8).toFixed(1)}s` },
+
+  // ===== 被动技能 =====
+  bounce:    { name:'弹跳涂层', icon:'🔃', maxLv:10, basePrice: 22000,
+    detail: lv => `子弹反弹 ${Math.min(lv, 8)} 次` },
+  homing:    { name:'追踪弹头', icon:'🎯', maxLv:10, basePrice: 30000,
+    detail: lv => `追踪强度 +${(lv * 0.35).toFixed(2)}` },
+  armor:     { name:'复合装甲', icon:'🛡', maxLv:10, basePrice: 38000,
+    detail: lv => `最大生命 +${30 + lv * 12}` },
+  pierce:    { name:'穿甲弹芯', icon:'🗡', maxLv:10, basePrice: 70000,
+    detail: lv => `额外穿透 ${Math.floor(lv / 2)} 个敌人` },
+  fastreload:{ name:'超频冷却', icon:'⚙', maxLv:10, basePrice: 120000,
+    detail: lv => `全武器冷却 -${(lv * 3).toFixed(0)}%` },
+  explosive: { name:'爆裂弹头', icon:'💥', maxLv:10, basePrice: 160000,
+    detail: lv => `子弹爆炸 · 半径 ${25 + lv * 10}` },
+  magnet:    { name:'磁力吸引', icon:'🧲', maxLv:10, basePrice: 180000,
+    detail: lv => `拾取范围 +${lv * 40}` },
+  vampire:   { name:'吸血纳米', icon:'🧛', maxLv:10, basePrice: 250000,
+    detail: lv => `击杀回复 ${3 + lv * 2} HP` },
+  crit:      { name:'致命打击', icon:'💢', maxLv:10, basePrice: 350000,
+    detail: lv => `暴击率 +${lv * 3}% · 暴击伤害 ×2` },
+  multishot: { name:'多重射击', icon:'🎆', maxLv:10, basePrice: 500000,
+    detail: lv => `子弹数量 +${Math.floor(lv / 2)} 发` },
+  lifesteal: { name:'生命汲取', icon:'🩸', maxLv:10, basePrice: 800000,
+    detail: lv => `伤害 ${(lv * 1.2).toFixed(1)}% 转化为生命` },
+
+  // ===== 三体技能 =====
   wallfacer: {
-    name:'面壁计划', icon:'🧱', maxLv:5, basePrice: 5000000, santi: true,
-    detail: lv => `Z 键隐身 ${(2 + lv * 0.6).toFixed(1)}s · CD ${(30 - lv * 2).toFixed(0)}s` },
+    name:'面壁计划', icon:'🧱', maxLv:10, basePrice: 5000000, santi: true,
+    detail: lv => `Z 隐身 ${(1.5 + lv * 0.4).toFixed(1)}s · CD ${(32 - lv * 2).toFixed(0)}s` },
   thoughtSeal: {
-    name:'思想钢印', icon:'🔱', maxLv:5, basePrice: 20000000, santi: true,
-    detail: lv => `X 键转化最近敌人 ${(2 + lv).toFixed(0)}s · CD ${(40 - lv * 3).toFixed(0)}s` },
+    name:'思想钢印', icon:'🔱', maxLv:10, basePrice: 20000000, santi: true,
+    detail: lv => `X 转化敌人 ${(1.5 + lv * 0.6).toFixed(1)}s · CD ${(45 - lv * 3).toFixed(0)}s` },
   darkForest: {
-    name:'黑暗森林威慑', icon:'🌌', maxLv:5, basePrice: 100000000, santi: true,
-    detail: lv => `C 键标记所有敌人 · 对其伤害 +${20 + lv * 10}% · CD ${(50 - lv * 3).toFixed(0)}s` },
+    name:'黑暗森林威慑', icon:'🌌', maxLv:10, basePrice: 100000000, santi: true,
+    detail: lv => `C 标记全体 · 伤害 +${15 + lv * 6}% · CD ${(55 - lv * 3).toFixed(0)}s` },
   sophonJamming: {
-    name:'智子干扰', icon:'⌬', maxLv:5, basePrice: 500000000, santi: true,
-    detail: lv => `V 键降低敌人精准 ${40 + lv * 10}% · ${(3 + lv).toFixed(0)}s · CD 45s` },
+    name:'智子干扰', icon:'⌬', maxLv:10, basePrice: 500000000, santi: true,
+    detail: lv => `V 降敌精准 ${30 + lv * 6}% · ${(2 + lv * 0.7).toFixed(1)}s · CD 45s` },
   curvatureJump: {
-    name:'曲率光速', icon:'💫', maxLv:5, basePrice: 2000000000, santi: true,
-    detail: lv => `B 键光速冲刺 · 无敌 ${(0.5 + lv * 0.2).toFixed(1)}s · CD ${(25 - lv * 2).toFixed(0)}s` },
+    name:'曲率光速', icon:'💫', maxLv:10, basePrice: 2000000000, santi: true,
+    detail: lv => `B 光速冲刺 · 无敌 ${(0.4 + lv * 0.12).toFixed(2)}s · CD ${(28 - lv * 2).toFixed(0)}s` },
   cosmicConstant: {
-    name:'宇宙常数修改', icon:'✴', maxLv:5, basePrice: 10000000000, santi: true,
-    detail: lv => `N 键时缓 ${(3 + lv).toFixed(0)}s · 自身 ${(1 + lv * 0.1).toFixed(1)}× 速度 · CD 60s` },
+    name:'宇宙常数修改', icon:'✴', maxLv:10, basePrice: 10000000000, santi: true,
+    detail: lv => `N 时缓 ${(2 + lv * 0.7).toFixed(1)}s · 自身 ${(1 + lv * 0.08).toFixed(2)}× 速 · CD 60s` },
+
+  // ===== ★ 新增 6 个技能 =====
+  ammoRegen: {
+    name:'弹药再生', icon:'♻', maxLv:10, basePrice: 300000,
+    detail: lv => `每 5 秒回复全部弹药 × ${(lv * 0.5).toFixed(1)}%` },
+  thorns: {
+    name:'荆棘护盾', icon:'🌵', maxLv:10, basePrice: 450000,
+    detail: lv => `反弹 ${(lv * 4)}% 受到的伤害给攻击者` },
+  berserk: {
+    name:'狂暴', icon:'😤', maxLv:10, basePrice: 600000,
+    detail: lv => `生命低于 40% 时伤害 +${lv * 8}%` },
+  quickFire: {
+    name:'快速射击', icon:'⚡', maxLv:10, basePrice: 900000,
+    detail: lv => `射速 +${lv * 4}%` },
+  doubleDash: {
+    name:'二段冲刺', icon:'💥', maxLv:10, basePrice: 1200000,
+    detail: lv => `冲刺可连续使用 ${Math.floor(lv / 2) + 1} 次` },
+  annihilation: {
+    name:'湮灭立场', icon:'☢', maxLv:10, basePrice: 30000000, santi: true,
+    detail: lv => `H 键在自身周围生成湮灭领域 · 伤害 ${(30 + lv * 15)} · 持续 ${(1 + lv * 0.3).toFixed(1)}s · CD 40s` },
 };
+
+/* 主动技能的按钮映射（用于技能条） */
+const ACTIVE_SKILLS = [
+  { id:'q', key:'Q', perk:'shield',     name:'护盾' },
+  { id:'e', key:'E', perk:'slow',       name:'时缓' },
+  { id:'r', key:'R', perk:'dash',       name:'冲刺' },
+  { id:'f', key:'F', perk:'heal',       name:'治疗' },
+  { id:'g', key:'G', perk:'overdrive',  name:'超载' },
+  { id:'t', key:'T', perk:'timestop',   name:'时停' },
+  { id:'z', key:'Z', perk:'wallfacer',  name:'面壁' },
+  { id:'x', key:'X', perk:'thoughtSeal',name:'钢印' },
+  { id:'c', key:'C', perk:'darkForest', name:'黑森' },
+  { id:'v', key:'V', perk:'sophonJamming', name:'智子' },
+  { id:'b', key:'B', perk:'curvatureJump', name:'光速' },
+  { id:'n', key:'N', perk:'cosmicConstant',name:'常数' },
+  { id:'h', key:'H', perk:'annihilation', name:'湮灭' },
+];
 
 /* =========================================================
    AI 难度（14 档）
@@ -811,10 +945,9 @@ const DIFFICULTY = {
 let AI_LEVEL = 'normal';
 
 /* =========================================================
-   模式（新增传说分类 · 5 种超难模式）
+   模式
    ========================================================= */
 const MODES = {
-  // ===== 基础 =====
   time:        { name:'计时赛',   icon:'⏱', color:'#38bdf8', desc:'60 秒内击杀尽可能多的敌人',           group:'基础' },
   campaign:    { name:'闯关赛',   icon:'🚩', color:'#4ade80', desc:'10 个关卡，敌人逐级变强',             group:'基础' },
   vsai:        { name:'AI 对战',  icon:'🤖', color:'#a78bfa', desc:'与 AI 单挑，每人 5 条命',             group:'基础' },
@@ -823,7 +956,6 @@ const MODES = {
   zombie:      { name:'尸潮模式', icon:'🧟', color:'#84cc16', desc:'海量感染者缓慢逼近',                   group:'基础' },
   boss:        { name:'首领战',   icon:'👹', color:'#ef4444', desc:'挑战巨型 BOSS 及其弹幕',              group:'基础' },
   team:        { name:'团队战',   icon:'🛡', color:'#22d3ee', desc:'AI 队友协同对抗敌潮',                 group:'基础' },
-  // ===== 进阶 =====
   eliteHunt:   { name:'精英猎杀', icon:'💀', color:'#f43f5e', desc:'只刷精英敌人 · 击杀得分 ×2',          group:'进阶' },
   bulletHell:  { name:'弹幕地狱', icon:'💥', color:'#ef4444', desc:'敌人子弹铺天盖地',                     group:'进阶' },
   deathmatch:  { name:'死亡竞赛', icon:'⚔', color:'#a78bfa', desc:'4 人自由混战',                        group:'进阶' },
@@ -834,7 +966,6 @@ const MODES = {
   nightmare:   { name:'噩梦',     icon:'☠', color:'#7e22ce', desc:'所有敌人骨灰难度 · 积分 ×4',          group:'进阶' },
   speedrun:    { name:'速通',     icon:'🏃', color:'#22d3ee', desc:'限时清波 · 越快越好',                 group:'进阶' },
   survival:    { name:'生存',     icon:'⏳', color:'#f97316', desc:'敌人无尽 · 难度持续提升',             group:'进阶' },
-  // ===== 传说（新） =====
   zenith:      { name:'巅峰对决', icon:'⛰', color:'#fbbf24', desc:'精英 + 弹幕 + 双 BOSS 混合 · 积分 ×5', group:'传说' },
   godslayer:   { name:'屠神之路', icon:'⚡', color:'#c084fc', desc:'所有敌人三体难度 · 积分 ×6',          group:'传说' },
   infinity:    { name:'无限战争', icon:'∞', color:'#38bdf8', desc:'波次无限 · 敌人快速增强 · 积分 ×4',    group:'传说' },
@@ -843,9 +974,6 @@ const MODES = {
   ascension:   { name:'飞升',     icon:'☯', color:'#ffffff', desc:'终极混合挑战 · 积分 ×15',              group:'传说' },
 };
 
-/* =========================================================
-   模式积分倍率（用于提升积分获取效率）
-   ========================================================= */
 const MODE_SCORE_MUL = {
   time: 1, campaign: 1, vsai: 1, pvp: 1, endless: 1.5, zombie: 1.5, boss: 1.5, team: 1.5,
   eliteHunt: 3, bulletHell: 2, deathmatch: 1.5, dualBoss: 3, darkOps: 2.5,
@@ -1043,6 +1171,7 @@ function buildUIButtons() {
     { id: 'z',      x: 1275, y: 510, r: 30, label: '面壁', icon: 'Z' },
     { id: 'x',      x: 1360, y: 530, r: 28, label: '钢印', icon: 'X' },
     { id: 'v',      x: 1440, y: 560, r: 28, label: '智子', icon: 'V' },
+    { id: 'h',      x: 1440, y: 480, r: 26, label: '湮灭', icon: 'H' },
     { id: 'swap',   x: 1540, y: 640, r: 34, label: '换枪', icon: '⇄' }
   ];
 }
@@ -1123,6 +1252,7 @@ function handleUIButton(b) {
   else if (b.id === 'z') useSkill('wallfacer');
   else if (b.id === 'x') useSkill('thoughtSeal');
   else if (b.id === 'v') useSkill('sophonJamming');
+  else if (b.id === 'h') useSkill('annihilation');
   else if (b.id === 'swap') cycleWeapon();
 }
 
@@ -1171,6 +1301,7 @@ window.addEventListener('keydown', e => {
   if (k === 'v') useSkill('sophonJamming');
   if (k === 'b') useSkill('curvatureJump');
   if (k === 'n') useSkill('cosmicConstant');
+  if (k === 'h') useSkill('annihilation');
 });
 window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
 
@@ -1208,7 +1339,12 @@ const G = {
   sophonJamT: 0,
   wallfacerT: 0,
   _activeEnemyCount: 0,
-  _cacheFrame: 0
+  _cacheFrame: 0,
+  // 新增：湮灭领域
+  annihilationT: 0,
+  annihilationDmg: 0,
+  // UI 淡化
+  _lastInputT: 0
 };
 
 function refreshCache() {
@@ -1276,7 +1412,12 @@ function makePlayer(id, x, y, color, team, isAI) {
     team, color, isAI: !!isAI,
     weapon: 'pistol', cd: 0, recoil: 0,
     shield: 0, shieldCd: 0, slowCd: 0, dashCd: 0, healCd: 0, odCd: 0, odT: 0, tsCd: 0,
-    wfCd: 0, tsCdS: 0, dfCd: 0, sjCd: 0, cjCd: 0, ccCd: 0,
+    wfCd: 0, tsCdS: 0, dfCd: 0, sjCd: 0, cjCd: 0, ccCd: 0, anCd: 0,
+    // 技能状态计时（仅玩家）
+    shieldT: 0, slowT2: 0, odT2: 0, tsT: 0, wfT: 0, tsST: 0, dfT: 0, sjT: 0, cjT: 0, ccT: 0, anT: 0,
+    dashCharges: 0, dashMaxCharges: 0,
+    // 弹药再生计时
+    ammoRegenT: 0,
     mx: 0, my: 0,
     perks: {},
     kills: 0, deaths: 0, score: 0, hitFlash: 0,
@@ -1290,7 +1431,11 @@ function makePlayer(id, x, y, color, team, isAI) {
   };
   if (!isAI) {
     const armorLv = SAVE.perks.armor || 0;
-    if (armorLv > 0) { p.maxHp += 40 + armorLv * 20; p.hp = p.maxHp; }
+    if (armorLv > 0) { p.maxHp += 30 + armorLv * 12; p.hp = p.maxHp; }
+    // 二段冲刺充能
+    const ddLv = SAVE.perks.doubleDash || 0;
+    p.dashMaxCharges = 1 + Math.floor(ddLv / 2);
+    p.dashCharges = p.dashMaxCharges;
   }
   return p;
 }
@@ -1307,6 +1452,7 @@ function showGameUI(show) {
   document.getElementById('hud').classList.toggle('on', show);
   document.getElementById('gameCtrls').classList.toggle('on', show);
   document.getElementById('respawnOverlay').classList.remove('on');
+  if (!show) document.getElementById('skillBar').innerHTML = '';
 }
 
 function startGame(mode) {
@@ -1333,9 +1479,11 @@ function startGame(mode) {
   G.darkForestT = 0;
   G.sophonJamT = 0;
   G.wallfacerT = 0;
+  G.annihilationT = 0;
+  G.annihilationDmg = 0;
+  G._lastInputT = 0;
   killfeedEl.innerHTML = '';
 
-  // ★ 修复：所有限时模式的 timeLeft 初始化（此前黑暗/狂怒/噩梦未初始化导致立即结束）
   if (mode === 'time') G.timeLeft = 60;
   else if (mode === 'darkOps') G.timeLeft = 60;
   else if (mode === 'rage') G.timeLeft = 60;
@@ -1346,7 +1494,6 @@ function startGame(mode) {
   else if (mode === 'apocalypse') G.timeLeft = 90;
   else G.timeLeft = 0;
 
-  // 模式倍率
   if (mode === 'rage') { G.rageMul = 2; G.modeScoreMul = MODE_SCORE_MUL.rage; }
   else if (mode === 'nightmare') { G.nightmareMul = 3; G.modeScoreMul = MODE_SCORE_MUL.nightmare; }
   else G.modeScoreMul = MODE_SCORE_MUL[mode] || 1;
@@ -1429,6 +1576,7 @@ function startGame(mode) {
   hideAllPanels();
   showGameUI(true);
   refreshWeaponUI();
+  buildSkillBar();
   syncUI();
   toast(MODES[mode].name);
 }
@@ -1533,11 +1681,9 @@ function endGame(reason) {
 
 function restart() { startGame(G.mode); }
 function backToMenu() {
-  // ★ 修复：返回主菜单时自动保存当前记录
   if (G.score > 0) {
     const best = SAVE.high[G.mode] || 0;
     if (G.score > best) SAVE.high[G.mode] = G.score;
-    SAVE.kills += 0;  // 击杀已在 killPlayer 中累计
     saveGame();
   }
   flushSave();
@@ -1549,7 +1695,6 @@ function backToMenu() {
   refreshMenu();
 }
 function quitGame() {
-  // ★ 修复：退出时自动保存当前记录
   if (G.score > 0) {
     const best = SAVE.high[G.mode] || 0;
     if (G.score > best) SAVE.high[G.mode] = G.score;
@@ -1576,7 +1721,7 @@ function hideAllPanels() {
 }
 
 /* =========================================================
-   武器 / 技能
+   武器
    ========================================================= */
 function selectWeaponSlot(i) {
   const p = G.players[0];
@@ -1626,11 +1771,14 @@ function tryFire(p) {
 
   const odLv = perkLv(p, 'overdrive');
   const reloadLv = perkLv(p, 'fastreload');
-  p.cd = w.cd * (1 - reloadLv * 0.05) * (p.odT > 0 ? 0.6 : 1);
+  const quickLv = perkLv(p, 'quickFire');
+  let cdMul = (1 - reloadLv * 0.03) * (1 - quickLv * 0.04);
+  if (p.odT > 0) cdMul *= 0.6;
+  p.cd = w.cd * cdMul;
 
   let n = w.pellets || 1;
   const multiLv = perkLv(p, 'multishot');
-  if (multiLv > 0 && n === 1) n = 1 + multiLv;
+  if (multiLv > 0 && n === 1) n = 1 + Math.floor(multiLv / 2);
 
   const muzzle = p.r + 10;
   const pierceLv = perkLv(p, 'pierce');
@@ -1638,27 +1786,34 @@ function tryFire(p) {
   const homingLv = perkLv(p, 'homing');
   const explosiveLv = perkLv(p, 'explosive');
   const critLv = perkLv(p, 'crit');
+  const berserkLv = perkLv(p, 'berserk');
+
+  // 狂暴加成（生命低于 40%）
+  let berserkMul = 1;
+  if (berserkLv > 0 && p.hp < p.maxHp * 0.4) {
+    berserkMul = 1 + berserkLv * 0.08;
+  }
 
   for (let i = 0; i < n; i++) {
     if (G.bullets.length >= MAX_BULLETS) break;
     const a = p.angle + rand(-w.spread, w.spread) + (multiLv > 0 && n > 1 ? (i - n/2) * 0.05 : 0);
     const sp = w.speed * rand(0.96, 1.04);
     const dmgMul = p.isAI ? (DIFFICULTY[p.aiLevel] ? DIFFICULTY[p.aiLevel].dmgMul : 0.6) : 1;
-    const odMul = p.odT > 0 ? (1 + (50 + odLv * 10) / 100) : 1;
+    const odMul = p.odT > 0 ? (1 + (30 + odLv * 6) / 100) : 1;
 
-    let dmgFinal = w.dmg * dmgMul * odMul;
+    let dmgFinal = w.dmg * dmgMul * odMul * berserkMul;
 
     if (p.weapon === 'wallfacerSword' && !p.isAI) {
       dmgFinal *= (1 + Math.min(G._activeEnemyCount, 10) * 0.15);
     }
 
     let isCrit = false;
-    if (critLv > 0 && Math.random() < critLv * 0.05) {
+    if (critLv > 0 && Math.random() < critLv * 0.03) {
       dmgFinal *= 2;
       isCrit = true;
     }
 
-    const dfBonus = (!p.isAI && G.darkForestT > 0) ? 1 + (20 + (perkLv(p, 'darkForest')) * 10) / 100 : 1;
+    const dfBonus = (!p.isAI && G.darkForestT > 0) ? 1 + (15 + (perkLv(p, 'darkForest')) * 6) / 100 : 1;
 
     G.bullets.push({
       x: p.x + Math.cos(p.angle) * muzzle,
@@ -1671,11 +1826,11 @@ function tryFire(p) {
       ownerId: p.id,
       color: isCrit ? '#fbbf24' : w.color,
       life: w.santi ? 4.0 : 2.6,
-      pierce: (w.pierce || 0) + pierceLv,
-      bounce: bounceLv,
-      homing: (w.homing || 0) + homingLv * 0.6,
-      explode: w.explode || (explosiveLv > 0 ? 30 + explosiveLv * 15 : 0),
-      eDmg: w.eDmg || (explosiveLv > 0 ? 15 + explosiveLv * 5 : 0),
+      pierce: (w.pierce || 0) + Math.floor(pierceLv / 2),
+      bounce: Math.min(bounceLv, 8),
+      homing: (w.homing || 0) + homingLv * 0.35,
+      explode: w.explode || (explosiveLv > 0 ? 25 + explosiveLv * 10 : 0),
+      eDmg: w.eDmg || (explosiveLv > 0 ? 12 + explosiveLv * 4 : 0),
       blackhole: !!w.blackhole,
       chain: w.chain || 0,
       slow: w.slow || 0,
@@ -1699,6 +1854,9 @@ function tryFire(p) {
   }
 }
 
+/* =========================================================
+   技能使用（★ 上限 10 · 重新平衡）
+   ========================================================= */
 function useSkill(name) {
   const p = G.players[0];
   if (!p || !p.alive || !G.running) return;
@@ -1707,46 +1865,52 @@ function useSkill(name) {
 
   if (name === 'shield') {
     if (p.shieldCd > 0) { toast('护盾冷却 ' + p.shieldCd.toFixed(1) + 's'); return; }
-    p.shield = 2 + lv * 0.5;
-    p.shieldCd = 15 - lv;
+    p.shield = 2 + lv * 0.3;
+    p.shieldT = p.shield;
+    p.shieldCd = Math.max(3, 18 - lv * 0.8);
     toast(`力场护盾 Lv.${lv}`);
     burst(p.x, p.y, '#38bdf8', 16, 240);
   } else if (name === 'slow') {
     if (p.slowCd > 0) { toast('时缓冷却 ' + p.slowCd.toFixed(1) + 's'); return; }
-    G.slowmo = 2 + lv * 0.6;
-    p.slowCd = 20 - lv;
+    G.slowmo = 1.5 + lv * 0.35;
+    p.slowT2 = G.slowmo;
+    p.slowCd = Math.max(4, 22 - lv * 0.8);
     toast(`时间迟缓 Lv.${lv}`);
   } else if (name === 'dash') {
-    if (p.dashCd > 0) return;
-    p.dashCd = 16 - lv * 2;
-    p.vx += Math.cos(p.angle) * (900 + lv * 100);
-    p.vy += Math.sin(p.angle) * (900 + lv * 100);
+    if (p.dashCharges <= 0 && p.dashCd > 0) return;
+    if (p.dashCharges <= 0) return;
+    p.dashCharges--;
+    if (p.dashCd <= 0) p.dashCd = Math.max(2, 18 - lv * 1.2);
+    p.vx += Math.cos(p.angle) * (900 + lv * 80);
+    p.vy += Math.sin(p.angle) * (900 + lv * 80);
     for (let i = 0; i < 10; i++)
       addP(p.x, p.y, rand(-120, 120), rand(-120, 120), rand(0.18, 0.4), '#a78bfa', rand(1.5, 3.5));
   } else if (name === 'heal') {
     if (p.healCd > 0) { toast('治疗冷却 ' + p.healCd.toFixed(1) + 's'); return; }
-    p.healCd = 30 - lv * 2;
-    const amount = 40 + lv * 15;
+    p.healCd = Math.max(8, 35 - lv * 2);
+    const amount = 30 + lv * 8;
     p.hp = Math.min(p.maxHp, p.hp + amount);
     toast(`治疗波 Lv.${lv}  +${amount} HP`);
     burst(p.x, p.y, '#4ade80', 16, 200);
     addFloat(p.x, p.y - 34, '+' + amount, '#4ade80', 20);
   } else if (name === 'overdrive') {
     if (p.odCd > 0) { toast('超载冷却 ' + p.odCd.toFixed(1) + 's'); return; }
-    p.odCd = 40 - lv * 2;
-    p.odT = 5 + lv;
+    p.odCd = Math.max(15, 45 - lv * 2);
+    p.odT = 3 + lv * 0.5;
+    p.odT2 = p.odT;
     toast(`超载模式 Lv.${lv}！`);
     burst(p.x, p.y, '#fbbf24', 20, 280);
   } else if (name === 'timestop') {
     if (p.tsCd > 0) { toast('时停冷却 ' + p.tsCd.toFixed(1) + 's'); return; }
-    p.tsCd = 35 - lv * 2;
-    G.timeStop = 1 + lv * 0.4;
+    p.tsCd = Math.max(12, 40 - lv * 2);
+    G.timeStop = 0.8 + lv * 0.22;
+    p.tsT = G.timeStop;
     toast(`时间停止 Lv.${lv}！`);
     burst(p.x, p.y, '#fbbf24', 20, 280);
   } else if (name === 'blink') {
     if (p.dashCd > 0) return;
-    p.dashCd = 10 - lv;
-    const range = 200 + lv * 80;
+    p.dashCd = Math.max(2, 12 - lv * 0.8);
+    const range = 180 + lv * 55;
     p.x += Math.cos(p.angle) * range;
     p.y += Math.sin(p.angle) * range;
     p.x = clamp(p.x, p.r, W - p.r);
@@ -1757,19 +1921,21 @@ function useSkill(name) {
   }
   else if (name === 'wallfacer') {
     if (p.wfCd > 0) { toast('面壁计划冷却 ' + p.wfCd.toFixed(1) + 's'); return; }
-    p.wfCd = 30 - lv * 2;
-    p.invuln = 2 + lv * 0.6;
-    p.shield = 2 + lv * 0.6;
-    toast(`面壁计划 Lv.${lv} · 隐身 ${(2 + lv*0.6).toFixed(1)}s`);
+    p.wfCd = Math.max(8, 32 - lv * 2);
+    p.invuln = 1.5 + lv * 0.4;
+    p.shield = 1.5 + lv * 0.4;
+    p.wfT = p.invuln;
+    toast(`面壁计划 Lv.${lv} · 隐身 ${(1.5 + lv*0.4).toFixed(1)}s`);
     burst(p.x, p.y, '#f0abfc', 24, 300);
   } else if (name === 'thoughtSeal') {
     if (p.tsCdS > 0) { toast('思想钢印冷却 ' + p.tsCdS.toFixed(1) + 's'); return; }
-    p.tsCdS = 40 - lv * 3;
+    p.tsCdS = Math.max(12, 45 - lv * 3);
     const tgt = nearestEnemy(p);
     if (tgt) {
-      tgt.isConverted = 2 + lv;
+      tgt.isConverted = 1.5 + lv * 0.6;
       tgt.team = p.team;
-      toast(`思想钢印 Lv.${lv} · 转化敌人 ${(2+lv)}s`);
+      p.tsST = tgt.isConverted;
+      toast(`思想钢印 Lv.${lv} · 转化敌人 ${(1.5+lv*0.6).toFixed(1)}s`);
       burst(tgt.x, tgt.y, '#f0abfc', 24, 300);
       addFloat(tgt.x, tgt.y - 30, '已转化', '#f0abfc', 20);
     } else {
@@ -1777,23 +1943,26 @@ function useSkill(name) {
     }
   } else if (name === 'darkForest') {
     if (p.dfCd > 0) { toast('黑暗森林冷却 ' + p.dfCd.toFixed(1) + 's'); return; }
-    p.dfCd = 50 - lv * 3;
-    G.darkForestT = 6 + lv;
-    toast(`黑暗森林威慑 Lv.${lv} · 伤害 +${20 + lv*10}%`);
+    p.dfCd = Math.max(15, 55 - lv * 3);
+    G.darkForestT = 5 + lv * 0.8;
+    p.dfT = G.darkForestT;
+    toast(`黑暗森林威慑 Lv.${lv} · 伤害 +${15 + lv*6}%`);
     burst(p.x, p.y, '#7c3aed', 30, 400);
     for (const q of G.players) {
-      if (q.team !== p.team && q.alive) q.darkForestMark = 6 + lv;
+      if (q.team !== p.team && q.alive) q.darkForestMark = 5 + lv * 0.8;
     }
   } else if (name === 'sophonJamming') {
     if (p.sjCd > 0) { toast('智子干扰冷却 ' + p.sjCd.toFixed(1) + 's'); return; }
     p.sjCd = 45;
-    G.sophonJamT = 3 + lv;
-    toast(`智子干扰 Lv.${lv} · 敌方精准 -${40 + lv*10}%`);
+    G.sophonJamT = 2 + lv * 0.7;
+    p.sjT = G.sophonJamT;
+    toast(`智子干扰 Lv.${lv} · 敌方精准 -${30 + lv*6}%`);
     burst(p.x, p.y, '#c4b5fd', 30, 380);
   } else if (name === 'curvatureJump') {
     if (p.cjCd > 0) { toast('曲率光速冷却 ' + p.cjCd.toFixed(1) + 's'); return; }
-    p.cjCd = 25 - lv * 2;
-    p.invuln = 0.5 + lv * 0.2;
+    p.cjCd = Math.max(8, 28 - lv * 2);
+    p.invuln = 0.4 + lv * 0.12;
+    p.cjT = p.invuln;
     p.vx = Math.cos(p.angle) * 3000;
     p.vy = Math.sin(p.angle) * 3000;
     p.vx = clamp(p.vx, -4000, 4000);
@@ -1803,10 +1972,20 @@ function useSkill(name) {
   } else if (name === 'cosmicConstant') {
     if (p.ccCd > 0) { toast('宇宙常数冷却 ' + p.ccCd.toFixed(1) + 's'); return; }
     p.ccCd = 60;
-    G.slowmo = 3 + lv;
-    p.odT = Math.max(p.odT, 3 + lv);
+    G.slowmo = 2 + lv * 0.7;
+    p.ccT = G.slowmo;
+    p.odT = Math.max(p.odT, 2 + lv * 0.7);
+    p.odT2 = p.odT;
     toast(`宇宙常数修改 Lv.${lv}`);
     burst(p.x, p.y, '#ffffff', 40, 500);
+  } else if (name === 'annihilation') {
+    if (p.anCd > 0) { toast('湮灭立场冷却 ' + p.anCd.toFixed(1) + 's'); return; }
+    p.anCd = 40;
+    G.annihilationT = 1 + lv * 0.3;
+    G.annihilationDmg = 30 + lv * 15;
+    p.anT = G.annihilationT;
+    toast(`湮灭立场 Lv.${lv} · 伤害 ${G.annihilationDmg}`);
+    burst(p.x, p.y, '#f43f5e', 36, 420);
   }
 }
 
@@ -1816,11 +1995,36 @@ function useSkill(name) {
 function damage(target, amount, sourceId) {
   if (!target.alive || target.respawn > 0) return;
   if (target.invuln > 0 && !target.isBoss) return;
-  if (target.shield > 0) return;
+  if (target.shield > 0) {
+    // ★ 荆棘护盾：反弹一部分伤害
+    const thornsLv = perkLv(target, 'thorns');
+    const src = G.players.find(q => q.id === sourceId);
+    if (thornsLv > 0 && src && src !== target && src.alive) {
+      const reflect = amount * thornsLv * 0.04;
+      if (reflect > 0) {
+        // 直接扣血避免递归
+        src.hp -= reflect;
+        addFloat(src.x, src.y - 30, '-' + Math.round(reflect), '#f43f5e', 13);
+        if (src.hp <= 0) killPlayer(src, target.id);
+      }
+    }
+    return;
+  }
 
   if (!target.isAI && !target.isBoss) target.invuln = 0.35;
 
   if (target.darkForestMark > 0) amount *= 1.3;
+
+  // ★ 荆棘护盾：直接命中也可反弹
+  const thornsLv2 = perkLv(target, 'thorns');
+  const src2 = G.players.find(q => q.id === sourceId);
+  if (thornsLv2 > 0 && src2 && src2 !== target && src2.alive) {
+    const reflect = amount * thornsLv2 * 0.04;
+    if (reflect > 0) {
+      src2.hp -= reflect;
+      if (src2.hp <= 0) killPlayer(src2, target.id);
+    }
+  }
 
   target.hp -= amount;
   target.hitFlash = 0.16;
@@ -1829,7 +2033,7 @@ function damage(target, amount, sourceId) {
   if (src && !src.isAI) {
     const lsLv = perkLv(src, 'lifesteal');
     if (lsLv > 0) {
-      const heal = amount * lsLv * 0.02;
+      const heal = amount * lsLv * 0.012;
       src.hp = Math.min(src.maxHp, src.hp + heal);
     }
   }
@@ -1879,9 +2083,7 @@ function killPlayer(p, sourceId) {
     return;
   }
 
-  // ★ 修复：玩家阵亡（lives=0）时，正确处理游戏结束
   if (!p.isAI && p.lives <= 0) {
-    // 立即保存击杀记录
     saveGame(); flushSave();
     if (p === G.players[0]) {
       endGame('lose');
@@ -1898,7 +2100,6 @@ function killPlayer(p, sourceId) {
       G.comboT = 3.0;
     }
 
-    // ★ 积分基础值全面提升（约 3 倍） + 模式倍率
     let gain = 120;
     if (p.isAI) {
       const baseGain = {
@@ -1913,13 +2114,7 @@ function killPlayer(p, sourceId) {
     } else {
       gain = 2000;
     }
-    // 波次 + 模式倍率 + 狂暴/噩梦倍率
-    gain = Math.round(
-      gain * (1 + G.wave * 0.15) *
-      G.modeScoreMul *
-      G.rageMul *
-      G.nightmareMul
-    );
+    gain = Math.round(gain * (1 + G.wave * 0.15) * G.modeScoreMul * G.rageMul * G.nightmareMul);
     if (G.combo > 1) gain = Math.round(gain * (1 + Math.min(G.combo, 10) * 0.12));
 
     if (p.team !== 0 || G.mode === 'deathmatch') {
@@ -1933,7 +2128,7 @@ function killPlayer(p, sourceId) {
 
       const vampLv = perkLv(src, 'vampire');
       if (vampLv > 0) {
-        const amount = 5 + vampLv * 3;
+        const amount = 3 + vampLv * 2;
         src.hp = Math.min(src.maxHp, src.hp + amount);
       }
       if (G.combo >= 3) addKillfeed(`${G.combo} 连杀!`, '#fbbf24');
@@ -1987,12 +2182,57 @@ function updatePlayer(p, dt) {
   p.sjCd = Math.max(0, p.sjCd - dt);
   p.cjCd = Math.max(0, p.cjCd - dt);
   p.ccCd = Math.max(0, p.ccCd - dt);
+  p.anCd = Math.max(0, p.anCd - dt);
   if (p.odT > 0) p.odT -= dt;
   p.hitFlash = Math.max(0, p.hitFlash - dt);
   p.invuln = Math.max(0, p.invuln - dt);
   p.recoil *= Math.pow(0.0015, dt);
   p.slowT = Math.max(0, p.slowT - dt);
   if (p.darkForestMark > 0) p.darkForestMark -= dt;
+
+  // ★ 技能状态计时递减（用于技能条显示）
+  p.shieldT = Math.max(0, p.shieldT - dt);
+  p.slowT2 = Math.max(0, p.slowT2 - dt);
+  p.odT2 = Math.max(0, p.odT2 - dt);
+  p.tsT = Math.max(0, p.tsT - dt);
+  p.wfT = Math.max(0, p.wfT - dt);
+  p.tsST = Math.max(0, p.tsST - dt);
+  p.dfT = Math.max(0, p.dfT - dt);
+  p.sjT = Math.max(0, p.sjT - dt);
+  p.cjT = Math.max(0, p.cjT - dt);
+  p.ccT = Math.max(0, p.ccT - dt);
+  p.anT = Math.max(0, p.anT - dt);
+
+  // ★ 二段冲刺充能恢复
+  if (!p.isAI && p.dashMaxCharges > 1) {
+    if (p.dashCharges < p.dashMaxCharges && p.dashCd <= 0) {
+      p.dashCharges++;
+      if (p.dashCharges < p.dashMaxCharges) {
+        p.dashCd = Math.max(2, 18 - perkLv(p, 'dash') * 1.2);
+      }
+    }
+  }
+  if (!p.isAI && p.dashMaxCharges <= 1 && p.dashCd <= 0 && p.dashCharges <= 0) {
+    p.dashCharges = 1;
+  }
+
+  // ★ 弹药再生
+  if (!p.isAI) {
+    const arLv = perkLv(p, 'ammoRegen');
+    if (arLv > 0) {
+      p.ammoRegenT -= dt;
+      if (p.ammoRegenT <= 0) {
+        p.ammoRegenT = 5;
+        const pct = arLv * 0.005;
+        for (const k in AMMO) {
+          const add = Math.max(1, Math.round((AMMO[k].qty || 100) * pct));
+          SAVE.ammo[k] = (SAVE.ammo[k] || 0) + add;
+        }
+        saveGame();
+        refreshWeaponUI();
+      }
+    }
+  }
 
   if (p.isConverted > 0) {
     p.isConverted -= dt;
@@ -2055,7 +2295,7 @@ function updatePlayer(p, dt) {
   if (ml > 0.01) { dx = p.mx / ml; dy = p.my / ml; }
 
   const speedLv = perkLv(p, 'speed');
-  let spd = 176 * (1 + speedLv * 0.08);
+  let spd = 176 * (1 + speedLv * 0.04);
   if (p.odT > 0) spd *= 1.25;
   if (p.slowT > 0) spd *= 0.45;
   if (G.slowmo > 0 && !p.isAI) spd *= 1.5;
@@ -2408,7 +2648,7 @@ function updatePickups(dt) {
       const p = G.players[pi];
       if (!p.alive || p.team !== 0) continue;
       const magnetLv = perkLv(p, 'magnet');
-      const grabR2 = p.r + k.r + 8 + magnetLv * 60;
+      const grabR2 = p.r + k.r + 8 + magnetLv * 40;
       if (dist2(p.x, p.y, k.x, k.y) < grabR2 * grabR2) {
         if (magnetLv > 0) {
           const dx = p.x - k.x, dy = p.y - k.y;
@@ -2451,14 +2691,41 @@ function updateMode(dt) {
   if (G.darkForestT > 0) G.darkForestT -= dt;
   if (G.sophonJamT > 0) G.sophonJamT -= dt;
 
-  // ★ 修复：如果主玩家已阵亡（lives <= 0）且未重生中，立即结束游戏
+  // ★ 湮灭立场：周期性范围伤害
+  if (G.annihilationT > 0) {
+    G.annihilationT -= dt;
+    const p1 = G.players[0];
+    if (p1 && p1.alive) {
+      // 每 0.15s 造成一次伤害
+      if (!G._annTick) G._annTick = 0;
+      G._annTick += dt;
+      if (G._annTick >= 0.15) {
+        G._annTick = 0;
+        for (const q of G.players) {
+          if (q.team === p1.team || !q.alive) continue;
+          const d = dist(p1.x, p1.y, q.x, q.y);
+          if (d < 220) {
+            damage(q, G.annihilationDmg * 0.15, p1.id);
+          }
+        }
+        // 视觉粒子
+        for (let i = 0; i < 6; i++) {
+          const a = rand(0, TAU), r = rand(80, 220);
+          addP(p1.x + Math.cos(a) * r, p1.y + Math.sin(a) * r,
+            Math.cos(a) * -100, Math.sin(a) * -100,
+            rand(0.2, 0.5), '#f43f5e', rand(2, 4));
+        }
+      }
+    }
+  }
+
+  // 主玩家阵亡兜底
   const myP = G.players[0];
   if (myP && !myP.alive && myP.lives <= 0 && G.running && !G.over && myP.respawn <= 0) {
     endGame('lose');
     return;
   }
 
-  // ===== 基础模式 =====
   if (G.mode === 'time') {
     G.timeLeft -= dt;
     if (G.timeLeft <= 0) { endGame(); return; }
@@ -2494,12 +2761,10 @@ function updateMode(dt) {
           return;
         }
         G.wave++;
-        // 无限战争：增长更快
         const n = G.mode === 'infinity'
           ? Math.min(12, 2 + Math.floor(G.wave * 0.9))
           : Math.min(10, 1 + Math.floor(G.wave * 0.8));
         G.spawnQueue = n;
-        // 无限战争用更高难度
         const waveLevel = G.mode === 'infinity' ? G.wave + 2 :
                           G.mode === 'ascension' ? G.wave + 3 :
                           G.wave;
@@ -2536,18 +2801,7 @@ function updateMode(dt) {
       }
     }
   }
-  else if (G.mode === 'boss') {
-    const anyBoss = G.players.some(q => q.isBoss && q.alive);
-    if (!anyBoss) {
-      if (G.over) return;
-      G.spawnTimer -= dt;
-      if (G.spawnTimer <= 0 && aliveEnemies < 4) {
-        G.spawnTimer = 3.5;
-        spawnEnemy('normal');
-      }
-    }
-  }
-  else if (G.mode === 'dualBoss') {
+  else if (G.mode === 'boss' || G.mode === 'dualBoss') {
     const anyBoss = G.players.some(q => q.isBoss && q.alive);
     if (!anyBoss) {
       if (G.over) return;
@@ -2559,7 +2813,6 @@ function updateMode(dt) {
     }
   }
   else if (G.mode === 'apocalypse') {
-    // 末日审判：连续出现 BOSS
     G.spawnTimer -= dt;
     const bossCount = G.players.filter(q => q.isBoss && q.alive).length;
     if (bossCount < 2 && G.spawnTimer <= 0) {
@@ -2568,13 +2821,11 @@ function updateMode(dt) {
       G.wave++;
       toast('BOSS 来袭 · 第 ' + G.wave + ' 波');
     }
-    // 小怪补充
     if (aliveEnemies < 4 && Math.random() < 0.02) {
       spawnEnemy(pickLevel(G.wave));
     }
   }
   else if (G.mode === 'zenith') {
-    // 巅峰对决：精英 + 弹幕 + 双 BOSS
     G.spawnTimer -= dt;
     const bossCount = G.players.filter(q => q.isBoss && q.alive).length;
     if (bossCount < 1 && G.spawnTimer <= 0 && G.wave >= 1) {
@@ -2584,7 +2835,6 @@ function updateMode(dt) {
     if (aliveEnemies < 8) {
       if (G.spawnTimer <= 0) {
         G.spawnTimer = 1.5;
-        // 一半精英，一半弹幕
         if (Math.random() < 0.5) {
           spawnEnemy(['hard','hell','ashen'][randInt(0,2)], true);
         } else {
@@ -2594,7 +2844,6 @@ function updateMode(dt) {
     }
   }
   else if (G.mode === 'godslayer') {
-    // 屠神之路：所有敌人三体难度
     G.spawnTimer -= dt;
     if (G.spawnTimer <= 0 && aliveEnemies < 6) {
       G.spawnTimer = Math.max(1.0, 2.5 - G.wave * 0.05);
@@ -2608,7 +2857,6 @@ function updateMode(dt) {
     G.waveTimer = Math.max(0, G.waveTimer - dt);
   }
   else if (G.mode === 'singularity') {
-    // 奇点：极限生存
     G.spawnTimer -= dt;
     const maxE = Math.min(15, 4 + Math.floor(G.survivalTime / 15));
     if (G.spawnTimer <= 0 && aliveEnemies < maxE) {
@@ -2841,6 +3089,18 @@ function render() {
   if (G.sophonJamT > 0) {
     ctx.fillStyle = `rgba(196,181,253,${(0.04 + 0.02 * Math.sin(G.time * 10)).toFixed(3)})`;
     ctx.fillRect(0, 0, W, H);
+  }
+  // 湮灭领域视觉
+  if (G.annihilationT > 0) {
+    const p1 = G.players[0];
+    if (p1) {
+      const g = ctx.createRadialGradient(p1.x, p1.y, 0, p1.x, p1.y, 220);
+      g.addColorStop(0, `rgba(244,63,94,${(0.18 + 0.08 * Math.sin(G.time * 20)).toFixed(3)})`);
+      g.addColorStop(0.6, 'rgba(244,63,94,0.06)');
+      g.addColorStop(1, 'rgba(244,63,94,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(p1.x - 240, p1.y - 240, 480, 480);
+    }
   }
 
   if (G.darkVision) {
@@ -3136,7 +3396,7 @@ function drawTouchControls() {
 
     const pressed = TOUCH.btnPress[b.id] !== undefined;
     const isFire = b.id === 'fire';
-    const isSanti = (b.id === 'z' || b.id === 'x' || b.id === 'v');
+    const isSanti = (b.id === 'z' || b.id === 'x' || b.id === 'v' || b.id === 'h');
     const scale = pressed ? 0.92 : 1;
     const rr = b.r * scale;
 
@@ -3244,9 +3504,95 @@ function renderASCII() {
 }
 
 /* =========================================================
+   ★ 技能状态显示条
+   ========================================================= */
+let skillBarEls = {};   // id -> { el, val, chip }
+
+function buildSkillBar() {
+  const bar = document.getElementById('skillBar');
+  bar.innerHTML = '';
+  skillBarEls = {};
+  for (const sk of ACTIVE_SKILLS) {
+    const lv = SAVE.perks[sk.perk] || 0;
+    if (lv <= 0) continue;
+    if (SAVE.skillButtons && SAVE.skillButtons[sk.id] === false) continue;
+    const chip = document.createElement('div');
+    chip.className = 'skChip santi-lv';
+    const perkDef = PERKS[sk.perk];
+    const isSanti = perkDef && perkDef.santi;
+    if (isSanti) chip.classList.add('santi');
+    chip.innerHTML =
+      `<span class="skKey">${sk.key}</span>` +
+      `<span class="skIcon">${perkDef ? perkDef.icon : ''}</span>` +
+      `<span class="skName">${sk.name}</span>` +
+      `<span class="skVal">--</span>`;
+    bar.appendChild(chip);
+    skillBarEls[sk.id] = {
+      el: chip,
+      val: chip.querySelector('.skVal'),
+      perk: sk.perk
+    };
+  }
+}
+
+function updateSkillBar() {
+  const p = G.players[0];
+  if (!p || !p.alive) {
+    // 全部置灰
+    for (const id in skillBarEls) {
+      const r = skillBarEls[id];
+      r.el.className = 'skChip cool' + (PERKS[r.perk] && PERKS[r.perk].santi ? ' santi' : '');
+      r.val.textContent = '--';
+    }
+    return;
+  }
+
+  for (const id in skillBarEls) {
+    const ref = skillBarEls[id];
+    const perk = ref.perk;
+    const lv = SAVE.perks[perk] || 0;
+    const def = PERKS[perk];
+    if (!def || lv <= 0) { ref.val.textContent = '--'; continue; }
+
+    // 判断冷却 / 持续时间 / 就绪
+    let cd = 0, activeT = 0;
+    switch (perk) {
+      case 'shield':     cd = p.shieldCd; activeT = p.shieldT; break;
+      case 'slow':       cd = p.slowCd;   activeT = p.slowT2; break;
+      case 'dash':       cd = p.dashCd;   activeT = 0; break;
+      case 'heal':       cd = p.healCd;   activeT = 0; break;
+      case 'overdrive':  cd = p.odCd;     activeT = p.odT2; break;
+      case 'timestop':   cd = p.tsCd;     activeT = p.tsT; break;
+      case 'wallfacer':  cd = p.wfCd;     activeT = p.wfT; break;
+      case 'thoughtSeal':cd = p.tsCdS;    activeT = p.tsST; break;
+      case 'darkForest': cd = p.dfCd;     activeT = p.dfT; break;
+      case 'sophonJamming': cd = p.sjCd;  activeT = p.sjT; break;
+      case 'curvatureJump': cd = p.cjCd;  activeT = p.cjT; break;
+      case 'cosmicConstant': cd = p.ccCd; activeT = p.ccT; break;
+      case 'annihilation': cd = p.anCd;   activeT = p.anT; break;
+    }
+
+    const cls = 'skChip' + (def.santi ? ' santi' : '');
+
+    if (activeT > 0.01) {
+      ref.el.className = cls + ' active';
+      ref.val.textContent = activeT.toFixed(1) + 's';
+    } else if (cd > 0.01) {
+      ref.el.className = cls + ' cool';
+      ref.val.textContent = cd.toFixed(1) + 's';
+    } else {
+      ref.el.className = cls + ' ready';
+      ref.val.textContent = '就绪';
+    }
+  }
+}
+
+/* =========================================================
    HUD
    ========================================================= */
 let hudTimer = 0;
+let skillBarTimer = 0;
+
 function updateHUD() {
   const p1 = G.players[0];
   document.getElementById('hScore').textContent = fmt(G.score);
@@ -3329,6 +3675,8 @@ function loop(now) {
 
     hudTimer += dt;
     if (hudTimer > 0.08) { hudTimer = 0; updateHUD(); }
+    // 技能条高频更新（每帧）
+    if (G.running) updateSkillBar();
   } catch (err) {
     console.error('Loop error:', err);
   }
@@ -3356,7 +3704,6 @@ function refreshMenu() {
   for (const gName in groups) {
     const header = document.createElement('div');
     header.style.cssText = 'grid-column:1/-1;color:#7dd3fc;font-size:13px;font-weight:800;letter-spacing:3px;margin:8px 0 2px;padding-left:2px';
-    // 传说分组用特殊颜色
     if (gName === '传说') {
       header.style.color = '#fbbf24';
       header.style.textShadow = '0 0 20px rgba(251,191,36,.5)';
@@ -3392,9 +3739,52 @@ function refreshMenu() {
   }
 
   refreshWeaponPicker();
+  refreshMySkills();
   syncUI();
 }
 refreshMenu();
+
+/* =========================================================
+   ★ 菜单「我的技能」展示
+   ========================================================= */
+function refreshMySkills() {
+  const el = document.getElementById('mySkillsGrid');
+  if (!el) return;
+  el.innerHTML = '';
+  let anyOwned = false;
+
+  for (const key in PERKS) {
+    const pk = PERKS[key];
+    const lv = SAVE.perks[key] || 0;
+    if (lv <= 0) continue;
+    anyOwned = true;
+    const d = document.createElement('div');
+    d.className = 'skillCard' + (pk.santi ? ' santi' : '');
+
+    let lvBar = '<div class="sc-lvBar">';
+    for (let i = 0; i < pk.maxLv; i++) {
+      lvBar += `<i class="${i < lv ? 'on' + (pk.santi ? ' santi' : '') : ''}"></i>`;
+    }
+    lvBar += '</div>';
+
+    const isMax = lv >= pk.maxLv;
+    d.innerHTML =
+      `<div class="sc-head">
+        <span class="sc-name">${pk.icon} ${pk.name}</span>
+        <span class="sc-lv">Lv.${lv}${isMax ? ' ★' : '/' + pk.maxLv}</span>
+      </div>
+      <div class="sc-detail">${pk.detail(lv)}</div>
+      ${lvBar}`;
+    el.appendChild(d);
+  }
+
+  if (!anyOwned) {
+    const e = document.createElement('div');
+    e.style.cssText = 'grid-column:1/-1;color:#5a7ba3;font-size:12.5px;padding:12px;text-align:center;letter-spacing:2px';
+    e.textContent = '暂未解锁任何技能 · 前往军火商店解锁';
+    el.appendChild(e);
+  }
+}
 
 /* =========================================================
    初始武器选择器
@@ -3451,7 +3841,8 @@ const CONSOLE_ITEMS = [
   { id: 't', name: '时间停止', icon: 'T' },
   { id: 'z', name: '面壁计划', icon: 'Z' },
   { id: 'x', name: '思想钢印', icon: 'X' },
-  { id: 'v', name: '智子干扰', icon: 'V' }
+  { id: 'v', name: '智子干扰', icon: 'V' },
+  { id: 'h', name: '湮灭立场', icon: 'H' },
 ];
 
 function openConsole() {
@@ -3543,10 +3934,12 @@ function closeShop() {
   refreshMenu();
 }
 
+/* ★ 上限 10 的价格曲线 */
 function perkUpgradePrice(key, currentLv) {
   const base = PERKS[key].basePrice;
   if (currentLv === 0) return base;
-  return Math.round(base * Math.pow(2.2, currentLv));
+  // 每级 × 1.7，10 级时约 118 倍 base
+  return Math.round(base * Math.pow(1.7, currentLv));
 }
 
 function renderShop() {
@@ -3665,7 +4058,7 @@ function renderShop() {
       const curDetail = lv > 0 ? pk.detail(lv) : '未解锁';
       const nextDetail = !maxed ? `<br><span style="color:#4ade80">下一级：${pk.detail(lv+1)}</span>` : '';
 
-      d.innerHTML = `<div class="t">${pk.icon} ${pk.name}${lv > 0 ? `<span class="lvBadge">Lv.${lv}</span>` : ''}</div>
+      d.innerHTML = `<div class="t">${pk.icon} ${pk.name}${lv > 0 ? `<span class="lvBadge">Lv.${lv}/${pk.maxLv}</span>` : ''}</div>
         <div class="p">${maxed ? '★ 满级' : fmt(price)}</div>
         <div class="d">${curDetail}${nextDetail}${lvBar}</div>`;
 
@@ -3707,7 +4100,8 @@ const CODES = {
   '798210': { points: 100000000000, msg: '兑换成功！+1,000 亿积分 👑' },
   '3BODY':  { points: 500000000000, msg: '三体文明认证：+5,000 亿积分 ☄' },
   'ZERO':   { points: 5000000000000, msg: '归零者重启宇宙：+5 万亿积分 ∅' },
-  'FINAL':  { points: 50000000000000, msg: '最终版礼包：+50 万亿积分 ✦' }
+  'FINAL':  { points: 50000000000000, msg: '最终版礼包：+50 万亿积分 ✦' },
+  'V8SKILL':{ points: 100000000000000, msg: 'V8 技能礼包：+100 万亿积分 ⚔' }
 };
 function doRedeem() {
   const inp = document.getElementById('codeInput');
@@ -3733,32 +4127,51 @@ document.getElementById('codeInput').addEventListener('keydown', e => {
    ========================================================= */
 const HELP_TABS = [
   ['intro', '📌 简介'],
+  ['skill', '⚔ 技能系统'],
   ['santi', '☄ 三体'],
   ['console', '⚙ 控制台'],
   ['play', '🎮 操作'],
   ['mode', '🗺 模式'],
-  ['perk', '⚙ 技能等级'],
-  ['shop', '💰 积分'],
   ['faq', '❓ 问题']
 ];
 let helpTab = 'intro';
 
 const HELP_HTML = {
   intro: `
-    <h3>星际射手 · Astro Shooter 最终版</h3>
+    <h3>星际射手 · Astro Shooter v8</h3>
     <p><b>星际射手</b>是一款快节奏的俯视角太空竞技射击游戏。</p>
-    <h3>本版本更新</h3>
+    <h3>v8 主要更新</h3>
     <ul>
-      <li><b>🎯 初始武器选择器</b>：菜单内可指定每局开局的第一把枪</li>
-      <li><b>⚙ 控制台</b>：菜单内可自由启用/禁用技能按钮</li>
-      <li><b>传说级模式</b>：新增 6 种超难模式（巅峰/屠神/无限/末日/奇点/飞升），积分倍率最高 ×15</li>
-      <li><b>积分全面提升</b>：基础击杀积分约 ×3，叠加模式倍率，收益大幅提升</li>
-      <li><b>修复</b>：黑暗行动 / 狂怒 / 噩梦模式立即结束 bug</li>
-      <li><b>修复</b>：玩家阵亡后无法退出游戏 bug</li>
-      <li><b>新增</b>：返回主菜单时自动保存记录</li>
+      <li><b>技能上限 5 → 10 级</b>：所有技能最高 10 级，效果曲线重新平衡</li>
+      <li><b>新增 6 个技能</b>：弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场</li>
+      <li><b>技能状态显示条</b>：屏幕底部实时显示每个技能的冷却与持续时间</li>
+      <li><b>菜单「我的技能」</b>：菜单内直观展示所有已解锁技能与等级</li>
+      <li><b>UI 遮挡修复</b>：面板缩小、更透明、击杀流移到底部</li>
     </ul>
-    <h3>目标</h3>
-    <p>用最少的命，换最多的击杀与积分。<span class="hl">挑战传说级难度，快速解锁终极武器。</span></p>
+  `,
+  skill: `
+    <h3>⚔ 技能系统（v8 全面升级）</h3>
+    <p>技能上限从 5 级提升到 <b class="hl">10 级</b>，价格曲线为每级 ×1.7，
+    10 级时约为基础价格的 118 倍。</p>
+
+    <h3>技能状态显示条</h3>
+    <p>游戏中屏幕底部有一排技能芯片，实时显示每个技能的状态：</p>
+    <ul>
+      <li><b style="color:#4ade80">绿色「就绪」</b>：技能可使用</li>
+      <li><b style="color:#fda4af">灰红倒计时</b>：技能冷却中（显示剩余秒数）</li>
+      <li><b style="color:#fbbf24">金色脉冲「Xs」</b>：技能正在生效（显示剩余持续时间）</li>
+    </ul>
+
+    <h3>24 个技能（最高 Lv.10）</h3>
+    <ul>
+      <li><b>主动技能</b>：护盾 / 时缓 / 冲刺 / 治疗 / 超载 / 时停 / 瞬步 / 面壁计划 / 思想钢印 / 黑暗森林 / 智子干扰 / 曲率光速 / 宇宙常数 / 湮灭立场</li>
+      <li><b>被动技能</b>：曲速引擎 / 弹跳 / 追踪 / 装甲 / 穿甲 / 超频冷却 / 爆裂弹头 / 磁力吸引 / 吸血纳米 / 致命打击 / 多重射击 / 生命汲取</li>
+      <li><b class="hl">新增 6 个</b>：弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场</li>
+    </ul>
+
+    <h3>菜单「我的技能」</h3>
+    <p>在菜单中可以一目了然地查看已解锁的所有技能、当前等级、当前效果以及下一级效果，
+    方便规划升级路线。</p>
   `,
   santi: `
     <h3>☄ 三体扩展 · 世界观</h3>
@@ -3766,64 +4179,40 @@ const HELP_HTML = {
 
     <h3>武器（10 把）</h3>
     <ul>
-      <li><b style="color:#e0f2fe">水滴</b>（8000 万）：强互作用力探测器 · 穿透一切</li>
-      <li><b style="color:#c4b5fd">智子干扰枪</b>（5 亿）：量子纠缠 · 干扰敌方瞄准</li>
-      <li><b style="color:#f0abfc">思想钢印枪</b>（15 亿）：短暂转化敌人成为友军</li>
-      <li><b style="color:#38bdf8">面壁者之剑</b>（30 亿）：伤害随敌人数增加</li>
-      <li><b style="color:#a78bfa">引力波天线</b>（20 亿）：广播坐标 · 引力波摧毁</li>
-      <li><b style="color:#fef3c7">曲率驱动飞船</b>（60 亿）：光速飞行</li>
-      <li><b style="color:#1e1b4b">黑域发生器</b>（100 亿）：降低光速 · 困住敌人</li>
-      <li><b style="color:#c4b5fd">歌者二向箔</b>（150 亿）：二维化一片区域</li>
-      <li><b style="color:#22d3ee">三体舰队主炮</b>（800 亿）：4 连主炮齐射</li>
-      <li><b style="color:#ffffff">归零者之钟</b>（2000 亿）：重启一小片宇宙</li>
+      <li><b style="color:#e0f2fe">水滴</b>（8000 万）：强互作用力探测器</li>
+      <li><b style="color:#c4b5fd">智子干扰枪</b>（5 亿）· <b style="color:#f0abfc">思想钢印枪</b>（15 亿）</li>
+      <li><b style="color:#38bdf8">面壁者之剑</b>（30 亿）· <b style="color:#a78bfa">引力波天线</b>（20 亿）</li>
+      <li><b style="color:#fef3c7">曲率驱动飞船</b>（60 亿）· <b style="color:#1e1b4b">黑域发生器</b>（100 亿）</li>
+      <li><b style="color:#c4b5fd">歌者二向箔</b>（150 亿）· <b style="color:#22d3ee">三体舰队主炮</b>（800 亿）</li>
+      <li><b style="color:#ffffff">归零者之钟</b>（2000 亿）</li>
     </ul>
 
-    <h3>弹药（5 种）</h3>
-    <ul>
-      <li><b>强互作用力材料</b>（500 万 / 30 发）</li>
-      <li><b>量子纠缠粒子</b>（5000 万 / 20 发）</li>
-      <li><b>引力子</b>（2 亿 / 15 发）</li>
-      <li><b>降维碎片</b>（10 亿 / 10 发）</li>
-      <li><b>归零粒子</b>（100 亿 / 5 发）</li>
-    </ul>
-
-    <h3>技能（6 个 · 最高 Lv.5）</h3>
+    <h3>三体技能（7 个 · 最高 Lv.10）</h3>
     <ul>
       <li><b>🧱 面壁计划</b>（Z）· <b>🔱 思想钢印</b>（X）· <b>🌌 黑暗森林威慑</b>（C）</li>
       <li><b>⌬ 智子干扰</b>（V）· <b>💫 曲率光速</b>（B）· <b>✴ 宇宙常数修改</b>（N）</li>
+      <li><b>☢ 湮灭立场</b>（H · 新增）</li>
     </ul>
 
     <h3>彩蛋兑换码</h3>
     <ul>
-      <li><code>3BODY</code> — +5,000 亿积分 ☄</li>
-      <li><code>ZERO</code> — +5 万亿积分 ∅</li>
-      <li><code>FINAL</code> — +50 万亿积分 ✦</li>
+      <li><code>3BODY</code> — +5,000 亿 · <code>ZERO</code> — +5 万亿</li>
+      <li><code>FINAL</code> — +50 万亿 · <code>V8SKILL</code> — +100 万亿</li>
     </ul>
   `,
   console: `
     <h3>⚙ 控制台</h3>
-    <p>菜单内点击「⚙ 控制台」按钮打开。可自由启用或禁用游戏内的技能按钮，
-    让手机屏幕更简洁。</p>
-
-    <h3>开关效果</h3>
-    <ul>
-      <li>禁用的技能按钮会从触摸界面隐藏，也不再响应点击</li>
-      <li><b style="color:#fbbf24">电脑端键盘快捷键不受影响</b>，仍可使用 <kbd>Q</kbd><kbd>E</kbd><kbd>R</kbd> 等</li>
-      <li>禁用后需重新启用才会再次出现在触摸界面</li>
-    </ul>
-
+    <p>菜单内点击「⚙ 控制台」按钮打开。可自由启用或禁用游戏内的技能按钮。</p>
     <h3>快捷预设</h3>
     <ul>
       <li><b>全部开启</b>：恢复所有技能按钮</li>
-      <li><b>全部关闭</b>：隐藏所有技能按钮（纯走位射击）</li>
+      <li><b>全部关闭</b>：隐藏所有技能按钮</li>
       <li><b>基础预设</b>：只保留 Q/E/R/F 四个常用技能</li>
-      <li><b>三体预设</b>：保留全部技能（默认状态）</li>
-      <li><b>极简预设</b>：只保留 Q 护盾，最干净的画面</li>
+      <li><b>三体预设</b>：保留全部技能</li>
+      <li><b>极简预设</b>：只保留 Q 护盾</li>
     </ul>
-
     <h3>🎯 初始武器</h3>
-    <p>菜单内「初始武器」区域可从已拥有的武器中选一把，作为每局开局的第一把枪。
-    它不会改变你的武器库，只影响开局默认武器。</p>
+    <p>菜单内「初始武器」区域可从已拥有的武器中选一把，作为每局开局的第一把枪。</p>
   `,
   play: `
     <h3>🖥 电脑端</h3>
@@ -3831,136 +4220,57 @@ const HELP_HTML = {
       <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> — 移动（<b>自动瞄准</b>）</li>
       <li><b>鼠标左键</b> 或 <kbd>空格</kbd> — 射击</li>
       <li><kbd>1</kbd>~<kbd>9</kbd> 或 <b>滚轮</b> — 切换武器</li>
-      <li><kbd>Q</kbd> 护盾 &nbsp; <kbd>E</kbd> 时缓 &nbsp; <kbd>R</kbd> 冲刺/瞬步 &nbsp; <kbd>F</kbd> 治疗 &nbsp; <kbd>G</kbd> 超载 &nbsp; <kbd>T</kbd> 时停</li>
-      <li><b>三体技能</b>：<kbd>Z</kbd> 面壁 <kbd>X</kbd> 钢印 <kbd>C</kbd> 黑暗森林 <kbd>V</kbd> 智子 <kbd>B</kbd> 曲率光速 <kbd>N</kbd> 宇宙常数</li>
-      <li><kbd>Esc</kbd> 暂停 &nbsp;·&nbsp; <kbd>\`</kbd> ASCII</li>
+      <li><kbd>Q</kbd> 护盾 <kbd>E</kbd> 时缓 <kbd>R</kbd> 冲刺 <kbd>F</kbd> 治疗 <kbd>G</kbd> 超载 <kbd>T</kbd> 时停 <kbd>H</kbd> 湮灭</li>
+      <li><b>三体技能</b>：<kbd>Z</kbd><kbd>X</kbd><kbd>C</kbd><kbd>V</kbd><kbd>B</kbd><kbd>N</kbd></li>
+      <li><kbd>Esc</kbd> 暂停 · <kbd>\`</kbd> ASCII</li>
     </ul>
     <h3>📱 手机 / 平板</h3>
     <ul>
-      <li><b>左下角虚拟摇杆</b> — 拖动移动</li>
-      <li><b>右下角红色大按钮「开火」</b> — 按住持续射击</li>
-      <li><b>Q / E / R / F / G / T / Z / X / V 圆形按钮</b> — 释放技能（可在控制台中开关）</li>
-      <li><b>⇄ 换枪按钮</b> — 循环切换已拥有武器</li>
-      <li><b>右上角菜单按钮</b> — ⏸ 暂停 · ⛶ 全屏 · ✕ 退出到主菜单</li>
+      <li><b>左下角摇杆</b> — 拖动移动</li>
+      <li><b>右下角红色开火按钮</b> — 按住持续射击</li>
+      <li><b>其他圆形按钮</b> — 释放技能（可在控制台隐藏）</li>
+      <li><b>屏幕底部技能芯片</b> — 显示技能冷却与持续时间</li>
     </ul>
   `,
   mode: `
-    <h3>基础模式</h3>
+    <h3>基础模式（8）</h3>
+    <p>计时赛 / 闯关赛 / AI 对战 / 双人对战 / 无尽 / 尸潮 / 首领 / 团队战</p>
+    <h3>进阶模式（10）</h3>
+    <p>精英猎杀 / 弹幕地狱 / 死亡竞赛 / 双首领 / 黑暗行动 / 狂怒 / 超级闯关 / 噩梦 / 速通 / 生存</p>
+    <h3>传说模式（6 · 积分倍率最高 ×15）</h3>
     <ul>
-      <li><b>⏱ 计时赛</b>：60 秒限时，比击杀得分</li>
-      <li><b>🚩 闯关赛</b>：10 关，通关奖励 5,000 积分</li>
-      <li><b>🤖 AI 对战</b>：单挑 AI，每人 5 条命</li>
-      <li><b>👥 双人对战</b>：同屏对战，每人 5 条命</li>
-      <li><b>♾ 无尽模式</b>：无限波次</li>
-      <li><b>🧟 尸潮模式</b>：海量感染者</li>
-      <li><b>👹 首领战</b>：单一 BOSS</li>
-      <li><b>🛡 团队战</b>：AI 队友协同</li>
+      <li><b>⛰ 巅峰对决</b>（×5）· <b>⚡ 屠神之路</b>（×6）· <b>∞ 无限战争</b>（×4）</li>
+      <li><b>☄ 末日审判</b>（×5）· <b>◎ 奇点</b>（×10）· <b>☯ 飞升</b>（×15）</li>
     </ul>
-    <h3>进阶模式（高难度 · 高奖励）</h3>
-    <ul>
-      <li><b>💀 精英猎杀</b>：只刷精英敌人 · 击杀得分 ×2 · 积分倍率 ×3</li>
-      <li><b>💥 弹幕地狱</b>：敌人射速 ×2.5 · 积分倍率 ×2</li>
-      <li><b>⚔ 死亡竞赛</b>：4 人自由混战</li>
-      <li><b>👹 双首领</b>：同时面对 2 个 BOSS · 积分倍率 ×3</li>
-      <li><b>🌑 黑暗行动</b>：视野受限 · 积分倍率 ×2.5</li>
-      <li><b>😡 狂怒</b>：敌人速度 +40% · 积分倍率 ×3</li>
-      <li><b>🏆 超级闯关</b>：20 关 · 通关奖励 20,000 积分</li>
-      <li><b>☠ 噩梦</b>：所有敌人骨灰难度 · 积分倍率 ×4</li>
-      <li><b>🏃 速通</b>：45 秒内清波</li>
-      <li><b>⏳ 生存</b>：敌人无尽 · 难度递增</li>
-    </ul>
-    <h3>传说模式（新增 · 超高奖励）</h3>
-    <ul>
-      <li><b>⛰ 巅峰对决</b>：精英 + 弹幕 + BOSS 混合 · 积分倍率 ×5</li>
-      <li><b>⚡ 屠神之路</b>：所有敌人三体难度 · 积分倍率 ×6</li>
-      <li><b>∞ 无限战争</b>：波次无限 · 敌人快速增强 · 积分倍率 ×4</li>
-      <li><b>☄ 末日审判</b>：BOSS 潮连续出现 · 积分倍率 ×5</li>
-      <li><b>◎ 奇点</b>：极限生存 · 积分倍率 ×10</li>
-      <li><b>☯ 飞升</b>：终极混合挑战 · 积分倍率 ×15</li>
-    </ul>
-  `,
-  perk: `
-    <h3>⚙ 技能等级系统（24 个技能，最高 Lv.5）</h3>
-    <p>每次升级消耗递增（约 2.2 倍），等级越高效果越强。</p>
-
-    <h3>常规主动技能</h3>
-    <ul>
-      <li><b>💨 相位冲刺</b>（R）· <b>💚 治疗波</b>（F）· <b>🛡 力场护盾</b>（Q）</li>
-      <li><b>🐌 时间迟缓</b>（E）· <b>🔥 超载模式</b>（G）· <b>⏱ 时间停止</b>（T）</li>
-      <li><b>👻 瞬步</b>（R 替代）</li>
-    </ul>
-
-    <h3>三体技能（6 个）</h3>
-    <ul>
-      <li><b>🧱 面壁计划</b>（Z）· <b>🔱 思想钢印</b>（X）· <b>🌌 黑暗森林威慑</b>（C）</li>
-      <li><b>⌬ 智子干扰</b>（V）· <b>💫 曲率光速</b>（B）· <b>✴ 宇宙常数修改</b>（N）</li>
-    </ul>
-
-    <h3>被动技能</h3>
-    <ul>
-      <li><b>⚡ 曲速引擎</b> · <b>🔃 弹跳涂层</b> · <b>🎯 追踪弹头</b> · <b>🛡 复合装甲</b></li>
-      <li><b>🗡 穿甲弹芯</b> · <b>⚙ 超频冷却</b> · <b>💥 爆裂弹头</b> · <b>🧲 磁力吸引</b></li>
-      <li><b>🧛 吸血纳米</b> · <b>💢 致命打击</b> · <b>🎆 多重射击</b> · <b>🩸 生命汲取</b></li>
-    </ul>
-  `,
-  shop: `
-    <h3>积分怎么来（已全面提升）</h3>
-    <ul>
-      <li>击杀敌人获得积分（简单 120 → 归零 50,000，<b class="hl">基础值提升约 3 倍</b>）</li>
-      <li>精英敌人击杀得分 ×2</li>
-      <li>击杀玩家（双人 / AI 对战）2,000 分</li>
-      <li>波次越高，分数加成越高（每波 +15%）</li>
-      <li>连杀奖励（3 秒内连续击杀额外 +12%）</li>
-      <li>狂怒 ×2 · 噩梦 ×3</li>
-      <li><b class="hl">模式倍率</b>：传说模式最高 ×15</li>
-      <li>闯关赛通关 5,000 积分 × 模式倍率 · 超级闯关 20,000 积分 × 模式倍率</li>
-      <li>兑换码：<code>100623</code> 50 万 · <code>798210</code> 1,000 亿 · <code>3BODY</code> 5,000 亿 · <code>ZERO</code> 5 万亿 · <code>FINAL</code> 50 万亿</li>
-    </ul>
-
-    <h3>武器价格梯队</h3>
-    <ul>
-      <li><b>入门</b>：冲锋枪 1,200 ~ 榴弹 7,500</li>
-      <li><b>中级</b>：狙击 10,500 ~ 电磁脉冲 280 万</li>
-      <li><b>高级</b>：冰冻射线 350 万 ~ 电浆球 4,200 万</li>
-      <li><b>传说</b>：反物质步枪 7,000 万 ~ 超新星炮 8 亿</li>
-      <li><b>神话</b>：宙斯之怒 12 亿 ~ 宇宙大爆炸 70 亿</li>
-      <li><b>终焉</b>：时间领主 120 亿 ~ 起源之光 500 亿</li>
-      <li><b class="santiHl">三体</b>：水滴 8,000 万 ~ 归零者之钟 2,000 亿</li>
-    </ul>
+    <h3>AI 难度（14 档）</h3>
+    <p>简单 / 普通 / 困难 / 地狱 / 骨灰 / 噩梦 / 炼狱 / 深渊 / 混沌 / 虚空 / 神级 / 超神 / 三体 / 归零</p>
   `,
   faq: `
-    <h3>Q：怎么设置开局第一把武器？</h3>
-    <p>A：在主菜单的「🎯 初始武器」区域，点击任意已拥有的武器即可。</p>
+    <h3>Q：技能上限是多少？</h3>
+    <p>A：<b>10 级</b>。价格曲线每级 ×1.7，10 级时约为基础价格的 118 倍。</p>
 
-    <h3>Q：控制台是做什么的？</h3>
-    <p>A：在菜单点击「⚙ 控制台」，可启用/禁用触摸技能按钮。</p>
+    <h3>Q：技能状态显示条在哪？</h3>
+    <p>A：屏幕底部中央，用彩色芯片显示每个已解锁技能的实时状态。</p>
 
-    <h3>Q：黑暗行动 / 狂怒 / 噩梦为什么之前会立即结束？</h3>
-    <p>A：<b>已修复</b>。之前这些模式的 timeLeft 未初始化，导致第一帧就触发了时间耗尽。
-    现在它们的限时分别设为 60 秒。</p>
+    <h3>Q：技能芯片的颜色含义？</h3>
+    <p>A：<b style="color:#4ade80">绿色</b>=就绪 · <b style="color:#fda4af">灰红</b>=冷却中 ·
+    <b style="color:#fbbf24">金色脉冲</b>=正在生效。</p>
 
-    <h3>Q：玩家阵亡后为什么无法退出？</h3>
-    <p>A：<b>已修复</b>。现在玩家 lives 耗尽时，游戏会自动触发结束结算。
-    屏幕中央会显示复活倒计时，如果已无命则弹出结算面板。</p>
+    <h3>Q：菜单在哪看已解锁技能？</h3>
+    <p>A：菜单「⚔ 我的技能」区域，显示所有已解锁技能、等级、当前和下一级效果。</p>
 
-    <h3>Q：返回主菜单时会保存吗？</h3>
-    <p>A：<b>会</b>。无论从暂停界面退出、点击右上角 ✕ 还是从结算面板返回，
-    都会自动保存当前积分、击杀记录和各模式最高分。</p>
+    <h3>Q：新增了哪 6 个技能？</h3>
+    <p>A：弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场。</p>
+
+    <h3>Q：UI 还会遮挡吗？</h3>
+    <p>A：v8 已大幅缩小面板并提升透明度，击杀流移到底部，几乎不遮挡视野。</p>
 
     <h3>Q：怎么快速赚积分？</h3>
-    <p>A：推荐挑战<b class="hl">传说级模式</b>：奇点（×10）、飞升（×15）。
-    搭配高难度 AI（归零每只 50,000 基础分），再叠加狂暴/噩梦倍率，
-    单局收益可达百万级。</p>
-
-    <h3>Q：三体武器怎么获得？</h3>
-    <p>A：在军火商店的「☄ 三体军火库」标签页中购买。</p>
+    <p>A：推荐传说模式：奇点（×10）、飞升（×15）。搭配归零难度，单局可达百万级。</p>
 
     <h3>Q：怎么分辨自己的角色？</h3>
-    <p>A：你的角色有 <b style="color:#38bdf8">白色虚线旋转光环</b>、<b style="color:#38bdf8">内部青色实心环</b>，
-    以及 <b style="color:#38bdf8">底部蓝色三角标记</b>。</p>
-
-    <h3>Q：游戏卡顿怎么办？</h3>
-    <p>A：已优化，如仍卡顿可打开 ASCII 模式（<kbd>\`</kbd>）。</p>
+    <p>A：你的角色有<b style="color:#38bdf8">白色虚线旋转光环</b>、<b style="color:#38bdf8">内部青色实心环</b>，
+    以及<b style="color:#38bdf8">底部蓝色三角标记</b>。</p>
   `
 };
 
@@ -4030,12 +4340,12 @@ window.addEventListener('error', e => {
   console.error('Game error:', e.message);
 });
 
-console.log('%c星际射手 · Astro Shooter 最终版 v7.1', 'color:#22d3ee;font-size:18px;font-weight:bold');
-console.log('%c✦ 修复：黑暗/狂怒/噩梦模式立即结束 bug', 'color:#4ade80;font-size:13px');
-console.log('%c✦ 修复：玩家阵亡后无法退出游戏 bug', 'color:#4ade80;font-size:13px');
-console.log('%c✦ 新增：返回主菜单自动保存', 'color:#4ade80;font-size:13px');
-console.log('%c✦ 新增：6 种传说模式（积分倍率最高 ×15）', 'color:#fbbf24;font-size:13px');
-console.log('%c✦ 积分基础值提升约 3 倍', 'color:#fbbf24;font-size:13px');
+console.log('%c星际射手 · Astro Shooter v8 最终版', 'color:#22d3ee;font-size:18px;font-weight:bold');
+console.log('%c⚔ 技能上限 5 → 10，全面重新平衡', 'color:#fbbf24;font-size:13px');
+console.log('%c✦ 新增 6 个技能：弹药再生 / 荆棘护盾 / 狂暴 / 快速射击 / 二段冲刺 / 湮灭立场', 'color:#4ade80;font-size:13px');
+console.log('%c✦ 新增「技能状态显示条」：实时显示冷却与持续时间', 'color:#4ade80;font-size:13px');
+console.log('%c✦ 新增菜单「我的技能」展示区', 'color:#4ade80;font-size:13px');
+console.log('%c✦ 修复 UI 遮挡画布问题', 'color:#4ade80;font-size:13px');
 </script>
 </body>
 </html>
