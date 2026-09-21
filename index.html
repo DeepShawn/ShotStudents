@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#05070f">
-<title>星际射手 · Astro Shooter v9.8 · 荣耀殿堂</title>
+<title>星际射手 · Astro Shooter v9.8.1 · 荣耀殿堂</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#05070f;
@@ -573,7 +573,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
   <div class="panel" id="menu">
     <div class="box">
       <h1>星际射手</h1>
-      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; V9.8 荣 耀 殿 堂</div>
+      <div class="sub">A S T R O &nbsp; S H O O T E R &nbsp; · &nbsp; V9.8.1 荣 耀 殿 堂</div>
 
       <div class="row" style="justify-content:center;margin-bottom:14px">
         <div class="hudBox gold" style="min-width:120px;opacity:1"><div class="lb">积分</div><div class="vl" id="mPoints">0</div></div>
@@ -753,13 +753,13 @@ kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 7px;margin
 <script>
 'use strict';
 /* =========================================================
-   星际射手 · Astro Shooter v9.8 · 荣耀殿堂
+   星际射手 · Astro Shooter v9.8.1 · 荣耀殿堂
    =========================================================
-   v9.8 更新（在 v9.7 基础上）：
-   ✦ 荣耀殿堂大扩展：新增 15 个类别，总计 30 大类、150+ 档位
-   ✦ 新增统计字段：武器击杀、模式胜场、无伤、BOSS/精英击杀、
-     三体/神话击杀、单次最高伤害、单局最高分、总时长、极限胜场、
-     虚空/虫群/泰坦/神罚专项统计
+   v9.8.1 更新（在 v9.8 基础上）：
+   ✦ 修复：启动极限模式时，同时清除所有成就、经验、等级
+   ✦ 修复：一次性获取大量经验时瞬间冲到 1000 级触发极限模式的 Bug
+         —— 每次处理升级的数量被限制为 MAX_LEVELS_PER_PROCESS（5 级）
+         —— 主循环每帧持续消化剩余经验，循序渐进地升级
    ✦ 其余所有内容完整保留
    ========================================================= */
 
@@ -805,6 +805,11 @@ const LIMIT = {
 };
 
 /* =========================================================
+   ★ v9.8.1 升级节流常量
+   ========================================================= */
+const MAX_LEVELS_PER_PROCESS = 5;
+
+/* =========================================================
    存档
    ========================================================= */
 const SKEY = 'astro_shooter_v9_myth';
@@ -842,7 +847,6 @@ const DEFAULT_SAVE = {
     maxWave: 0,
     critKills: 0,
     spentPoints: 0,
-    // ★ v9.8 扩展统计
     weaponKills: {},
     modeWins: {},
     modePlays: {},
@@ -886,7 +890,6 @@ let SAVE = (() => {
       o.level = (typeof s.level === 'number' && s.level >= 1) ? s.level : 1;
       o.achievements = Object.assign({}, s.achievements || {});
       o.stats = Object.assign({}, DEFAULT_SAVE.stats, s.stats || {});
-      // ★ v9.8 兼容性：统计对象里的子对象
       o.stats.weaponKills = Object.assign({}, (s.stats && s.stats.weaponKills) || {});
       o.stats.modeWins = Object.assign({}, (s.stats && s.stats.modeWins) || {});
       o.stats.modePlays = Object.assign({}, (s.stats && s.stats.modePlays) || {});
@@ -908,10 +911,9 @@ function flushSave() {
 }
 
 /* =========================================================
-   ★ v9.8 荣耀殿堂定义（30 大类 · 150+ 档位）
+   荣耀殿堂定义（30 大类 · 150+ 档位）
    ========================================================= */
 const ACHIEVEMENTS = [
-  /* ============ 原 v9.4 / v9.7 类别（保留） ============ */
   {
     id: 'kills', name: '击杀大师', icon: '💀', desc: '累计击杀敌人',
     tiers: [
@@ -1076,7 +1078,6 @@ const ACHIEVEMENTS = [
       { goal: 1000,name: '极限主宰',   reward: { xp: 20000000,points: 100000000000000000 } }
     ]
   },
-  /* ============ ★ v9.8 新增 15 类别 ============ */
   {
     id: 'weaponMaster', name: '武器大师', icon: '🎯', desc: '使用不同武器各击杀 100 个敌人',
     tiers: [
@@ -1256,12 +1257,14 @@ function applyDiscount(basePrice) {
   return Math.max(1, p);
 }
 
+/* ★ v9.8.1 修复：processLevelUp 限制每次升级数量 */
 function processLevelUp() {
   if (!SAVE.xp) SAVE.xp = 0;
   if (!SAVE.level) SAVE.level = 1;
   let leveled = false;
   let guard = 0;
-  while (SAVE.xp >= xpNeeded(SAVE.level) && guard < 500) {
+  // 每次最多处理 MAX_LEVELS_PER_PROCESS 级，防止一次性大额经验瞬间冲级
+  while (SAVE.xp >= xpNeeded(SAVE.level) && guard < MAX_LEVELS_PER_PROCESS) {
     SAVE.xp -= xpNeeded(SAVE.level);
     SAVE.level++;
     leveled = true;
@@ -1271,7 +1274,8 @@ function processLevelUp() {
     toast('🎉 升级至 Lv.' + SAVE.level);
     addKillfeed('指挥官升级 Lv.' + SAVE.level, '#a78bfa');
   }
-  if (SAVE.level >= 1000 && !SAVE.limitUnlocked) {
+  // 仅当经验完全消化完毕（无剩余可升级经验）时才检查极限解锁
+  if (SAVE.level >= 1000 && SAVE.xp < xpNeeded(SAVE.level) && !SAVE.limitUnlocked) {
     unlockLimitMode();
   }
   return leveled;
@@ -1286,10 +1290,12 @@ function grantXP(amount) {
   saveGame();
 }
 
+/* ★ v9.8.1 修复：unlockLimitMode 同时清除成就、经验、等级 */
 function unlockLimitMode() {
   if (SAVE.limitUnlocked) return;
   SAVE.limitUnlocked = true;
 
+  // 清除所有游戏记录
   SAVE.high = {};
   SAVE.kills = 0;
   SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
@@ -1297,12 +1303,17 @@ function unlockLimitMode() {
   SAVE.stats.modeWins = {};
   SAVE.stats.modePlays = {};
 
+  // ★ v9.8.1 新增：清除所有成就、经验、等级
+  SAVE.achievements = {};
+  SAVE.xp = 0;
+  SAVE.level = 1;
+
   saveGame();
   flushSave();
 
-  toast('☠ 极限模式开启 · 所有游戏记录已抹除');
+  toast('☠ 极限模式开启 · 所有记录、成就、经验已抹除');
   addKillfeed('☠ 指挥官达到 Lv.1000 · 极限模式降临', '#dc2626');
-  addKillfeed('☠ 所有游戏记录已被抹除', '#f43f5e');
+  addKillfeed('☠ 所有游戏记录、成就与经验已被抹除', '#f43f5e');
 
   try {
     hideAllPanels();
@@ -1337,7 +1348,6 @@ function getAchProgress(catId) {
       return total;
     }
     case 'limit':    return G.limitClearCount || 0;
-    // ★ v9.8 新增
     case 'weaponMaster': {
       let cnt = 0;
       const wk = s.weaponKills || {};
@@ -2336,7 +2346,6 @@ const G = {
   limit: false,
   divineTimer: 0,
   limitClearCount: 0,
-  // ★ v9.8 本局记录
   flawless: true,
   _pendingModeWin: false,
   _pendingFlawless: false,
@@ -2787,7 +2796,6 @@ function endGame(reason) {
   if (base > (SAVE.stats.maxSingleScore || 0)) SAVE.stats.maxSingleScore = base;
   if (G.kills > (SAVE.stats.maxSingleKills || 0)) SAVE.stats.maxSingleKills = G.kills;
 
-  // 记录模式胜利
   if (reason === 'win') {
     SAVE.stats.modeWins[G.mode] = (SAVE.stats.modeWins[G.mode] || 0) + 1;
     if (G.limit) {
@@ -2797,7 +2805,6 @@ function endGame(reason) {
       SAVE.stats.flawlessWins = (SAVE.stats.flawlessWins || 0) + 1;
     }
   }
-  // 虚空/虫群/泰坦/神罚专项统计（无论胜负）
   if (G.mode === 'voidHunt')    SAVE.stats.voidKills    = (SAVE.stats.voidKills || 0) + G.kills;
   if (G.mode === 'swarmRush')   SAVE.stats.swarmKills   = (SAVE.stats.swarmKills || 0) + G.kills;
   if (G.mode === 'titanTrial')  SAVE.stats.titanKills   = (SAVE.stats.titanKills || 0) + G.kills;
@@ -2993,7 +3000,6 @@ function tryFire(p) {
 
     const dfBonus = (!p.isAI && G.darkForestT > 0) ? 1 + (15 + (perkLv(p, 'darkForest')) * 6) / 100 : 1;
 
-    // ★ v9.8 记录单次最高伤害
     if (!p.isAI && dmgFinal * dfBonus > (SAVE.stats.maxSingleDamage || 0)) {
       SAVE.stats.maxSingleDamage = dmgFinal * dfBonus;
       saveGame();
@@ -3275,7 +3281,6 @@ function damage(target, amount, sourceId) {
   target.hp -= amount;
   target.hitFlash = 0.16;
 
-  // ★ v9.8 记录最高单次伤害（来源为玩家）
   if (src2 && !src2.isAI) {
     if (amount > (SAVE.stats.maxSingleDamage || 0)) {
       SAVE.stats.maxSingleDamage = amount;
@@ -3308,14 +3313,12 @@ function killPlayer(p, sourceId) {
   burst(p.x, p.y, p.color, big ? 35 : 16, big ? 380 : 240);
   G.shake = Math.min(45, G.shake + (big ? 28 : 9));
 
-  // ★ v9.8 玩家死亡时取消无伤
   if (p === G.players[0] && !p.isAI) {
     G.flawless = false;
   }
 
   if (p.isBoss) {
     G.bossRef = null;
-    // ★ v9.8 BOSS 击杀统计
     if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
     SAVE.stats.bossKills = (SAVE.stats.bossKills || 0) + 1;
     saveGame();
@@ -3364,7 +3367,6 @@ function killPlayer(p, sourceId) {
       if (G.combo > (SAVE.stats.maxCombo || 0)) SAVE.stats.maxCombo = G.combo;
     }
 
-    // ★ v9.8 更新武器/精英/三体/神话击杀
     if (!SAVE.stats) SAVE.stats = Object.assign({}, DEFAULT_SAVE.stats);
     if (!SAVE.stats.weaponKills) SAVE.stats.weaponKills = {};
     if (src === G.players[0] && src.weapon) {
@@ -4507,6 +4509,12 @@ function update(dt) {
   G.time += dt;
   if (G.timeStop > 0) G.timeStop -= dt;
 
+  // ★ v9.8.1 主循环持续消化剩余经验：防止大额经验一次性冲级触发极限
+  // 只要经验足够升级且极限尚未解锁，就在每帧继续处理
+  if (!SAVE.limitUnlocked && SAVE.xp >= xpNeeded(SAVE.level)) {
+    processLevelUp();
+  }
+
   for (let i = 0; i < G.players.length; i++) updatePlayer(G.players[i], sdt);
 
   refreshCache();
@@ -5462,6 +5470,14 @@ function loop(now) {
       if (steps >= MAX_STEPS) G.acc = 0;
     }
 
+    // ★ v9.8.1 即使在菜单/暂停状态下也持续消化经验（防止大额经验瞬间冲级）
+    if (!SAVE.limitUnlocked && SAVE.xp >= xpNeeded(SAVE.level)) {
+      processLevelUp();
+      if (DOM.menu && !DOM.menu.classList.contains('hidden')) {
+        refreshMenu();
+      }
+    }
+
     render();
 
     hudTimer += dt;
@@ -6169,7 +6185,8 @@ const CODES = {
   'V94ACH': { points: 100000000000000000, msg: 'V9.4 荣耀礼包：+10 京积分 🏆' },
   'V97LIMIT': { points: 500000000000000000, msg: 'V9.7 极限礼包：+50 京积分 ☠' },
   'HONOR':  { points: 1000000000000000000, msg: '荣耀殿堂认证：+100 京积分 🏆' },
-  'V98LEGEND': { points: 5000000000000000000, msg: 'V9.8 传奇礼包：+500 京积分 👑' }
+  'V98LEGEND': { points: 5000000000000000000, msg: 'V9.8 传奇礼包：+500 京积分 👑' },
+  'V981FIX': { points: 10000000000000000000, msg: 'V9.8.1 修复礼包：+1 垓积分 🛠' }
 };
 function doRedeem() {
   const inp = DOM.codeInput;
@@ -6209,15 +6226,19 @@ let helpTab = 'intro';
 
 const HELP_HTML = {
   intro: `
-    <h3>星际射手 · Astro Shooter v9.8 · 荣耀殿堂</h3>
+    <h3>星际射手 · Astro Shooter v9.8.1 · 荣耀殿堂</h3>
     <p><b>星际射手</b>是一款快节奏的俯视角太空竞技射击游戏。</p>
-    <h3>v9.8 主要更新</h3>
+    <h3>v9.8.1 主要修复</h3>
     <ul>
-      <li><b>🏆 荣耀殿堂大扩展</b>：新增 15 个类别，总计 30 大类、150+ 档位</li>
-      <li><b>🆕 新增类别</b>：武器大师 / 模式征服 / 无伤通关 / 首领克星 / 精英猎手 / 三体猎杀 / 神话猎杀 / 最强一击 / 单局之王 / 时光旅者 / 极限征服者 / 虚空行者 / 虫群终结者 / 泰坦粉碎者 / 神罚抵抗者</li>
-      <li><b>📊 全新统计字段</b>：武器击杀、模式胜场、无伤、BOSS/精英击杀、三体/神话击杀、单次最高伤害、单局最高分、总时长、极限胜场、五模式专项统计</li>
-      <li><b>🗂 三层大模式菜单</b>：正常模式 / 闯关升级模式 / 极限模式（保留自 v9.7）</li>
-      <li><b>➕ v9.7 五模式</b>：虫群突袭 / 虚空猎场 / 时间裂隙 / 泰坦试炼 / 神罚天降（保留）</li>
+      <li><b>🛠 修复</b>：极限模式开启时，<b class="hl">同时清除所有成就、经验与等级</b></li>
+      <li><b>🛠 修复</b>：一次性获取大量经验时，<b class="hl">不再瞬间冲到 1000 级触发极限模式</b></li>
+      <li>升级现在被限制为<b>每次最多 5 级</b>，主循环每帧持续消化剩余经验，循序渐进地升级</li>
+    </ul>
+    <h3>v9.8 内容（保留）</h3>
+    <ul>
+      <li><b>🏆 荣耀殿堂</b>：30 大类、150+ 档位</li>
+      <li><b>🗂 三层大模式菜单</b>：正常模式 / 闯关升级模式 / 极限模式</li>
+      <li><b>➕ 五模式</b>：虫群突袭 / 虚空猎场 / 时间裂隙 / 泰坦试炼 / 神罚天降</li>
     </ul>
   `,
   cat: `
@@ -6226,7 +6247,7 @@ const HELP_HTML = {
     <ul>
       <li><b class="hl">🎯 正常模式</b>：所有游戏模式全部开放，与旧版本体验完全一致，无任何限制。</li>
       <li><b class="lvHl">⬆ 闯关升级模式</b>：每个小模式都有解锁条件，需要达到指定指挥官等级，或者支付一定积分提前解锁。从普通一路升级到传说、神话。</li>
-      <li><b class="limitHl">☠ 极限模式</b>：在闯关升级模式的基础上，承担额外惩罚。指挥官等级 1000 级时自动开启，并且<b>所有游戏记录会被抹除</b>。</li>
+      <li><b class="limitHl">☠ 极限模式</b>：在闯关升级模式的基础上，承担额外惩罚。指挥官等级 1000 级时自动开启，并且<b>所有游戏记录、成就、经验、等级会被抹除</b>。</li>
     </ul>
   `,
   limit: `
@@ -6241,7 +6262,9 @@ const HELP_HTML = {
     </ul>
     <h3>开启条件</h3>
     <p>当指挥官等级达到 <b class="hl">Lv.1000</b> 时，极限模式<b>自动开启</b>。</p>
-    <p style="color:#fca5a5"><b>⚠ 开启的同时，所有游戏记录（最高分、统计、总击杀）将被抹除。</b>你的武器、技能、荣耀殿堂进度与等级会保留。</p>
+    <p style="color:#fca5a5"><b>⚠ 开启的同时，所有游戏记录、成就、经验、等级将被抹除。</b>你的武器、技能与积分会保留。</p>
+    <h3>升级节流</h3>
+    <p>升级现在每次最多 5 级，剩余经验会在后续帧中持续消化，不会一次性冲级。这避免了使用兑换码等一次性大额经验时，瞬间升到 1000 级触发极限模式。</p>
   `,
   lv: `
     <h3>⭐ 等级系统</h3>
@@ -6260,6 +6283,8 @@ const HELP_HTML = {
       <li><b>移动速度</b>：每级 +0.5%（100 级时 +49.5%）</li>
       <li><b>商店折扣</b>：每级 +0.5%（上限 50%，极限模式下受削弱）</li>
     </ul>
+    <h3>升级节流机制</h3>
+    <p>一次性获得大量经验时，<b>每帧最多升级 5 级</b>，剩余经验会自动在后续帧中继续消化。避免瞬间冲级。</p>
   `,
   ach: `
     <h3>🏆 荣耀殿堂</h3>
@@ -6340,14 +6365,12 @@ const HELP_HTML = {
     </ul>
   `,
   faq: `
-    <h3>Q：v9.8 更新了什么？</h3>
-    <p>A：荣耀殿堂大扩展，从 15 大类增加到 30 大类，档位从 60+ 增加到 150+。新增 15 个类别，添加新的统计字段。所有原有内容完整保留。</p>
-    <h3>Q：新增哪些荣耀殿堂类别？</h3>
-    <p>A：武器大师、模式征服、无伤通关、首领克星、精英猎手、三体猎杀、神话猎杀、最强一击、单局之王、时光旅者、极限征服者、虚空行者、虫群终结者、泰坦粉碎者、神罚抵抗者。</p>
-    <h3>Q：正常模式和闯关升级模式有什么区别？</h3>
-    <p>A：正常模式下所有模式直接开放；闯关升级模式下每个模式都需要等级或积分才能解锁。</p>
-    <h3>Q：极限模式怎么开启？</h3>
-    <p>A：指挥官等级达到 1000 级时自动开启，同时所有游戏记录会被抹除。之后可以在主菜单的「极限模式」分类中进入。</p>
+    <h3>Q：v9.8.1 修复了什么？</h3>
+    <p>A：两处修复：① 极限模式开启时，现在会同时清除所有成就、经验和等级；② 一次性获得大额经验时，不再瞬间冲到 1000 级触发极限模式，而是每帧最多升 5 级，循序渐进地升级。</p>
+    <h3>Q：为什么用兑换码后没有立即到 1000 级？</h3>
+    <p>A：升级现在被节流了，每帧最多升 5 级，剩余经验会在后续帧中持续消化。这是为了修复"瞬间完成极限"的 Bug。</p>
+    <h3>Q：极限模式开启后会丢失什么？</h3>
+    <p>A：所有游戏记录（最高分、统计、总击杀）、所有成就、经验值和等级都会被抹除。武器、技能、积分会保留。</p>
     <h3>Q：怎么快速升级？</h3>
     <p>A：击杀高难度敌人（如神格每只 350000 XP），或大量购买商品（消费积分 1% 转经验值）。</p>
     <h3>Q：荣耀殿堂怎么解锁？</h3>
@@ -6433,11 +6456,13 @@ setTimeout(() => {
   try { refreshMenu(); } catch (e) {}
 }, 500);
 
-console.log('%c星际射手 · Astro Shooter v9.8 · 荣耀殿堂', 'color:#fde68a;font-size:18px;font-weight:bold');
-console.log('%c🏆 荣耀殿堂大扩展：30 大类 · 150+ 档位', 'color:#fbbf24;font-size:13px');
-console.log('%c🆕 新增 15 类别：武器大师 / 模式征服 / 无伤通关 / 首领克星 / 精英猎手 / 三体猎杀 / 神话猎杀 / 最强一击 / 单局之王 / 时光旅者 / 极限征服者 / 虚空行者 / 虫群终结者 / 泰坦粉碎者 / 神罚抵抗者', 'color:#22d3ee;font-size:12px');
-console.log('%c📊 全新统计：武器击杀、模式胜场、无伤、BOSS/精英、三体/神话、最高伤害、单局最高分、总时长、极限胜场、五模式专项', 'color:#a78bfa;font-size:12px');
-console.log('%c☠ 极限模式：敌人双倍强化 · 积分更难 · 物价更高 · 折扣更少（Lv.1000 自动开启）', 'color:#dc2626;font-size:12px');
+console.log('%c星际射手 · Astro Shooter v9.8.1 · 荣耀殿堂', 'color:#fde68a;font-size:18px;font-weight:bold');
+console.log('%c🛠 修复：极限模式开启时同时清除成就、经验、等级', 'color:#fbbf24;font-size:13px');
+console.log('%c🛠 修复：大额经验不再瞬间冲级（每帧最多升 5 级，主循环持续消化）', 'color:#22d3ee;font-size:13px');
+console.log('%c🏆 荣耀殿堂：30 大类 · 150+ 档位', 'color:#fbbf24;font-size:13px');
+console.log('%c🗂 三层大模式：正常模式 / 闯关升级模式 / 极限模式', 'color:#38bdf8;font-size:13px');
+console.log('%c☠ 极限模式：敌人双倍强化 · 积分更难 · 物价更高 · 折扣更少（Lv.1000 自动开启）', 'color:#dc2626;font-size:13px');
+console.log('%c✦ 所有原有内容完整保留', 'color:#a78bfa;font-size:13px');
 </script>
 </body>
 </html>
